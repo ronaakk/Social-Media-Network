@@ -1,24 +1,43 @@
 {% extends "network/layout.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'network/css/authentication-forms.css' %}">
+{% endblock extra_head %}
 
 {% block body %}
-
-    <h2>Login</h2>
-
-    {% if message %}
-        <div>{{ message }}</div>
+    <!-- To display error message -->
+    {% if messages %}
+        {% for message in messages %}
+            <br>
+                <div class="{{ message.tags }} alert alert-danger" role="alert">{{ message }}</div> 
+        {% endfor %}
     {% endif %}
 
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Login">
-    </form>
+    <!--Form section-->
+    <div class="login-section">
+        <h2 class="title text-center">Login</h2>
+        <div class="login-card">
 
-    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+            <form action= "{% url 'login' %}" method="POST" enctype='multipart/form-data' class='form'>
 
+                {% csrf_token %}
+                
+                <div class="input-group">
+                    <img class="icon" src={% static "icons/profile-user.svg" %}>
+                    <input autofocus class="input form-control" type="text" name="username" placeholder="Username">
+                </div>
+                <div class="input-group">
+                    <img class="icon" src={% static "icons/key.svg" %}>
+                    <input class="input form-control" type="password" name="password" placeholder="Password">
+                </div>
+                <div class="input-group">
+                    <input class="btn btn-primary create-button" type="submit" value="Create Account">
+                </div>
+            </form>
+            <div class="login-redirect">
+                <p>Don't have an account? <a href="{% url 'register' %}">Register here.</a></p> 
+            </div>
+        </div>
+    </div>
 {% endblock %}

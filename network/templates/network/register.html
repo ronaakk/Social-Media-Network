@@ -1,30 +1,52 @@
 {% extends "network/layout.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href= "{% static 'network/css/authentication-forms.css' %}">
+{% endblock extra_head %}
 
 {% block body %}
 
-    <h2>Register</h2>
-
-    {% if message %}
-        <div>{{ message }}</div>
+     <!-- To display error message -->
+     {% if messages %}
+        {% for message in messages %}
+            <br>
+                <div class="{{ message.tags }} alert alert-danger" role="alert">{{ message }}</div> 
+        {% endfor %}
     {% endif %}
 
-    <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Register">
-    </form>
 
-    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+    <!--Form section-->
+    <div class="sign-up-section">
+        <h2 class="title text-center">Sign Up</h2>
+        <div class="sign-up-card">
 
+            <form action= "{% url 'register' %}" method="POST" enctype='multipart/form-data' class='form'>
+
+                {% csrf_token %}
+                
+                <div class="input-group">
+                    <img class="icon" src={% static "icons/profile-user.svg" %}>
+                    {{register_form.username}}
+                </div>
+                <div class="input-group">
+                    <img class="icon" src={% static "icons/key.svg" %}>
+                    {{register_form.password}}
+                </div>
+                <!-- The confirmation will not be part of the Model form, rather just something else to input and compare -->
+                <div class="input-group">
+                    <img class="icon" src={% static "icons/key.svg" %}>
+                    <input type="password" name="confirmation" class="form-control" placeholder="Confirm Password">
+                </div>
+                <div class="input-group">
+                    <img class="icon" src={% static "icons/envelope.png" %}>
+                    {{register_form.email}}
+                </div>
+                <div class="input-group">
+                    <input class="btn btn-primary create-button" type="submit" value="Create Account">
+                </div>
+
+            </form>
+        </div>
+    </div>
 {% endblock %}

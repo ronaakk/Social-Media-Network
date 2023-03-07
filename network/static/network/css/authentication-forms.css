@@ -1,0 +1,60 @@
+
+.sign-up-section, .login-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 3em auto;
+
+    width: min-content;
+    height: min-content;
+    padding: 20px;
+    border-radius: 1em;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);  
+}
+
+.sign-up-card, .login-card {
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form {
+    width: 350px;
+    margin-top: 11px;
+    margin-bottom: 11px;
+}
+
+.create-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.icon {
+    height: min(5vw, 30px);
+    width: min(5vw, 30px);
+    margin: 0px 15px;
+}
+
+
+.input-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.login-redirect {
+    padding-left: 2em;
+    padding-top: 0.5em;
+}
+
+p {
+    font-size: 15px;
+}
+
+
+
+
