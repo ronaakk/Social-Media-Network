@@ -1,3 +1,103 @@
-.body {
-    padding: .5rem .5rem;
+html * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    text-decoration: none;
+    list-style: none;
+    overflow: hidden;
 }
+
+/* Styles for 'light/grey' mode currently */
+:root {
+    --font-family: 'Poppins', sans-serif;
+    --bg-color: rgb(43, 42, 42);
+    --text-color: #f3f3f3;
+    --main-color: rgb(65, 142, 197);
+}
+
+a, span, .username {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    
+    font-size: 1.2rem;
+    font-weight: 200;
+
+}
+
+/* Originally these styles were in body */
+.navbar-section {
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    
+} 
+
+header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    right: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    padding: 25px 6%;
+    transition: all .50s ease;
+}
+
+.icon {
+    padding-right: 15px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    color: var(--main-color);
+}
+
+.navbar {
+    display: flex;
+}
+
+.nav-link {
+    padding: 5px 0;
+    margin: 0 30px;
+    transition: all 0.5s ease;
+}
+
+.nav-link:hover {
+    color: var(--main-color);
+}
+
+.authentication-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.authentication-actions a {
+    margin-right: 20px;
+    margin-left: 10px;
+}
+
+.ri-menu-line {
+    font-size: 22px;
+    padding-left: 10px;
+}
+
+.profile-picture-icon{
+    font-size: 22px;
+    padding-top: 4px;
+}
+
+
+
+
+
+
+

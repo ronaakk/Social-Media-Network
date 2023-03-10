@@ -4,6 +4,7 @@
     flex-direction: column;
     justify-content: center;
     margin: 3em auto;
+    font-family: 'Open Sans', sans-serif;
 
     width: min-content;
     height: min-content;
@@ -38,7 +39,6 @@
     margin: 0px 15px;
 }
 
-
 .input-group {
     display: flex;
     justify-content: center;
@@ -55,6 +55,9 @@ p {
     font-size: 15px;
 }
 
+.message {
+    font-family: 'Poppins', sans-serif;
+}
 
 
 
