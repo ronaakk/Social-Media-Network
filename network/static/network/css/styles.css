@@ -5,7 +5,7 @@ html * {
     font-family: 'Poppins', sans-serif;
     text-decoration: none;
     list-style: none;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 /* Styles for 'light/grey' mode currently */
@@ -14,23 +14,22 @@ html * {
     --bg-color: rgb(43, 42, 42);
     --text-color: #f3f3f3;
     --main-color: rgb(65, 142, 197);
+    --body-bg-color: #E7E7E7;
 }
 
-a, span, .username {
+a, .app-name, .username {
     font-family: var(--font-family);
     color: var(--text-color);
     
-    font-size: 1.2rem;
-    font-weight: 200;
-
+    font-size: 1.1rem;
+    font-weight: 300;
 }
 
 /* Originally these styles were in body */
 .navbar-section {
-    min-height: 100vh;
+    min-height: 5rem;
     background-color: var(--bg-color);
     color: var(--text-color);
-    
 } 
 
 header {
@@ -43,7 +42,7 @@ header {
     align-items: center;
     justify-content: space-between;
     background: transparent;
-    padding: 25px 6%;
+    padding: 1rem 3.5%;
     transition: all .50s ease;
 }
 
@@ -70,34 +69,26 @@ header {
     transition: all 0.5s ease;
 }
 
-.nav-link:hover {
-    color: var(--main-color);
+.user, .register, .app-name {
+    transition: all 0.5s ease;
+    cursor: pointer;
 }
 
-.authentication-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.nav-link:hover, .app-name:hover, .user:hover, .register:hover {
+    color: var(--main-color);
+    text-decoration: none;
 }
 
 .authentication-actions a {
-    margin-right: 20px;
+    margin-right: 15px;
     margin-left: 10px;
 }
 
-.ri-menu-line {
-    font-size: 22px;
-    padding-left: 10px;
-}
-
-.profile-picture-icon{
+.profile-picture-icon {
     font-size: 22px;
     padding-top: 4px;
 }
 
-
-
-
-
-
-
+.body {
+    background-color: var(--body-bg-color);
+}

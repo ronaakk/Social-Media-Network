@@ -45,19 +45,17 @@
                             <!-- TODO: Implement light and dark mode later -->
                             {% comment %} <i class="ri-sun-line"></i> {% endcomment %}
                             <div class="profile-picture-icon">
+                                <!-- TODO: Change this to an actual profile picture later-->
                                 <i class="ri-account-circle-line"></i>
                             </div>
                             <a class="username nav-link" href="#">
-                                <!-- TODO: Change this to an actual profile picture later-->
                                 {{ user.username }}
                             </a>
-                            <i class="ri-menu-line"></i>  
+                            {% comment %} <i class="menu-ri-menu-line"></i>   {% endcomment %}
                          
                     {% else %} 
-                        <!-- TOOD: Need to add profile picture functionality to this -->
                         <a href= "{% url 'login' %}" class="user"><i class="ri-account-circle-line"></i> Sign In</a>
-                        <a href="{% url 'register' %}">Register</a>
-                        <i class="ri-menu-line"></i>
+                        <a href="{% url 'register' %}" class="user">Register</a> 
                     {% endif %}
                 </div>
             </header>

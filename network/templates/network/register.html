@@ -26,20 +26,20 @@
                 {% csrf_token %}
                 
                 <div class="input-group">
-                    <img class="icon" src={% static "icons/profile-user.svg" %}>
+                    <img class="form-icon" src={% static "icons/profile-user.svg" %}>
                     {{register_form.username}}
                 </div>
                 <div class="input-group">
-                    <img class="icon" src={% static "icons/key.svg" %}>
+                    <img class="form-icon" src={% static "icons/key.svg" %}>
                     {{register_form.password}}
                 </div>
                 <!-- The confirmation will not be part of the Model form, rather just something else to input and compare -->
                 <div class="input-group">
-                    <img class="icon" src={% static "icons/key.svg" %}>
+                    <img class="form-icon" src={% static "icons/key.svg" %}>
                     <input type="password" name="confirmation" class="form-control" placeholder="Confirm Password">
                 </div>
                 <div class="input-group">
-                    <img class="icon" src={% static "icons/envelope.png" %}>
+                    <img class="form-icon" src={% static "icons/envelope.png" %}>
                     {{register_form.email}}
                 </div>
                 <div class="input-group">
