@@ -5,7 +5,7 @@ html * {
     font-family: 'Poppins', sans-serif;
     text-decoration: none;
     list-style: none;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 /* Styles for 'light/grey' mode currently */
@@ -47,16 +47,12 @@ header {
 }
 
 .icon {
-    padding-right: 15px;
+    padding-right: 0.9rem;
 }
 
 .logo {
     display: flex;
     align-items: center;
-}
-
-.icon {
-    color: var(--main-color);
 }
 
 .navbar {
@@ -74,9 +70,15 @@ header {
     cursor: pointer;
 }
 
-.nav-link:hover, .app-name:hover, .user:hover, .register:hover {
+.nav-link:hover, .logo .app-name:hover, .user:hover, .register:hover {
     color: var(--main-color);
     text-decoration: none;
+}
+
+.authentication-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .authentication-actions a {
@@ -91,4 +93,27 @@ header {
 
 .body {
     background-color: var(--body-bg-color);
+}
+
+.left-section {
+    display: flex;
+    justify-content: space-between;
+}
+
+.remix-icon-item {
+    display: flex;
+    /* justify-content: space-between; */
+    font-family: 'Roboto', sans-serif;
+    align-items: center;
+}
+
+.remix-icon-item p {
+    font-family: 'Roboto', sans-serif;
+    font-size: inherit;
+}
+
+.remix-icon {
+    font-size: 22px;
+    padding-right: 0.5rem;
+    vertical-align: -5px;
 }

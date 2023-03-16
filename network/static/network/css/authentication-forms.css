@@ -7,7 +7,7 @@
     font-family: 'Open Sans', sans-serif;
 
     width: min-content;
-    height: min-content;
+    min-width: min-content;
     padding: 20px;
     border-radius: 1em;
     box-shadow: 10px 10px 30px rgba(0,0,0,0.1);  
@@ -36,27 +36,37 @@
 .form-icon {
     height: min(5vw, 30px);
     width: min(5vw, 30px);
-    margin: 0px 15px;
+    margin: 0px 0.9rem;
 }
 
 .input-group {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 15px;
+    margin-top: 0.9rem;
 }
 
 .login-redirect {
     padding-left: 2em;
     padding-top: 0.5em;
+    font-family: 'Roboto', sans-serif;
 }
 
-p {
-    font-size: 15px;
+.login_redirect__text, .redirect-link {
+    font-size: 0.9rem;
+    font-family: 'Roboto', sans-serif;
+    color: black;
+} 
+
+.redirect-link:hover {
+    color: var();
+    text-decoration: none;
+    transition: all 0.5s ease;
 }
 
 .message {
     font-family: 'Poppins', sans-serif;
+    padding: 1rem 3.5%;
 }
 
 
