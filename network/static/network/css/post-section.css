@@ -1,0 +1,40 @@
+@import './styles.css';
+
+.post-section {
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    min-width: 450px;
+    max-width: 650px;
+
+    border-radius: .5rem;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);  
+    padding: 1rem;
+    justify-content: space-between;
+    background-color: white;
+}
+
+#post-content {
+    padding: 0.8rem 4rem 3rem 0.8rem;
+    margin-bottom: 1rem;
+    border: none;
+    
+    font-size: 1.1rem;
+
+}
+
+.action-section {
+    display: flex;
+    justify-content: right;
+}
+
+#post-button {
+    /* width: 20%; */
+    background-color: var(--main-color);
+    color: var(--text-color);
+
+    border-radius: 0.3rem;
+    border: none;
+    padding: 0.2rem 2.5rem;
+}

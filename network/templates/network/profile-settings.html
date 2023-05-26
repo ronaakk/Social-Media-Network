@@ -1,0 +1,54 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link href="{% static 'network/css/profile-settings-form.css' %}" rel="stylesheet">
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="container__row">
+        <!-- To display success/error message -->
+        {% if messages %}
+            {% for message in messages %}
+                <br>
+                {% if message.tags == "error" %}
+                    <div class="{{ message.tags }} alert alert-danger message" role="alert">{{ message }}</div> 
+                {% else %}
+                    <div class="{{ message.tags }} alert alert-primary" role="alert">{{ message }}</div> 
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="profile-settings-container">
+        <div class="container__row">
+            <h1>Edit Profile</h1>
+        </div>
+
+        <!-- Form where user can change profile picture, bio, or username-->
+        <form action= {% url 'change_profile' %} method="POST" class="form" enctype = "multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Profile picture -->
+            <div class="container__row">
+                <img src="{{ user_profile.profile_picture.url }}" class="profile-pic regular" >
+            </div>
+
+            <!-- Username (not changeable, just for display)-->
+            <div class="container__row">
+                {{ user_profile.user }}
+            </div>
+
+            <!-- Bio -->
+            <div class="container__row">
+                {{ user_profile.bio }}
+            </div>
+
+            <div class="container__row">
+                <div class="input-group">
+                    <input class="btn btn-primary create-button" type="submit" value="Save">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock body %}

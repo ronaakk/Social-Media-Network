@@ -1,0 +1,23 @@
+@import "./styles.css";
+
+.profile-settings-container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px auto;
+    width: 50%;
+
+    border-radius: .5rem;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);  
+    padding: 1rem;
+}
+
+.container__row {
+    margin-bottom: 2rem;
+}
+
+
+.profile-pic {
+
+}
