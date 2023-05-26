@@ -20,14 +20,14 @@
         <div class="navbar-section">
             <header>
                 <!-- TODO: Make this link go to a page describing what this site is about-->
-                <div class="left-section">
+                <div class="left-section navbar">
                     <a class="logo" href="#">        
                         <img class="icon" src={% static "icons/bird-logo.png" %}>
                         <span class="app-name">Tweetify</span> 
                     </a>
 
                     {% if not user.is_authenticated %}
-                        <a href="{% url 'index' %}" class="nav-link">
+                        <a href="{% url 'index' %}" class="nav-link home">
                             <div class="remix-icon-item">
                                 <i class="remix-icon ri-home-4-line"></i>
                                 <p>Home</p>
@@ -38,9 +38,6 @@
                 
             
                 <ul class="navbar">
-                    {% comment %} <li>
-                        <a class="nav-link" href="{% url 'index' %}">Home</a>
-                    </li> {% endcomment %}
                     {% if user.is_authenticated %}
                         <li>
                             <a href="{% url 'index' %}" class="nav-link">
@@ -75,11 +72,16 @@
                 
                             <!-- TODO: Implement light and dark mode later -->
                             {% comment %} <i class="ri-sun-line"></i> {% endcomment %}
-                            <div class="profile-picture-icon">
+
+              
                                 <!-- TODO: Change this to an actual profile picture later-->
-                                <i class="ri-account-circle-line"></i>
-                            </div>
-                            <a class="username nav-link" href="#">
+                            <a class="profile-image-link" href="{% url 'change_profile' %}">  
+                                <div>
+                                    <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small" >
+                                </div>
+                            </a>
+
+                            <a class="username" href="{% url 'change_profile' %}">
                                 {{ user.username }}
                             </a>  
                     {% else %} 
@@ -95,10 +97,9 @@
             </header>
         </div>
         
-        {% block body %}
-        {% endblock %}
-
-        <!-- JS script link -->
-        <script src="{% static 'network/js/layout.js' %}"></script>
+        <div class="body">
+            {% block body %}
+            {% endblock %}
+        </div>
     </body>
 </html>

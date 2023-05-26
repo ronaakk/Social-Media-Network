@@ -1,3 +1,4 @@
+@import 'styles.css';
 
 .sign-up-section, .login-section {
     display: flex;
@@ -67,6 +68,11 @@
 .message {
     font-family: 'Poppins', sans-serif;
     padding: 1rem 3.5%;
+}
+
+/* Style this later */
+.btn {
+    background-color: var(-main-color);
 }
 
 

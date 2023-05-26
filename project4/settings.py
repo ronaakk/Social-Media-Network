@@ -102,6 +102,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    # Add other authentication backends if needed
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -120,12 +125,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+# These lines will now configure static files in the correct location
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'network', 'static'),
+    os.path.join(BASE_DIR, 'network', 'static', 'network', 'css'),
+    os.path.join(BASE_DIR, 'network', 'static', 'icons'),
+    os.path.join(BASE_DIR, 'network', 'static', 'network', 'js'),
+)
 
 # Default auto field for models
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # For profile pictures (ONLY IN DEVELOPMENT)
 MEDIA_URL = "/media/"
-MEDIA_ROOT=os.path.join(BASE_DIR,"media/")
+MEDIA_ROOT=os.path.join(BASE_DIR, "media/")

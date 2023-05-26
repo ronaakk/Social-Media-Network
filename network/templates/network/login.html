@@ -9,8 +9,7 @@
     <!-- To display error message -->
     {% if messages %}
         {% for message in messages %}
-            <br>
-                <div class="{{ message.tags }} alert alert-danger message" role="alert">{{ message }}</div> 
+            <div class="{{ message.tags }} alert alert-danger message" role="alert">{{ message }}</div> 
         {% endfor %}
     {% endif %}
 
@@ -19,7 +18,7 @@
         <h2 class="title text-center">Login</h2>
         <div class="login-card">
 
-            <form action= "{% url 'login' %}" method="POST" enctype='multipart/form-data' class='form'>
+            <form action= "{% url 'login' %}" method="POST" class='form'>
 
                 {% csrf_token %}
                 

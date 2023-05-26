@@ -6,6 +6,7 @@ html * {
     text-decoration: none;
     list-style: none;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 /* Styles for 'light/grey' mode currently */
@@ -27,11 +28,14 @@ a, .app-name, .username {
 
 /* Originally these styles were in body */
 .navbar-section {
-    min-height: 5rem;
+    min-height: 3rem;
+    max-height: 4rem;
     background-color: var(--bg-color);
     color: var(--text-color);
+    padding: 3rem;
 } 
 
+/* Header/navbar styles */
 header {
     position: fixed;
     width: 100%;
@@ -42,17 +46,8 @@ header {
     align-items: center;
     justify-content: space-between;
     background: transparent;
-    padding: 1rem 3.5%;
+    padding: 1.5rem 3.5%;
     transition: all .50s ease;
-}
-
-.icon {
-    padding-right: 0.9rem;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
 }
 
 .navbar {
@@ -65,12 +60,16 @@ header {
     transition: all 0.5s ease;
 }
 
-.user, .register, .app-name {
+.username {
+    margin: 0 0.9rem;
+}
+
+.user, .register, .app-name, .username {
     transition: all 0.5s ease;
     cursor: pointer;
 }
 
-.nav-link:hover, .logo .app-name:hover, .user:hover, .register:hover {
+.nav-link:hover, .logo .app-name:hover, .user:hover, .register:hover, .username:hover {
     color: var(--main-color);
     text-decoration: none;
 }
@@ -81,23 +80,50 @@ header {
     align-items: center;
 }
 
-.authentication-actions a {
-    margin-right: 15px;
-    margin-left: 10px;
+.profile-image-link {
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
-.profile-picture-icon {
-    font-size: 22px;
-    padding-top: 4px;
-}
-
-.body {
-    background-color: var(--body-bg-color);
+.user, .register {
+    margin-right: 12px;
+    margin-left: 12px;
 }
 
 .left-section {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+/* Profile picture styles */
+.profile-pic {
+    border-radius: 50%;
+}
+
+.regular {
+    width: 3.9rem;
+    height: 3.9rem;
+}
+
+.small {
+    width: 2rem;
+    height: 2rem;
+}
+
+.large {
+    width: 6rem;
+    height: 6rem;
+}
+
+/* Icon styles */
+.icon {
+    padding-right: 0.9rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
 }
 
 .remix-icon-item {
