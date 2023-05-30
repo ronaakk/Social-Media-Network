@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from .forms import *
 from django.contrib import messages
+from PIL import Image
+import os
 
 from .models import *
 
@@ -65,27 +67,60 @@ def register(request):
         return render(request, "network/register.html", {"register_form": UserRegistrationForm()})
 
 def change_profile(request):
-    user_profile = UserProfile.objects.get(user = request.user)
+    user_profile = UserProfile.objects.get(user=request.user)
     if request.method == "POST":
         profile_settings_form = ProfileSettingsForm(request.POST, request.FILES)
         if profile_settings_form.is_valid():
-            new_profile_pic = ProfileSettingsForm.cleaned_data['profile_picture']
-            new_bio  = ProfileSettingsForm.cleaned_data['bio']
+            new_bio = profile_settings_form.cleaned_data['bio']
+            # Handle the case where user only inputs a new profile picture and not a bio
+            user_profile.bio = new_bio if new_bio else user_profile.bio
+            new_profile_pic = request.FILES.get('profile_picture')
 
-            if new_profile_pic != user_profile.profile_picture:
-                user_profile.profile_picture = new_profile_pic
-            
-            if new_bio != user_profile.bio:
-                user_profile.bio = new_bio
+            if new_profile_pic:
+                try:
+                    img = Image.open(new_profile_pic)
+                    width, height = img.size
 
-            # Save the user profile only if any changes were made
-            if new_profile_pic != user_profile.profile_picture or new_bio != user_profile.bio:
-                user_profile.save()
+                    if width < 60 and height < 60:
+                        raise ValidationError("Picture uploaded must be at least 60x60 pixels.")
+                    if width != height:
+                        # Resize the image to fit within a 60x60 circle while maintaining aspect ratio
+                        if width > height:
+                            left = (width - height) / 2
+                            right = left + height
+                            top = 0
+                            bottom = height
+                        else:
+                            top = (height - width) / 2
+                            bottom = top + width
+                            left = 0
+                            right = width
+                        img = img.crop((left, top, right, bottom))
+                        img = img.resize((60, 60), Image.ANTIALIAS)
+
+                    # Get the old profile picture path (to delete)
+                    old_profile_picture_path = user_profile.profile_picture.path
+                    if new_profile_pic and old_profile_picture_path != new_profile_pic.path:
+                        # Delete the old profile picture file
+                        if os.path.exists(old_profile_picture_path):
+                            os.remove(old_profile_picture_path)
+
+                    user_profile.profile_picture = new_profile_pic
+                except IOError:
+                    raise ValidationError('The picture uploaded is not a valid image file.')
+            else:
+                # Keep the existing profile picture
+                user_profile.profile_picture = user_profile.profile_picture
+
+            user_profile.save()
 
             messages.success(request, "Profile changes successfully saved!")
-            return render(request, "network/profile-settings.html")
+            return render(request, "network/profile-settings.html", {
+                "profile_pic_form": ProfileSettingsForm(),
+                "user_profile": user_profile
+            })
         else:
-            messages.error(request, "The profile picture/bio chosen cannot be added. Ensure it meets the requirements.")
+            print(profile_settings_form.errors)
             return render(request, "network/profile-settings.html", {
                 "profile_pic_form": profile_settings_form,
                 "user_profile": user_profile

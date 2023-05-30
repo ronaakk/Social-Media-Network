@@ -69,12 +69,7 @@
                 <div class="authentication-actions">
                     {% if user.is_authenticated %}
                         <!-- TODO: Add profile picture functionality by visiting profile page-->
-                
-                            <!-- TODO: Implement light and dark mode later -->
-                            {% comment %} <i class="ri-sun-line"></i> {% endcomment %}
-
-              
-                                <!-- TODO: Change this to an actual profile picture later-->
+                            <!-- TODO: Change this to an actual profile picture later-->
                             <a class="profile-image-link" href="{% url 'change_profile' %}">  
                                 <div>
                                     <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small" >

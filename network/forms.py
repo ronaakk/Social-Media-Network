@@ -1,6 +1,7 @@
-from django.forms import ModelForm, TextInput, FileInput, Textarea
+from django.forms import ModelForm, TextInput, FileInput, Textarea, ValidationError
 from .models import User, UserProfile
 from django import forms
+# from django.core.exceptions import ValidationError
 
 class UserRegistrationForm(ModelForm):
     confirmation = forms.CharField(
@@ -50,15 +51,18 @@ class UserRegistrationForm(ModelForm):
 class ProfileSettingsForm(ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['user', 'bio', 'profile_picture']
+        fields = ['bio', 'profile_picture']
         widgets = {
             'profile_picture': FileInput(
                 attrs={'class': 'profile-pic form-control'}
             ),
-            'user': TextInput(
-                attrs={'readonly': 'readonly'}
-            ),
             'bio': Textarea(
-                attrs={'rows': 5, 'columns':4, 'class': 'form-control'}
+                attrs={'class': 'form-control'}
             )
         }
+
+    # Makes it so that neither the bio or profile picture need to be changed in order to save properly
+    def __init__(self, *args, **kwargs):
+        super(ProfileSettingsForm, self).__init__(*args, **kwargs)
+        self.fields['profile_picture'].required = False
+        self.fields['bio'].required = False

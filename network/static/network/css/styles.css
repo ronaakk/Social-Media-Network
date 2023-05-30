@@ -15,6 +15,7 @@ html * {
     --bg-color: rgb(43, 42, 42);
     --text-color: #f3f3f3;
     --main-color: rgb(65, 142, 197);
+    --main-color-focus: rgb(51, 112, 155);
     --body-bg-color: #E7E7E7;
 }
 

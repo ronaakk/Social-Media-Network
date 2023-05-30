@@ -30,11 +30,15 @@
 }
 
 #post-button {
-    /* width: 20%; */
     background-color: var(--main-color);
     color: var(--text-color);
 
     border-radius: 0.3rem;
     border: none;
     padding: 0.2rem 2.5rem;
+    transition: background-color 0.3s;
+}
+
+#post-button:hover {
+    background-color: var(--main-color-focus);
 }

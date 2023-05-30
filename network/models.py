@@ -23,34 +23,6 @@ class Comment(models.Model):
     pass
 
 class UserProfile(models.Model):
-
-    # def clean_profile_picture(profile_picture):
-    #     # profile_picture = self.cleaned_data.get('profile_picture')
-    #     if profile_picture:
-    #         try:
-    #             img = Image.open(profile_picture)
-    #             width, height = img.size
-
-    #             if width < 60 and height < 60:
-    #                 raise ValidationError("Picture uploaded must be at least 60x60 pixels.")
-    #             if width != height:
-    #                 # Resize the image to fit within a 60x60 circle while maintaining aspect ratio
-    #                 if width > height:
-    #                     left = (width - height) / 2
-    #                     right = left + height
-    #                     top = 0
-    #                     bottom = height
-    #                 else:
-    #                     top = (height - width) / 2
-    #                     bottom = top + width
-    #                     left = 0
-    #                     right = width
-    #                 img = img.crop((left, top, right, bottom))
-    #                 img = img.resize((60, 60), Image.ANTIALIAS)
-    #         except IOError:
-    #             raise ValidationError('The picture uploaded is not a valid image file.')
-    #     return profile_picture
-
     profile_picture = models.ImageField(default="profile-pictures/default-profile-pic.jpeg", upload_to='profile-pictures')
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     bio = models.TextField(blank=True, max_length=150)
