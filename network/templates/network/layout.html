@@ -17,84 +17,78 @@
         {% endblock extra_head %}
     </head>
     <body>
-        <div class="navbar-section">
-            <header>
-                <!-- TODO: Make this link go to a page describing what this site is about-->
-                <div class="left-section navbar">
-                    <a class="logo" href="#">        
-                        <img class="icon" src={% static "icons/bird-logo.png" %}>
-                        <span class="app-name">Tweetify</span> 
-                    </a>
-
-                    {% if not user.is_authenticated %}
-                        <a href="{% url 'index' %}" class="nav-link home">
-                            <div class="remix-icon-item">
-                                <i class="remix-icon ri-home-4-line"></i>
-                                <p>Home</p>
-                            </div>  
-                        </a>
-                    {% endif %}
+          <header>
+            <div class="left-section navbar">
+              <a class="logo" href="#">
+                <img class="icon" src="{% static 'icons/bird-logo.png' %}">
+                <span class="app-name">Tweetify</span>
+              </a>
+              {% if not user.is_authenticated %}
+              <a href="{% url 'index' %}" class="nav-link home">
+                <div class="remix-icon-item">
+                  <i class="remix-icon ri-home-4-line"></i>
+                  <p>Home</p>
                 </div>
-                
-            
-                <ul class="navbar">
-                    {% if user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'index' %}" class="nav-link">
-                                <div class="remix-icon-item">
-                                    <i class="remix-icon ri-home-4-line"></i>
-                                    <p>Home</p>
-                                </div>  
-                            </a>
-                        </li>
-                        <li> 
-                            <a href="#" class="nav-link">
-                                <div class="remix-icon-item">
-                                    <i class="remix-icon ri-team-line"></i>
-                                    <p>Following</p>
-                                </div>  
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'logout' %}" class="nav-link">
-                                <div class="remix-icon-item">
-                                    <i class="remix-icon ri-logout-box-r-line"></i>
-                                    <p>Logout</p>
-                                </div>  
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-        
-                <div class="authentication-actions">
-                    {% if user.is_authenticated %}
-                        <!-- TODO: Add profile picture functionality by visiting profile page-->
-                            <!-- TODO: Change this to an actual profile picture later-->
-                            <a class="profile-image-link" href="{% url 'change_profile' %}">  
-                                <div>
-                                    <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small" >
-                                </div>
-                            </a>
-
-                            <a class="username" href="{% url 'change_profile' %}">
-                                {{ user.username }}
-                            </a>  
-                    {% else %} 
-                        <a href="{% url 'login' %}" class="user">
-                            <div class="remix-icon-item">
-                                <i class="remix-icon ri-account-circle-line"></i>
-                                <p>Login</p>
-                            </div>  
-                        </a>
-                        <a href="{% url 'register' %}" class="register">Sign Up</a> 
-                    {% endif %}
+              </a>
+              {% endif %}
+            </div>
+      
+            <ul class="navbar">
+              {% if user.is_authenticated %}
+              <li>
+                <a href="{% url 'index' %}" class="nav-link">
+                  <div class="remix-icon-item">
+                    <i class="remix-icon ri-home-4-line"></i>
+                    <p>Home</p>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="nav-link">
+                  <div class="remix-icon-item">
+                    <i class="remix-icon ri-team-line"></i>
+                    <p>Following</p>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'logout' %}" class="nav-link">
+                  <div class="remix-icon-item">
+                    <i class="remix-icon ri-logout-box-r-line"></i>
+                    <p>Logout</p>
+                  </div>
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+      
+            <div class="authentication-actions">
+              {% if user.is_authenticated %}
+              <a class="profile-image-link" href="{% url 'change_profile' %}">
+                <div>
+                  <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small">
                 </div>
-            </header>
-        </div>
-        
+              </a>
+      
+              <a class="username" href="{% url 'change_profile' %}">
+                {{ user.username }}
+              </a>
+              {% else %}
+              <a href="{% url 'login' %}" class="user">
+                <div class="remix-icon-item">
+                  <i class="remix-icon ri-account-circle-line"></i>
+                  <p>Login</p>
+                </div>
+              </a>
+              <a href="{% url 'register' %}" class="register">Sign Up</a>
+              {% endif %}
+            </div>
+          </header>
+      
         <div class="body">
-            {% block body %}
-            {% endblock %}
+          {% block body %}
+          {% endblock %}
         </div>
-    </body>
+      </body>
+      
 </html>

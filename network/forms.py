@@ -1,7 +1,6 @@
 from django.forms import ModelForm, TextInput, FileInput, Textarea, ValidationError
-from .models import User, UserProfile
+from .models import User, UserProfile, Tweet
 from django import forms
-# from django.core.exceptions import ValidationError
 
 class UserRegistrationForm(ModelForm):
     confirmation = forms.CharField(
@@ -66,3 +65,12 @@ class ProfileSettingsForm(ModelForm):
         super(ProfileSettingsForm, self).__init__(*args, **kwargs)
         self.fields['profile_picture'].required = False
         self.fields['bio'].required = False
+
+class TweetForm(ModelForm):
+    class Meta:
+        model = Tweet
+        fields = ['tweet', 'image']
+    
+    def __init__(self, *args, **kwargs):
+        super(TweetForm, self).__init__(*args, **kwargs)
+        self.fields['image'].required = False

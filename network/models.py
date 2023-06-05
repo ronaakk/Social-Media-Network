@@ -1,10 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.safestring import mark_safe
-from django.core.exceptions import ValidationError
-from PIL import Image
-from django.contrib.auth.validators import ASCIIUsernameValidator
-
+from django.utils import timezone
 
 class User(AbstractUser, models.Model):
     pass
@@ -12,9 +8,10 @@ class User(AbstractUser, models.Model):
 class Tweet(models.Model):
     tweet = models.CharField(blank=False, null=False, max_length=140)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='tweet-pictures', blank=True)
     likes = models.IntegerField(null=True, default=0)
     comments = models.ManyToManyField('Comment', blank=True)
-    date_posted = models.DateTimeField(auto_now=True)
+    date_posted = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.user} posted: '{self.tweet}'"
@@ -29,7 +26,3 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user}: {self.bio}"
-
-    # To view the images easily in admin
-    def image_tag(self):
-        return mark_safe('<img src="/../../media/%s" width="150" height="150" />' % (self.profile_picture))

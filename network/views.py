@@ -7,6 +7,7 @@ from .forms import *
 from django.contrib import messages
 from PIL import Image
 import os
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import *
 
@@ -130,3 +131,8 @@ def change_profile(request):
             "profile_pic_form": ProfileSettingsForm(),
             "user_profile": user_profile
         })
+
+@csrf_exempt
+def post_tweet(request):
+    if request.method == "POST":
+        pass
