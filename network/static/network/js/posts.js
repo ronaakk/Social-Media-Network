@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+
     // When the form is submitted
     const tweetForm = document.querySelector("#tweet-form");
     tweetForm.onsubmit = function(event) {
@@ -30,17 +31,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Function to check character count
 function checkCharacterCount(event) {
-    const tweetLength = document.querySelector("#post-content").value.length;
+    const tweetLength = event.value.length;
     const postButton = document.querySelector("#post-button");
     const tweet = document.querySelector("#post-content");
 
-    console.log(tweetLength);
     if (tweetLength > 140) {
-        alert("Your tweet must be less than 140 characters.");
-        tweet.style.outline = "rgb(238, 75, 43)";
+        tweet.style.color = "red"
+        postButton.disabled = true;
+    } else if (tweetLength <= 0) {
+        tweet.style.color = "";
         postButton.disabled = true;
     } else {
-        tweet.style.borderColor = "";
+        tweet.style.color = ""
         postButton.disabled = false;
     }
 }
@@ -55,7 +57,18 @@ function previewTweetImage(event) {
         reader.onload = function (e) {
             // This will change the div to be displayed
             preview.style.display = 'flex';
-            preview.innerHTML = `<img src="${e.target.result}" id="tweet-picture">`;
+
+            // Create a container for the image and the delete button
+            const imageContainer = document.createElement("div");
+            imageContainer.className = "image-container";
+            imageContainer.innerHTML = `<img src="${e.target.result}" id="tweet-picture">`;
+
+            // Allow user to delete the image and preview a new one
+            imageContainer.addEventListener('click', deletePreview);
+            
+            // Append the image container to the preview
+            preview.appendChild(imageContainer);
+
         };
         reader.onerror = function(e) {
             // Check the file type
@@ -77,3 +90,10 @@ function previewTweetImage(event) {
     }
 }
 
+// Function to delete preview and allow user to select new image
+function deletePreview() {
+    const imageContainer = this;
+    imageContainer.remove();
+}
+
+// Function to add posts to page (and sort them by date added)

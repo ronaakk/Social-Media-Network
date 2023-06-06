@@ -18,9 +18,10 @@
                     <a class="creator" href="{% url 'change_profile' %}"> 
                         <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section" >
                     </a>
-                    <input type="text" id="post-content" name="tweet" placeholder="What's Happening?" onchange="checkCharacterCount(event)">
+                    <input type="text" id="post-content" name="tweet" placeholder="What's Happening?" oninput="checkCharacterCount(this)">
                 </div>
 
+                <!-- To display tweet image preview and delete functionality -->
                 <div id="tweet-picture-preview" style="display: none;"></div>
 
                 <div class="post-section-row">

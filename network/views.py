@@ -8,6 +8,8 @@ from django.contrib import messages
 from PIL import Image
 import os
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
 
 from .models import *
 
@@ -132,7 +134,8 @@ def change_profile(request):
             "user_profile": user_profile
         })
 
+# Will be handled asynchronously with AJAX
 @csrf_exempt
 def post_tweet(request):
     if request.method == "POST":
-        pass
+        tweet_data = json.loads(request.body)
