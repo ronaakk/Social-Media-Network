@@ -8,21 +8,36 @@ class User(AbstractUser, models.Model):
 class Tweet(models.Model):
     tweet = models.CharField(blank=False, null=False, max_length=140)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='tweet-pictures', blank=True)
-    likes = models.IntegerField(null=True, default=0)
-    comments = models.ManyToManyField('Comment', blank=True)
+    image = models.ImageField(upload_to='tweet-pictures', blank=True, null=True)
+    likes = models.IntegerField(default=0)
+    comments = models.ManyToManyField('Comment', blank=True, related_name='tweet_comments')
     date_posted = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.user} posted: '{self.tweet}'"
 
 class Comment(models.Model):
-    pass
+    tweet = models.ForeignKey('Tweet', on_delete=models.CASCADE, null=True)
+    comment = models.CharField(max_length=140, null=True, blank=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.user} commented: {self.comment}"
+
+class Reply(models.Model):
+    reply = models.CharField(max_length=140, null=True, blank=False)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    comment = models.ForeignKey('Comment', on_delete=models.CASCADE, related_name="comment_reply")
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.user} replied: '{self.reply}'"
 
 class UserProfile(models.Model):
     profile_picture = models.ImageField(default="profile-pictures/default-profile-pic.jpeg", upload_to='profile-pictures')
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
-    bio = models.TextField(blank=True, max_length=150)
+    user = models.OneToOneField('User', on_delete=models.CASCADE)
+    bio = models.TextField(blank=True, null=True, max_length=150)
 
     def __str__(self):
         return f"{self.user}: {self.bio}"

@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    const postButton = document.querySelector("#post-button");
+    postButton.disabled = true;
+
     // When the form is submitted
     const tweetForm = document.querySelector("#tweet-form");
     tweetForm.onsubmit = function(event) {
@@ -17,8 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             // Handle the response data
+            console.log(data.message);
             const tweet = document.querySelector("#post-content").value;
-            const tweetImage = document.querySelector("#tweet-picture")
+            const tweetImage = document.querySelector("#tweet-picture");
             const posts = document.querySelector(".posts");
 
         })

@@ -139,3 +139,15 @@ def change_profile(request):
 def post_tweet(request):
     if request.method == "POST":
         tweet_data = json.loads(request.body)
+
+        # Get contents of form
+        tweet = tweet_data.get("tweet").strip()
+        image = tweet_data.get("tweet-picture")
+
+        # Save the tweet to the model
+        new_tweet = Tweet.objects.create(tweet=tweet, user=request.user, image=image)
+        new_tweet.save()
+
+        return JsonResponse({"message": "Tweet created successfully."}, status=201)
+    else:
+        return JsonResponse({"error": "POST request required."}, status=400)
