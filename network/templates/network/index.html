@@ -18,7 +18,8 @@
                     <a class="creator" href="{% url 'change_profile' %}"> 
                         <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section" >
                     </a>
-                    <input type="text" id="post-content" name="tweet" placeholder="What's Happening?" oninput="checkCharacterCount(this)">
+                    <textarea id="post-content" name="tweet" placeholder="What's Happening?" oninput="autoExpand(this); checkCharacterCount(this)"></textarea>
+                    <!-- <input type="text" id="post-content" name="tweet" placeholder="What's Happening?" oninput="checkCharacterCount(this)" onkeypress="autoExpand(this)"> -->
                 </div>
 
                 <!-- To display tweet image preview and delete functionality -->
@@ -42,21 +43,21 @@
     <div class="posts">
         <!-- TODO: Clicking on a post should go to a separate page and show all comments, etc. -->
         <div class="post">
-            <!-- Actual post content (tweet and image)-->
-            <div class="section-row">
-
-
+            <!-- Actual post content (profile, tweet, and image)-->
+            <div class="section-row"> <!--
+                 <a class="creator" href="{% url 'change_profile' %}"> 
+                    <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section" >
+                </a>
+                 <a class="creator" href="{% url 'change_profile' %}"> 
+                    <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section" >
+                </a> 
+            -->
             </div>
-
             <!-- Edit a post (given creator is authenticated), Likes, Comments-->
             <div class="section-row">
 
-                
             </div>
-
-
         </div>
-
     </div> 
 
 {% endblock %}

@@ -141,8 +141,8 @@ def post_tweet(request):
         tweet_data = json.loads(request.body)
 
         # Get contents of form
-        tweet = tweet_data.get("tweet").strip()
-        image = tweet_data.get("tweet-picture")
+        tweet = tweet_data.get("tweet", "").strip()
+        image = tweet_data.get("tweet-picture", "")
 
         # Save the tweet to the model
         new_tweet = Tweet.objects.create(tweet=tweet, user=request.user, image=image)

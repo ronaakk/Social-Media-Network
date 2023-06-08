@@ -8,6 +8,6 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("profile_settings", views.change_profile, name="change_profile"),
 
-    # API Routes
+    # API Routes (to handle saving, retrieving tweet data)
     path("post_tweet/", views.post_tweet, name="post_tweet"),
 ]

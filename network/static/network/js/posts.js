@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    const tweet = document.querySelector("#post-content");
+    autoExpand(tweet);
+
     const postButton = document.querySelector("#post-button");
     postButton.disabled = true;
 
@@ -19,11 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(data => {
-            // Handle the response data
+            // Handle the response data (update the UI)
             console.log(data.message);
             const tweet = document.querySelector("#post-content").value;
             const tweetImage = document.querySelector("#tweet-picture");
-            const posts = document.querySelector(".posts");
+
+            // Refer to addPostToPage function
+            addPostToPage(tweet, tweetImage)
 
         })
         .catch(error => {
@@ -94,6 +99,15 @@ function previewTweetImage(event) {
     }
 }
 
+// Function to auto expand textarea to fit all content
+function autoExpand(element) {
+    element.style.height = 'inherit';
+    const computedStyle = window.getComputedStyle(element);
+    const borderTop = parseFloat(computedStyle.borderTopWidth);
+    const borderBottom = parseFloat(computedStyle.borderBottomWidth);
+    element.style.height = element.scrollHeight + borderTop + borderBottom + 'px';
+}
+
 // Function to delete preview and allow user to select new image
 function deletePreview() {
     const imageContainer = this;
@@ -101,3 +115,7 @@ function deletePreview() {
 }
 
 // Function to add posts to page (and sort them by date added)
+function addPostToPage(tweet, tweetImage = "") {
+    const post = document.querySelector(".post");
+
+}
