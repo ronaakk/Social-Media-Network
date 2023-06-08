@@ -1,0 +1,44 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link href="{% static 'network/css/profile-settings-form.css' %}" rel="stylesheet">
+    {% comment %} <script src= {% static 'network/js/profile-settings.js' %} type="text/javascript"></script> {% endcomment %}
+{% endblock extra_head %}
+
+{% block body %}
+    <!-- To display the register form validation errors, and success message-->
+    {% comment %} {% with register_form_errors=register_form.errors %}
+    {% if register_form_errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for field in register_form %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    {% with messages=messages %}
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                <div class="{{ message.tags }} alert alert-danger message" role="alert">{{ message }}</div> 
+            {% else %}
+                <div class="{{ message.tags }} alert alert-primary" role="alert">{{ message }}</div> 
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% endwith %} {% endcomment %}
+
+    <div class="user">
+        <img src="{{ user_profile.profile_picture.url }}" class="profile-pic large">
+        {{ user_profile.bio }}
+
+        <!-- User following, followers, posts, etc. -->
+    </div>
+
+{% endblock body %}

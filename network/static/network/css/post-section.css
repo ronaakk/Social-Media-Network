@@ -6,7 +6,7 @@ body {
 
 /* Apply these styles to both the post-creation section and the list of made posts */
 .post-section, .post {
-    margin: 2rem auto;
+    margin: 2rem 25.8rem;
     display: flex;
     flex-direction: column;
     width: 50%;
@@ -20,9 +20,23 @@ body {
     background-color: white;
 }
 
+.post:hover {
+    cursor: pointer;
+}
+
+.post.hidden {
+    display: none;
+}
+
+/* For the making of the post */
 .post-section-row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+}
+
+/* The post itself */
+.section-row {
+    
 }
 
 #post-content {

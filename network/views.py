@@ -151,3 +151,18 @@ def post_tweet(request):
         return JsonResponse({"message": "Tweet created successfully."}, status=201)
     else:
         return JsonResponse({"error": "POST request required."}, status=400)
+
+def view_profile(request, user_id):
+
+    # Getting the user whos profile was clicked
+    user_profile = UserProfile.objects.get(id=user_id)
+
+    try:
+        user_logged_in = UserProfile.objects.get(user=request.user)
+    except:
+        user_logged_in = None
+    
+    return render(request, "network/user-profile.html", {
+        "user_profile": user_profile,
+        "user_logged_in": user_logged_in
+    })

@@ -26,9 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(data.message);
             const tweet = document.querySelector("#post-content").value;
             const tweetImage = document.querySelector("#tweet-picture");
+            const userNameInput = document.querySelector("#tweet-username");
+            const username = userNameInput.value;
 
             // Refer to addPostToPage function
-            addPostToPage(tweet, tweetImage)
+            addPostToPage(tweet, tweetImage, username);
 
         })
         .catch(error => {
@@ -115,7 +117,35 @@ function deletePreview() {
 }
 
 // Function to add posts to page (and sort them by date added)
-function addPostToPage(tweet, tweetImage = "") {
-    const post = document.querySelector(".post");
+function addPostToPage(tweet, tweetImage = "", username) {
+    const feed = document.querySelector(".posts");
+    const postTemplate = document.querySelector(".post");
+
+    // Clone the post template (true copies the whole subtree)
+    const newPost = postTemplate.cloneNode(true); 
+    newPost.classList.remove("hidden");
+
+    // Populate the new post with the tweet data (profile picture, username, tweet, tweet image, action buttons)
+    const section = newPost.querySelector(".section-row");
+    const tweetDetails = newPost.querySelector(".tweet-details");
+    const tweetText = tweetDetails.querySelector(".tweet");
+    const tweetImageElement = tweetDetails.querySelector(".tweet-picture");
+    const tweetCreator = section.querySelector(".tweet-creator");
+   
+    // Profile picture
+    const profilePictureUrl = tweetImageElement.dataSet.profilePicture;
+    tweetCreator.src = profilePictureUrl;
+
+    // Username
+    username.textContent = username;
+
+    // Tweet and tweet image
+    tweetText.textContent = tweet;
+    tweetImageElement.src = tweetImage;
+
+    // Action buttons
+
+    // Append the new post to the feed container
+    feed.insertBefore(newPost, feed.firstChild);
 
 }
