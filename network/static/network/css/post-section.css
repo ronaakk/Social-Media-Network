@@ -201,3 +201,27 @@ body {
 .delete-image-button:hover {
     opacity: 1;
 }
+
+/* Dropdown styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+  }
+  
+  .dropdown.open .dropdown-menu {
+    display: block;
+  }

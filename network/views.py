@@ -138,11 +138,10 @@ def change_profile(request):
 @csrf_exempt
 def post_tweet(request):
     if request.method == "POST":
-        tweet_data = json.loads(request.body)
 
         # Get contents of form
-        tweet = tweet_data.get("tweet", "").strip()
-        image = tweet_data.get("tweet-picture", "")
+        tweet = request.POST.get("tweet", "").strip()
+        image = request.FILES.get("tweet-picture")
 
         # Save the tweet to the model
         new_tweet = Tweet.objects.create(tweet=tweet, user=request.user, image=image)
