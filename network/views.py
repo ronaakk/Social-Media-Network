@@ -13,7 +13,6 @@ import json
 
 from .models import *
 
-
 def index(request):
     # If user is logged in
     try:

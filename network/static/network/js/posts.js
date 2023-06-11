@@ -23,9 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(data => {
         console.log(data.message);
         const tweet = document.querySelector("#post-content").value;
-        const tweetImage = document.querySelector("#tweet-picture");
         const userNameInput = document.querySelector("#tweet-username");
         const username = userNameInput.value;
+        let tweetImage = "";
+
+        try {
+          const tweetImage = document.querySelector("#tweet-picture").src;
+        } catch {
+          const tweetImage = "";
+        }
   
         addPostToPage(tweet, tweetImage, username);
       })
@@ -33,24 +39,27 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(error);
       });
     });
+
+    // Clear the tweet form when submitted
+    tweetForm.addEventListener('submit', clearPostSection);
   
     // Toggle the dropdown menu when the button is clicked (to edit/delete tweet)
-    // const dropdownToggle = document.querySelector('#edit-post');
-    // dropdownToggle.addEventListener('click', function() {
-    //   const dropdownMenu = this.nextElementSibling;
-    //   dropdownMenu.classList.toggle('open');
-    // });
+    const dropdownToggle = document.querySelector('#edit-post');
+    dropdownToggle.addEventListener('click', function() {
+      const dropdownMenu = this.nextElementSibling;
+      dropdownMenu.classList.toggle('open');
+    });
   
-    // // Close the dropdown menu when clicking outside
-    // document.addEventListener('click', function(event) {
-    //   const dropdowns = document.querySelectorAll('.dropdown');
-    //   dropdowns.forEach(dropdown => {
-    //     const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-    //     if (!dropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
-    //       dropdownMenu.classList.remove('open');
-    //     }
-    //   });
-    // });
+    // Close the dropdown menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const dropdowns = document.querySelectorAll('.dropdown');
+      dropdowns.forEach(dropdown => {
+        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+        if (!dropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
+          dropdownMenu.classList.remove('open');
+        }
+      });
+    });
   
   });
 
@@ -115,7 +124,7 @@ function autoExpand(element) {
     const computedStyle = window.getComputedStyle(element);
     const borderTop = parseFloat(computedStyle.borderTopWidth);
     const borderBottom = parseFloat(computedStyle.borderBottomWidth);
-    element.style.height = element.scrollHeight + borderTop + borderBottom + 'px';
+    element.style.height = element.scrollHeight + borderTop + borderBottom - 30 + 'px';
 }
   
 // Function to delete preview and allow user to select a new image
@@ -135,17 +144,32 @@ function addPostToPage(tweet, tweetImage = "", username) {
     const section = newPost.querySelector(".section-row");
     const tweetDetails = newPost.querySelector(".tweet-details");
     const tweetText = tweetDetails.querySelector(".tweet");
-    const tweetImageElement = tweetDetails.querySelector(".tweet-picture");
     const tweetCreator = section.querySelector(".tweet-creator");
+    const tweetImageElement = tweetDetails.querySelector(".tweet-picture");
+    const usernameElement = tweetDetails.querySelector(".username");
+
+    if (tweetImage) {
+      tweetImageElement.src = tweetImage;
+    }
   
     const profilePictureUrl = tweetImageElement.dataset.profilePicture;
     tweetCreator.src = profilePictureUrl;
-  
-    username.textContent = username;
+    
+    // Loading the username into the appropriate place
+    usernameElement.textContent = username;
   
     tweetText.textContent = tweet;
-    tweetImageElement.src = tweetImage;
   
     feed.insertBefore(newPost, feed.firstChild);
+    clearPostSection();
+}
+
+// Function to clear posting section once user has submitted a tweet
+function clearPostSection() {
+    const tweet = document.querySelector("#post-content");
+    const tweetImage = document.querySelector("#tweet-picture-preview");
+
+    tweet.value = "";
+    tweetImage.style.display = 'none';
 }
   

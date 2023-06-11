@@ -6,7 +6,7 @@ body {
 
 /* Apply these styles to both the post-creation section and the list of made posts */
 .post-section, .post {
-    margin: 2rem 25.8rem;
+    margin: 2rem auto;
     display: flex;
     flex-direction: column;
     width: 50%;
@@ -32,11 +32,6 @@ body {
 .post-section-row {
     display: flex;
     justify-content: space-between;
-}
-
-/* The post itself */
-.section-row {
-    
 }
 
 #post-content {
@@ -83,7 +78,7 @@ body {
 /* Tooltip container */
 .tweet-actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     gap: 1rem;
     position: relative;
@@ -200,6 +195,17 @@ body {
 
 .delete-image-button:hover {
     opacity: 1;
+}
+
+/* The styles for the post itself */
+.section-row {
+    
+}
+
+.tweet-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* Dropdown styles */
