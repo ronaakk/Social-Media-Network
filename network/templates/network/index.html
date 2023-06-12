@@ -1,12 +1,6 @@
 {% extends "network/layout.html" %}
 {% load static %}
 
-{% block extra_head %}
-    <script src= {% static 'network/js/posts.js' %} type="text/javascript"></script>
-    <link rel="stylesheet" href= {% static 'network/css/post-section.css' %}>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-{% endblock extra_head %}
-
 {% block body %}
     {% if user_profile %}
         <div class="post-section">
@@ -43,7 +37,7 @@
             <!-- Actual post content (profile image, username, tweet, and image) -->
             <div class="section-row"> 
                 <a href="{% url 'change_profile' %}"> 
-                    <img src="" class="profile-pic small-post-section tweet-creator" data-profile-picture="{{ user_profile.profile_picture.url }}">
+                    <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section tweet-creator">
                 </a>
                 <div class="tweet-details"> 
                     <a href="{% url 'view_profile' user.id %}"> 
@@ -89,6 +83,12 @@
             </div>
 
         </div>
-    </div> 
+    </div>
+
+    {% block extra_head %}
+        <script src= {% static 'network/js/posts.js' %} type="text/javascript"></script>
+        <link rel="stylesheet" href= {% static 'network/css/post-section.css' %}>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    {% endblock extra_head %}
 
 {% endblock %}

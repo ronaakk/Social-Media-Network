@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tweet = document.querySelector("#post-content");
     autoExpand(tweet);
-  
-    const postButton = document.querySelector("#post-button");
-    postButton.disabled = true;
+
+    disablePostButton();
   
     // When the form is submitted
     const tweetForm = document.querySelector("#tweet-form");
@@ -22,17 +21,21 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response => response.json())
       .then(data => {
         console.log(data.message);
-        const tweet = document.querySelector("#post-content").value;
+        const tweetInput = document.querySelector("#post-content");
+        const tweet = tweetInput.value;
+
         const userNameInput = document.querySelector("#tweet-username");
         const username = userNameInput.value;
-        let tweetImage = "";
 
+        let tweetImage = ""; // Initialize with an empty string
         try {
-          const tweetImage = document.querySelector("#tweet-picture").src;
+          const tweetImageElement = document.querySelector("#tweet-picture");
+          tweetImage = tweetImageElement.src;
         } catch {
-          const tweetImage = "";
+          console.log("No tweet image provided.");
         }
-  
+        
+        console.log(tweet,username,tweetImage);
         addPostToPage(tweet, tweetImage, username);
       })
       .catch(error => {
@@ -60,13 +63,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
-  
-  });
+});
 
 // Find the csrf token within the user's browser
 function getCookie(name) {
     const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
     return cookieValue ? cookieValue.pop() : '';
+}
+
+// Function to prevent default submission with no text
+function disablePostButton() {
+  const postButton = document.querySelector("#post-button");
+  postButton.disabled = true;
 }
   
 // Function to check character count
@@ -144,24 +152,21 @@ function addPostToPage(tweet, tweetImage = "", username) {
     const section = newPost.querySelector(".section-row");
     const tweetDetails = newPost.querySelector(".tweet-details");
     const tweetText = tweetDetails.querySelector(".tweet");
-    const tweetCreator = section.querySelector(".tweet-creator");
     const tweetImageElement = tweetDetails.querySelector(".tweet-picture");
     const usernameElement = tweetDetails.querySelector(".username");
 
+    // Setting the image
     if (tweetImage) {
       tweetImageElement.src = tweetImage;
     }
-  
-    const profilePictureUrl = tweetImageElement.dataset.profilePicture;
-    tweetCreator.src = profilePictureUrl;
     
     // Loading the username into the appropriate place
     usernameElement.textContent = username;
-  
+    
+    // Loading the tweet?
     tweetText.textContent = tweet;
   
     feed.insertBefore(newPost, feed.firstChild);
-    clearPostSection();
 }
 
 // Function to clear posting section once user has submitted a tweet
@@ -171,5 +176,7 @@ function clearPostSection() {
 
     tweet.value = "";
     tweetImage.style.display = 'none';
+
+    disablePostButton();
 }
   
