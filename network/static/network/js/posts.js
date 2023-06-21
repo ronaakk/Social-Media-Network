@@ -1,14 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const tweet = document.querySelector("#post-content");
-    autoExpand(tweet);
+  const tweet = document.querySelector("#post-content");
+  autoExpand(tweet);
+  disableButton("post");
+  
+  // Set the initial preview to "none"
+  const preview = document.querySelector("#tweet-picture-preview");
+  preview.style.display = "none";
+  
+  // When the form is submitted
+  const tweetForm = document.querySelector("#tweet-form");
+  tweetForm.addEventListener('submit', function(event) {
 
-    disablePostButton();
-  
-    // When the form is submitted
-    const tweetForm = document.querySelector("#tweet-form");
-    tweetForm.addEventListener('submit', function(event) {
-      event.preventDefault();
-  
+    event.preventDefault();
+    // Stops other event listeners of the same type of being called
+    event.stopImmediatePropagation();
+
+    const tweetInput = document.getElementById("post-content");
+    const tweet = tweetInput.value;
+
+    let tweetImage = "";
+    try {
+      const tweetImageElement = document.querySelector("#tweet-picture-preview img");
+      tweetImage = tweetImageElement.getAttribute('src');
+      console.log(tweetImage);
+    } catch {
+      console.log("No tweet image provided.");
+    }
+
+    const userNameInput = document.querySelector("#tweet-username");
+    const username = userNameInput.value;
+
+    if (tweet.trim().length > 0) {
       const csrftoken = getCookie('csrftoken');
       const formData = new FormData(tweetForm);
       fetch("/post_tweet/", {
@@ -21,48 +43,49 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response => response.json())
       .then(data => {
         console.log(data.message);
-        const tweetInput = document.querySelector("#post-content");
-        const tweet = tweetInput.value;
-
-        const userNameInput = document.querySelector("#tweet-username");
-        const username = userNameInput.value;
-
-        let tweetImage = ""; // Initialize with an empty string
-        try {
-          const tweetImageElement = document.querySelector("#tweet-picture");
-          tweetImage = tweetImageElement.src;
-        } catch {
-          console.log("No tweet image provided.");
-        }
-        
-        console.log(tweet,username,tweetImage);
+        console.log(tweetImage);
         addPostToPage(tweet, tweetImage, username);
+
+        // Clear the tweet form
+        clearPostSection();
       })
       .catch(error => {
         console.log(error);
       });
-    });
+    }
+  });
 
-    // Clear the tweet form when submitted
-    tweetForm.addEventListener('submit', clearPostSection);
+  // Function to clear posting section once user has submitted a tweet
+  function clearPostSection() {
+    const tweet = document.querySelector("#post-content");
+    tweet.value = "";
+    
+    const previewContainer = document.querySelector("#tweet__image");
+    if (previewContainer) {
+      deletePreview(previewContainer);
+    }
+
+    disableButton("post");
+    enableButton("image");
+  }
+
+  // Toggle the dropdown menu when the button is clicked (to edit/delete tweet)
+  // const dropdownToggle = document.querySelector('#edit-post');
+  // dropdownToggle.addEventListener('click', function() {
+  //   const dropdownMenu = this.nextElementSibling;
+  //   dropdownMenu.classList.toggle('open');
+  // });
   
-    // Toggle the dropdown menu when the button is clicked (to edit/delete tweet)
-    const dropdownToggle = document.querySelector('#edit-post');
-    dropdownToggle.addEventListener('click', function() {
-      const dropdownMenu = this.nextElementSibling;
-      dropdownMenu.classList.toggle('open');
-    });
-  
-    // Close the dropdown menu when clicking outside
-    document.addEventListener('click', function(event) {
-      const dropdowns = document.querySelectorAll('.dropdown');
-      dropdowns.forEach(dropdown => {
-        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-        if (!dropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
-          dropdownMenu.classList.remove('open');
-        }
-      });
-    });
+  // // Close the dropdown menu when clicking outside
+  // document.addEventListener('click', function(event) {
+  //   const dropdowns = document.querySelectorAll('.dropdown');
+  //   dropdowns.forEach(dropdown => {
+  //     const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+  //     if (!dropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
+  //       dropdownMenu.classList.remove('open');
+  //     }
+  //   });
+  // });
 });
 
 // Find the csrf token within the user's browser
@@ -71,60 +94,87 @@ function getCookie(name) {
     return cookieValue ? cookieValue.pop() : '';
 }
 
-// Function to prevent default submission with no text
-function disablePostButton() {
-  const postButton = document.querySelector("#post-button");
-  postButton.disabled = true;
+// Function to prevent default submission with no text and more than one image uploaded
+function disableButton(button) {
+  if (button === "post") {
+    const postButton = document.querySelector("#post-button");
+    postButton.disabled = true;
+  }
+  if (button === "image") {
+    const imageButton = document.querySelector("#tweet-picture");
+    imageButton.disabled = true;
+  }
+}
+
+function enableButton(button) {
+  if (button === "post") {
+    const postButton = document.querySelector("#post-button");
+    postButton.disabled = false;
+  }
+  if (button == "image") {
+    const imageButton = document.querySelector("#tweet-picture");
+    imageButton.disabled = false;
+  }
 }
   
 // Function to check character count
 function checkCharacterCount(event) {
     const tweetLength = event.value.length;
-    const postButton = document.querySelector("#post-button");
     const tweet = document.querySelector("#post-content");
   
     if (tweetLength > 140) {
       tweet.style.color = "red";
-      postButton.disabled = true;
+      disableButton("post");
     } else if (tweetLength <= 0) {
       tweet.style.color = "";
-      postButton.disabled = true;
+      disableButton("post");
     } else {
       tweet.style.color = "";
-      postButton.disabled = false;
+      enableButton("post");
     }
 }
   
 // Function to preview tweet image
 function previewTweetImage(event) {
-    const input = event.target;
-    const preview = document.querySelector("#tweet-picture-preview");
-  
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        preview.style.display = 'flex';
-        const imageContainer = document.createElement("div");
-        imageContainer.className = "image-container";
-        imageContainer.innerHTML = `<img src="${e.target.result}" id="tweet-picture">`;
-        imageContainer.addEventListener('click', deletePreview);
-        preview.appendChild(imageContainer);
-      };
-      reader.onerror = function(e) {
-        const fileType = input.files[0].type;
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
-        if (!allowedTypes.includes(fileType)) {
-          preview.innerHTML = "";
-          preview.style.display = 'none';
-          alert("The file uploaded was not a valid image file.");
-        }
-      };
-      reader.readAsDataURL(input.files[0]);
-    } else {
-      preview.innerHTML = "";
-      preview.style.display = 'none';
-    }
+  const input = event.target;
+  const previewContainer = document.querySelector("#tweet-picture-preview");
+
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+
+      // Create a new image preview container
+      const newPreviewContainer = document.createElement("img");
+      newPreviewContainer.id = "tweet__image";
+      newPreviewContainer.src = `${e.target.result}`;
+
+      previewContainer.style.display = "flex";
+      previewContainer.addEventListener('click', () => deletePreview(newPreviewContainer));
+
+      const imageContainer = document.querySelector(".image-container");
+      imageContainer.appendChild(newPreviewContainer);
+      imageContainer.style.display = "flex";
+      console.log(newPreviewContainer.src);
+
+      disableButton("image");
+      // console.log("previewTweetImage function is working.")
+    };
+    reader.onerror = function (e) {
+      const fileType = input.files[0].type;
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+      if (!allowedTypes.includes(fileType)) {
+        previewContainer.innerHTML = "";
+        previewContainer.style.display = 'none';
+        alert("The file uploaded was not a valid image file.");
+      }
+    };
+    reader.readAsDataURL(input.files[0]);
+  } else {
+    previewContainer.innerHTML = "";
+    previewContainer.style.display = 'none';
+  }
 }
+
   
 // Function to auto expand textarea to fit all content
 function autoExpand(element) {
@@ -136,9 +186,28 @@ function autoExpand(element) {
 }
   
 // Function to delete preview and allow user to select a new image
-function deletePreview() {
-    const imageContainer = this;
-    imageContainer.remove();
+function deletePreview(previewContainer) {
+  // console.log("deletePreview is running.");
+
+  const imageContainer = previewContainer.parentNode;
+  const preview = document.querySelector("#tweet-picture-preview");
+
+  preview.style.display = "none";
+  imageContainer.style.display = "none";
+
+  // Remove the image element
+  imageContainer.innerHTML = "";
+
+  const uploadInput = document.querySelector("#tweet-picture");
+  // console.log(`Current pic: ${uploadInput.value}`);
+
+  // Clear the input value
+  uploadInput.value = "";
+  // console.log(`Deleted pic: ${uploadInput.value}`);
+
+  // console.log("deletePreview has finished running.")
+
+  enableButton("image");
 }
   
 // Function to add posts to page (and sort them by date added)
@@ -149,10 +218,10 @@ function addPostToPage(tweet, tweetImage = "", username) {
     const newPost = postTemplate.cloneNode(true);
     newPost.classList.remove("hidden");
   
-    const section = newPost.querySelector(".section-row");
     const tweetDetails = newPost.querySelector(".tweet-details");
+
     const tweetText = tweetDetails.querySelector(".tweet");
-    const tweetImageElement = tweetDetails.querySelector(".tweet-picture");
+    const tweetImageElement = tweetDetails.querySelector(".posted-tweet-picture");
     const usernameElement = tweetDetails.querySelector(".username");
 
     // Setting the image
@@ -163,20 +232,8 @@ function addPostToPage(tweet, tweetImage = "", username) {
     // Loading the username into the appropriate place
     usernameElement.textContent = username;
     
-    // Loading the tweet?
+    // Loading the tweet
     tweetText.textContent = tweet;
   
     feed.insertBefore(newPost, feed.firstChild);
 }
-
-// Function to clear posting section once user has submitted a tweet
-function clearPostSection() {
-    const tweet = document.querySelector("#post-content");
-    const tweetImage = document.querySelector("#tweet-picture-preview");
-
-    tweet.value = "";
-    tweetImage.style.display = 'none';
-
-    disablePostButton();
-}
-  

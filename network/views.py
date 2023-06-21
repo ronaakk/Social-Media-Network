@@ -9,7 +9,7 @@ from PIL import Image
 import os
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-import json
+from django.conf import settings
 
 from .models import *
 
@@ -137,9 +137,12 @@ def change_profile(request):
 @csrf_exempt
 def post_tweet(request):
     if request.method == "POST":
+        print(request.FILES)
+        # print(settings.MEDIA_ROOT)
 
         # Get contents of form
         tweet = request.POST.get("tweet", "").strip()
+        # I believe this is referencing nothing potentially
         image = request.FILES.get("tweet-picture")
 
         # Save the tweet to the model
@@ -150,17 +153,17 @@ def post_tweet(request):
     else:
         return JsonResponse({"error": "POST request required."}, status=400)
 
-def view_profile(request, user_id):
+# def view_profile(request, user_id):
 
-    # Getting the user whos profile was clicked
-    user_profile = UserProfile.objects.get(id=user_id)
+#     # Getting the user whos profile was clicked
+#     user_profile = UserProfile.objects.get(id=user_id)
 
-    try:
-        user_logged_in = UserProfile.objects.get(user=request.user)
-    except:
-        user_logged_in = None
+#     try:
+#         user_logged_in = UserProfile.objects.get(user=request.user)
+#     except:
+#         user_logged_in = None
     
-    return render(request, "network/user-profile.html", {
-        "user_profile": user_profile,
-        "user_logged_in": user_logged_in
-    })
+#     return render(request, "network/user-profile.html", {
+#         "user_profile": user_profile,
+#         "user_logged_in": user_logged_in
+#     })

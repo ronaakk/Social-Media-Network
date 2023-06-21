@@ -4,7 +4,7 @@
 {% block body %}
     {% if user_profile %}
         <div class="post-section">
-            <form id="tweet-form" method="post">
+            <form id="tweet-form" method="post" enctype="multipart/form-data">
                 <div class="post-section-row">
                     <a class="creator" href="{% url 'change_profile' %}"> 
                         <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section" >
@@ -13,16 +13,19 @@
                 </div>
 
                 <!-- To display tweet image preview and delete functionality -->
-                <div id="tweet-picture-preview" style="display: none;"></div>
+                <div id="tweet-picture-preview">
+                    <div class="image-container">
+                    </div>
+                </div>
 
                 <div class="post-section-row">
                     <div class="error-message"></div>
                     <div class="tweet-actions">
-                        <label for="picture" title="Upload Picture">
-                            <span class="material-symbols-outlined">photo_library</span>
+                        <label for="tweet-picture" title="Upload Picture">
+                            <span class="material-symbols-outlined image-button">photo_library</span>
                             <span class="tooltiptext">Upload Picture</span>
-                            <input type="file" id="picture" name="tweet-picture" class="file-input" accept="image/jpeg, image/png, image/gif, image/jpg" onchange="previewTweetImage(event)">
-                        </label>                        
+                        </label>        
+                        <input type="file" id="tweet-picture" name="tweet-picture" class="file-input" accept="image/jpeg, image/png, image/gif, image/jpg" onchange="previewTweetImage(event)">                
                         <input type="submit" id="post-button" value="Post">
                     </div>
                 </div>
@@ -36,16 +39,16 @@
 
             <!-- Actual post content (profile image, username, tweet, and image) -->
             <div class="section-row"> 
-                <a href="{% url 'change_profile' %}"> 
+                <a href="{% url 'change_profile' %}">
                     <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section tweet-creator">
                 </a>
                 <div class="tweet-details"> 
-                    <a href="{% url 'view_profile' user.id %}"> 
+                    {% comment %} <a href="{% url 'view_profile' user.id %}">  {% endcomment %}
                         <input type="hidden" id="tweet-username" value="{{ user_profile.user }}">
                         <p class="username"></p>
-                    </a>
+                    {% comment %} </a> {% endcomment %}
                     <p class="tweet"></p>
-                    <img src="" class="tweet-picture">
+                    <img src="" class="posted-tweet-picture">
                 </div>
             </div>
 
