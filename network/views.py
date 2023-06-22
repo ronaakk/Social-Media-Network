@@ -10,6 +10,7 @@ import os
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.conf import settings
+from django.templatetags.static import static
 
 from .models import *
 
@@ -137,19 +138,23 @@ def change_profile(request):
 @csrf_exempt
 def post_tweet(request):
     if request.method == "POST":
-        print(request.FILES)
-        # print(settings.MEDIA_ROOT)
+        print(request.FILES, request.POST)
 
         # Get contents of form
         tweet = request.POST.get("tweet", "").strip()
-        # I believe this is referencing nothing potentially
-        image = request.FILES.get("tweet-picture")
+        image = request.FILES.get("tweet_image")
 
         # Save the tweet to the model
         new_tweet = Tweet.objects.create(tweet=tweet, user=request.user, image=image)
         new_tweet.save()
 
-        return JsonResponse({"message": "Tweet created successfully."}, status=201)
+        # Generate the URL for the uploaded image
+        if image:
+            image_url = settings.MEDIA_URL + str(image)  # Assuming your image field in the model is named 'image'
+        else:
+            image_url = None
+
+        return JsonResponse({"message": "Tweet created successfully.", "image_url": f"/media/tweet-pictures/{image.name}"}, status=201)
     else:
         return JsonResponse({"error": "POST request required."}, status=400)
 

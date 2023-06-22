@@ -18,21 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const tweetInput = document.getElementById("post-content");
     const tweet = tweetInput.value;
 
-    let tweetImage = "";
-    try {
-      const tweetImageElement = document.querySelector("#tweet-picture-preview img");
-      tweetImage = tweetImageElement.getAttribute('src');
-      console.log(tweetImage);
-    } catch {
-      console.log("No tweet image provided.");
-    }
+    const tweetImageElement = document.querySelector("#tweet-picture");
 
+    // Access the selected file and if there isn't any files, an empty string
+    const tweetImageFile = tweetImageElement.files[0] ? tweetImageElement.files[0]: "";
+    
     const userNameInput = document.querySelector("#tweet-username");
     const username = userNameInput.value;
 
     if (tweet.trim().length > 0) {
       const csrftoken = getCookie('csrftoken');
-      const formData = new FormData(tweetForm);
+      const formData = new FormData();
+      formData.append('tweet', tweet);  // Add tweet content to FormData
+      formData.append('tweet_image', tweetImageFile);  // Add image file to FormData
+  
       fetch("/post_tweet/", {
         method: "POST",
         body: formData,
@@ -43,10 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response => response.json())
       .then(data => {
         console.log(data.message);
-        console.log(tweetImage);
-        addPostToPage(tweet, tweetImage, username);
-
-        // Clear the tweet form
+        console.log(tweetImageFile);
+        addPostToPage(tweet, tweetImageFile, username);
         clearPostSection();
       })
       .catch(error => {
@@ -154,10 +151,8 @@ function previewTweetImage(event) {
       const imageContainer = document.querySelector(".image-container");
       imageContainer.appendChild(newPreviewContainer);
       imageContainer.style.display = "flex";
-      console.log(newPreviewContainer.src);
 
       disableButton("image");
-      // console.log("previewTweetImage function is working.")
     };
     reader.onerror = function (e) {
       const fileType = input.files[0].type;
@@ -187,7 +182,6 @@ function autoExpand(element) {
   
 // Function to delete preview and allow user to select a new image
 function deletePreview(previewContainer) {
-  // console.log("deletePreview is running.");
 
   const imageContainer = previewContainer.parentNode;
   const preview = document.querySelector("#tweet-picture-preview");
@@ -199,13 +193,9 @@ function deletePreview(previewContainer) {
   imageContainer.innerHTML = "";
 
   const uploadInput = document.querySelector("#tweet-picture");
-  // console.log(`Current pic: ${uploadInput.value}`);
 
   // Clear the input value
   uploadInput.value = "";
-  // console.log(`Deleted pic: ${uploadInput.value}`);
-
-  // console.log("deletePreview has finished running.")
 
   enableButton("image");
 }
@@ -224,10 +214,16 @@ function addPostToPage(tweet, tweetImage = "", username) {
     const tweetImageElement = tweetDetails.querySelector(".posted-tweet-picture");
     const usernameElement = tweetDetails.querySelector(".username");
 
+    tweetImageElement.style.display = "none";
     // Setting the image
-    if (tweetImage) {
+    if (tweetImage && tweetImage !== "") {
       tweetImageElement.src = tweetImage;
-    }
+      tweetImageElement.style.display = "flex";
+    } 
+    // else {
+    //   // If the user did not upload an image
+    //   tweetImageElement.style.display = "none";
+    // }
     
     // Loading the username into the appropriate place
     usernameElement.textContent = username;
