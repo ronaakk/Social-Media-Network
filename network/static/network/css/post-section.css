@@ -76,16 +76,24 @@ body {
 }
 
 /* Tooltip container */
-.tweet-actions {
+.tweet-actions, .tweet-actions-post {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
     gap: 1rem;
     position: relative;
 }
+
+.tweet-actions {
+    justify-content: flex-end;
+}
+
+.tweet-actions-post {
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
   
 /* Tooltip text */
-.tweet-actions .tooltiptext {
+.tweet-actions .tooltiptext, .right-section .tooltiptext {
     visibility: hidden;
     background-color: rgba(0, 0, 0, 0.8);
     color: var(--main-color);
@@ -201,11 +209,37 @@ body {
 /* .section-row {
     
 } */
+.post-layout {
+    display: flex;
+    
+}
+
+.posted-tweet-picture {
+    max-width: 80%;
+    max-height: 700px;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    /* transition: opacity 0.3s ease; */
+}
 
 .tweet-details {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+/* Right section styles */
+.right-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+}
+
+.like-section, .comment-section {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
 }
 
 /* Dropdown styles */

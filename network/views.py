@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.conf import settings
 from django.templatetags.static import static
+import datetime
 
 from .models import *
 
@@ -138,7 +139,6 @@ def change_profile(request):
 @csrf_exempt
 def post_tweet(request):
     if request.method == "POST":
-        print(request.FILES, request.POST)
 
         # Get contents of form
         tweet = request.POST.get("tweet", "").strip()
@@ -150,11 +150,15 @@ def post_tweet(request):
 
         # Generate the URL for the uploaded image
         if image:
-            image_url = settings.MEDIA_URL + str(image)  # Assuming your image field in the model is named 'image'
+            image_url = settings.MEDIA_URL + str(image)
         else:
             image_url = None
 
-        return JsonResponse({"message": "Tweet created successfully.", "image_url": f"/media/tweet-pictures/{image.name}"}, status=201)
+        return JsonResponse({
+            "message": "Tweet created successfully.", 
+            "image_url": image_url, 
+            "date_posted": new_tweet.date_posted.strftime("%B %d, %Y"),
+        }, status=201)
     else:
         return JsonResponse({"error": "POST request required."}, status=400)
 

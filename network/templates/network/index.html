@@ -1,6 +1,12 @@
 {% extends "network/layout.html" %}
 {% load static %}
 
+{% block extra_head %}
+    <script src= {% static 'network/js/posts.js' %} type="text/javascript"></script>
+    <link rel="stylesheet" href= {% static 'network/css/post-section.css' %}>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+{% endblock extra_head %}
+
 {% block body %}
     {% if user_profile %}
         <div class="post-section">
@@ -36,62 +42,60 @@
     <div class="posts">
         <!-- TODO: Clicking on a post should go to a separate page and show all comments, etc. -->
         <div class="post hidden">
-
-            <!-- Actual post content (profile image, username, tweet, and image) -->
-            <div class="section-row"> 
-                <a href="{% url 'change_profile' %}">
-                    <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section tweet-creator">
-                </a>
-                <div class="tweet-details"> 
-                    {% comment %} <a href="{% url 'view_profile' user.id %}">  {% endcomment %}
-                        <input type="hidden" id="tweet-username" value="{{ user_profile.user }}">
-                        <p class="username"></p>
-                    {% comment %} </a> {% endcomment %}
-                    <p class="tweet"></p>
-                    <img src="" class="posted-tweet-picture">
-                </div>
-            </div>
-
-            <!-- Edit/Delete a post (given creator is authenticated), Likes, Comments (give this div a class of "tweet-actions") -->
-            <div class="section-row tweet-actions">
-                <div class="dropdown">
-                    <button class="dropdown-toggle" id="edit-post">
-                        <span class="material-symbols-outlined">more_horiz</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Edit Post</a>
-                        <a class="dropdown-item" href="#">Delete Post</a>
+            <div class="post-layout">
+                <!-- Actual post content (profile image, username, tweet, and image) -->
+                <div class="section-row"> 
+                    <a href="{% url 'change_profile' %}">
+                        <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section tweet-creator">
+                    </a>
+                    <div class="tweet-details"> 
+                        {% comment %} <a href="{% url 'view_profile' user.id %}">  {% endcomment %}
+                            <input type="hidden" id="tweet-username" value="{{ user_profile.user }}">
+                            <p class="username"></p>
+                        {% comment %} </a> {% endcomment %}
+                        <p class="tweet"></p>
+                        <img src="" class="posted-tweet-picture">
                     </div>
                 </div>
 
-                <div class="like-section">
-                    <!-- Like Button -->
-                    <button class="like-button">
-                        <span class="material-symbols-outlined">favorite</span>
-                        <span class="tooltiptext">Like</span>
-                    </button>
-                    <!-- Like Counter -->
-                    <span class="like-counter">0 Likes</span>
-                </div>
-                
-                <div class="comment-section">
-                    <!-- Comment Button -->
-                    <button class="comment-button">
-                        <span class="material-symbols-outlined">chat_bubble</span>
-                        <span class="tooltiptext">Comment</span>
-                    </button>
-                    <!-- Comment Counter -->
-                    <span class="like-counter">0 Comments</span>
+                <!-- Edit/Delete a post (given creator is authenticated), Likes, Comments (give this div a class of "tweet-actions") -->
+                <div class="section-row tweet-actions-post">
+                    <div class="left-section">
+                        <p class="date-posted"></p>
+                    </div>
+                    <div class="right-section">
+                        <div class="dropdown">
+                            <button class="dropdown-toggle" id="edit-post">
+                                <span class="material-symbols-outlined">more_horiz</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Edit Post</a>
+                                <a class="dropdown-item" href="#">Delete Post</a>
+                            </div>
+                        </div>
+
+                        <div class="like-section">
+                            <!-- Like Button -->
+                            <button class="like-button">
+                                <span class="material-symbols-outlined">favorite</span>
+                                <span class="tooltiptext">Like</span>
+                            </button>
+                            <!-- Like Counter -->
+                            <span class="like-counter">0 Likes</span>
+                        </div>
+                        
+                        <div class="comment-section">
+                            <!-- Comment Button -->
+                            <button class="comment-button">
+                                <span class="material-symbols-outlined">chat_bubble</span>
+                                <span class="tooltiptext">Comment</span>
+                            </button>
+                            <!-- Comment Counter -->
+                            <span class="like-counter">0 Comments</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
-
-    {% block extra_head %}
-        <script src= {% static 'network/js/posts.js' %} type="text/javascript"></script>
-        <link rel="stylesheet" href= {% static 'network/css/post-section.css' %}>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    {% endblock extra_head %}
-
 {% endblock %}

@@ -41,10 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data.message);
         console.log(tweetImageFile);
-        addPostToPage(tweet, tweetImageFile, username);
+
+        if (tweetImageFile) {
+          addPostToPage(tweet, `/media/tweet-pictures/${tweetImageFile.name}`, username, data.date_posted);
+        } else {
+          addPostToPage(tweet, "", username, data.date_posted);
+        }
+
         clearPostSection();
+        console.log(data.message);
       })
       .catch(error => {
         console.log(error);
@@ -170,7 +176,6 @@ function previewTweetImage(event) {
   }
 }
 
-  
 // Function to auto expand textarea to fit all content
 function autoExpand(element) {
     element.style.height = 'inherit';
@@ -201,7 +206,7 @@ function deletePreview(previewContainer) {
 }
   
 // Function to add posts to page (and sort them by date added)
-function addPostToPage(tweet, tweetImage = "", username) {
+function addPostToPage(tweet, tweetImageFile = "", username, date_posted) {
     const feed = document.querySelector(".posts");
     const postTemplate = document.querySelector(".post");
   
@@ -213,17 +218,18 @@ function addPostToPage(tweet, tweetImage = "", username) {
     const tweetText = tweetDetails.querySelector(".tweet");
     const tweetImageElement = tweetDetails.querySelector(".posted-tweet-picture");
     const usernameElement = tweetDetails.querySelector(".username");
-
+    const datePostedElement = newPost.querySelector(".date-posted");
+    console.log(date_posted);
+    
     tweetImageElement.style.display = "none";
     // Setting the image
-    if (tweetImage && tweetImage !== "") {
-      tweetImageElement.src = tweetImage;
+    if (tweetImageFile && tweetImageFile !== "") {
+      tweetImageElement.src = tweetImageFile;
       tweetImageElement.style.display = "flex";
     } 
-    // else {
-    //   // If the user did not upload an image
-    //   tweetImageElement.style.display = "none";
-    // }
+
+    // Setting the date posted
+    datePostedElement.textContent = date_posted;
     
     // Loading the username into the appropriate place
     usernameElement.textContent = username;
