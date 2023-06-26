@@ -72,23 +72,28 @@ document.addEventListener('DOMContentLoaded', () => {
     enableButton("image");
   }
 
-  // Toggle the dropdown menu when the button is clicked (to edit/delete tweet)
-  // const dropdownToggle = document.querySelector('#edit-post');
-  // dropdownToggle.addEventListener('click', function() {
-  //   const dropdownMenu = this.nextElementSibling;
-  //   dropdownMenu.classList.toggle('open');
-  // });
-  
-  // // Close the dropdown menu when clicking outside
-  // document.addEventListener('click', function(event) {
-  //   const dropdowns = document.querySelectorAll('.dropdown');
-  //   dropdowns.forEach(dropdown => {
-  //     const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-  //     if (!dropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
-  //       dropdownMenu.classList.remove('open');
-  //     }
-  //   });
-  // });
+  // Toggle dropdown menu
+  const dropdownToggle = document.getElementById('edit-post');
+  const dropdownMenu = document.querySelector('.dropdown-menu');
+
+  dropdownToggle.addEventListener('click', function () {
+      dropdownMenu.classList.toggle('open');
+  });
+
+  // Close dropdown menu when clicking outside
+  window.addEventListener('click', function (event) {
+      if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+          dropdownMenu.classList.remove('open');
+      }
+  });
+
+  // Close dropdown menu when option is selected
+  const dropdownItems = dropdownMenu.querySelectorAll('.dropdown-item');
+  dropdownItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+          dropdownMenu.classList.remove('open');
+      });
+  });
 });
 
 // Find the csrf token within the user's browser
@@ -216,20 +221,23 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted) {
     const tweetDetails = newPost.querySelector(".tweet-details");
 
     const tweetText = tweetDetails.querySelector(".tweet");
+    const tweetImageContainer = tweetDetails.querySelector(".tweet-details__image");
     const tweetImageElement = tweetDetails.querySelector(".posted-tweet-picture");
-    const usernameElement = tweetDetails.querySelector(".username");
+    const usernameElement = tweetDetails.querySelector(".username-post");
     const datePostedElement = newPost.querySelector(".date-posted");
     console.log(date_posted);
     
+    tweetImageContainer.style.display = "none";
     tweetImageElement.style.display = "none";
     // Setting the image
     if (tweetImageFile && tweetImageFile !== "") {
+      tweetImageContainer.style.display = "flex";
       tweetImageElement.src = tweetImageFile;
       tweetImageElement.style.display = "flex";
     } 
 
     // Setting the date posted
-    datePostedElement.textContent = date_posted;
+    datePostedElement.textContent = ` • ${date_posted}`;
     
     // Loading the username into the appropriate place
     usernameElement.textContent = username;

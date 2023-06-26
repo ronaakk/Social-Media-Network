@@ -11,7 +11,7 @@ body {
     flex-direction: column;
     width: 50%;
     min-width: 450px;
-    max-width: 650px;
+    max-width: 625px;
 
     border-radius: .5rem;
     box-shadow: 10px 10px 30px rgba(0,0,0,0.1);  
@@ -89,11 +89,10 @@ body {
 
 .tweet-actions-post {
     justify-content: space-between;
-    margin-top: 1.5rem;
 }
   
 /* Tooltip text */
-.tweet-actions .tooltiptext, .right-section .tooltiptext {
+.tweet-actions .tooltiptext, .tweet-actions-section .tooltiptext {
     visibility: hidden;
     background-color: rgba(0, 0, 0, 0.8);
     color: var(--main-color);
@@ -205,63 +204,124 @@ body {
     opacity: 1;
 }
 
-/* The styles for the post itself */
-/* .section-row {
-    
-} */
+/* The styles for the post layout itself */
+.section-row {
+    min-width: 90%;
+}
+
+.username-post {
+    width: max-content;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.username-post:hover {
+    color: var(--main-color);
+    text-decoration: none;
+}
+
 .post-layout {
     display: flex;
-    
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.tweet-header {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.tweet-details__image {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 .posted-tweet-picture {
-    max-width: 80%;
+    max-width: 90%;
     max-height: 700px;
     object-fit: contain;
     border-radius: 0.5rem;
-    /* transition: opacity 0.3s ease; */
 }
 
 .tweet-details {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 0.2rem;
 }
 
-/* Right section styles */
-.right-section {
+.tweet {
+    margin-top: 0.3rem;
+    margin-bottom: 0.6rem;
+}
+
+.date-posted {
+    font-size: 0.9rem;
+    color: gray;
+}
+
+/* Tweet action section styles */
+.tweet-actions-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 50%;
+    width: 60%;
 }
 
 .like-section, .comment-section {
     display: flex;
     align-items: center;
     gap: 0.6rem;
+    transition: 0.1s color ease;
+}
+
+.like-button, .comment-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none; 
+    padding: 0; 
+}
+
+.like-section:hover,
+.like-section:hover .like-button,
+.like-section:hover .like-button .material-symbols-outlined {
+    color: red;
+}
+
+.comment-section:hover,
+.comment-section:hover .comment-button,
+.comment-section:hover .comment-button .material-symbols-outlined {
+    color: var(--main-color);
 }
 
 /* Dropdown styles */
 .dropdown {
     position: relative;
     display: inline-block;
-  }
-  
-  .dropdown-toggle {
+}
+
+.dropdown-toggle {
     background: none;
     border: none;
     cursor: pointer;
-  }
-  
-  .dropdown-menu {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-menu {
     display: none;
     position: absolute;
     top: 100%;
     left: 0;
     z-index: 1;
-  }
-  
-  .dropdown.open .dropdown-menu {
+}
+
+.dropdown.open .dropdown-menu {
     display: block;
-  }
+}

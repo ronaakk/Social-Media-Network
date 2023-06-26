@@ -42,56 +42,62 @@
     <div class="posts">
         <!-- TODO: Clicking on a post should go to a separate page and show all comments, etc. -->
         <div class="post hidden">
+
             <div class="post-layout">
+                <a href="{% url 'change_profile' %}">
+                    <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section tweet-creator">
+                </a>
+
                 <!-- Actual post content (profile image, username, tweet, and image) -->
                 <div class="section-row"> 
-                    <a href="{% url 'change_profile' %}">
-                        <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section tweet-creator">
-                    </a>
                     <div class="tweet-details"> 
                         {% comment %} <a href="{% url 'view_profile' user.id %}">  {% endcomment %}
+                        <div class="tweet-header">
                             <input type="hidden" id="tweet-username" value="{{ user_profile.user }}">
-                            <p class="username"></p>
-                        {% comment %} </a> {% endcomment %}
-                        <p class="tweet"></p>
-                        <img src="" class="posted-tweet-picture">
-                    </div>
-                </div>
-
-                <!-- Edit/Delete a post (given creator is authenticated), Likes, Comments (give this div a class of "tweet-actions") -->
-                <div class="section-row tweet-actions-post">
-                    <div class="left-section">
-                        <p class="date-posted"></p>
-                    </div>
-                    <div class="right-section">
-                        <div class="dropdown">
-                            <button class="dropdown-toggle" id="edit-post">
-                                <span class="material-symbols-outlined">more_horiz</span>
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Edit Post</a>
-                                <a class="dropdown-item" href="#">Delete Post</a>
-                            </div>
-                        </div>
-
-                        <div class="like-section">
-                            <!-- Like Button -->
-                            <button class="like-button">
-                                <span class="material-symbols-outlined">favorite</span>
-                                <span class="tooltiptext">Like</span>
-                            </button>
-                            <!-- Like Counter -->
-                            <span class="like-counter">0 Likes</span>
+                            <p class="username-post"></p>
+                            <p class="date-posted"></p>
                         </div>
                         
-                        <div class="comment-section">
-                            <!-- Comment Button -->
-                            <button class="comment-button">
-                                <span class="material-symbols-outlined">chat_bubble</span>
-                                <span class="tooltiptext">Comment</span>
-                            </button>
-                            <!-- Comment Counter -->
-                            <span class="like-counter">0 Comments</span>
+                        {% comment %} </a> {% endcomment %}
+                        <p class="tweet"></p>
+                        
+                        <div class="tweet-details__image">
+                            <img src="" class="posted-tweet-picture">
+                        </div>
+
+                        <!-- Edit/Delete a post (given creator is authenticated), Likes, Comments (give this div a class of "tweet-actions") -->
+                        <div class="tweet-actions-post">
+                            <div class="tweet-actions-section">
+                                <div class="dropdown">
+                                    <button class="dropdown-toggle" id="edit-post">
+                                        <span class="material-symbols-outlined">more_horiz</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Edit Post</a>
+                                        <a class="dropdown-item" href="#">Delete Post</a>
+                                    </div>
+                                </div>
+
+                                <div class="like-section">
+                                    <!-- Like Button -->
+                                    <button class="like-button">
+                                        <span class="material-symbols-outlined">favorite</span>
+                                        <span class="tooltiptext">Like</span>
+                                    </button>
+                                    <!-- Like Counter -->
+                                    <span class="like-counter">0 Likes</span>
+                                </div>
+                                
+                                <div class="comment-section">
+                                    <!-- Comment Button -->
+                                    <button class="comment-button">
+                                        <span class="material-symbols-outlined">chat_bubble</span>
+                                        <span class="tooltiptext">Comment</span>
+                                    </button>
+                                    <!-- Comment Counter -->
+                                    <span class="like-counter">0 Comments</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
