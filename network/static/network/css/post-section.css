@@ -88,6 +88,7 @@ body {
 }
 
 .tweet-actions-post {
+    margin-top: 0.5rem;
     justify-content: space-between;
 }
   
@@ -108,6 +109,7 @@ body {
     font-size: 1rem;
     line-height: 1.3;
     white-space: nowrap;
+    transition: opacity 0 ease-in;
 }
 
 /* Show the tooltip on hover */
@@ -272,20 +274,27 @@ body {
     width: 60%;
 }
 
-.like-section, .comment-section {
+.like-section, .comment-section, .edit-section {
     display: flex;
     align-items: center;
     gap: 0.6rem;
     transition: 0.1s color ease;
 }
 
-.like-button, .comment-button {
+.edit-button, .like-button, .comment-button {
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     background: none; 
     padding: 0; 
+}
+
+.edit-button .material-symbols-outlined {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
 }
 
 .like-section:hover,
@@ -300,8 +309,9 @@ body {
     color: var(--main-color);
 }
 
-/* Dropdown styles */
-.dropdown {
+/* Edit button styles */
+
+/* .dropdown {
     position: relative;
     display: inline-block;
 }
@@ -313,28 +323,10 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    /* box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); */
 }
 
 .dropdown-toggle:hover {
     background-color: lightgray;
     border-radius: 50%;
-}
-
-.dropdown-toggle-clicked {
-
-}
-
-
-
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1;
-}
-
-.dropdown.open .dropdown-menu {
-    display: block;
+    padding: 0.2rem;
 }
