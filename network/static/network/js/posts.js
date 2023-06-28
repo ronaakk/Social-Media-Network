@@ -44,7 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(tweetImageFile);
 
         if (tweetImageFile) {
-          addPostToPage(tweet, `/media/tweet-pictures/${tweetImageFile.name}`, username, data.date_posted);
+          file = tweetImageFile.name;
+          if (file.includes(" ")) {
+            // Replace spaces with underscores
+            file = file.replace(/ /g, "_");
+          }
+          console.log(file);
+          addPostToPage(tweet, `/media/tweet-pictures/${file}`, username, data.date_posted);
         } else {
           addPostToPage(tweet, "", username, data.date_posted);
         }
@@ -73,27 +79,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Toggle dropdown menu
-  const dropdownToggle = document.getElementById('edit-post');
-  const dropdownMenu = document.querySelector('.dropdown-menu');
+  // const dropdownToggle = document.getElementById('edit-post');
+  // const dropdownMenu = document.querySelector('.dropdown-menu');
 
-  dropdownToggle.addEventListener('click', function () {
-      dropdownMenu.classList.toggle('open');
-  });
+  // dropdownToggle.addEventListener('click', function () {
+  //     dropdownMenu.classList.toggle('open');
+  // });
 
-  // Close dropdown menu when clicking outside
-  window.addEventListener('click', function (event) {
-      if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-          dropdownMenu.classList.remove('open');
-      }
-  });
+  // // Close dropdown menu when clicking outside
+  // window.addEventListener('click', function (event) {
+  //     if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+  //         dropdownMenu.classList.remove('open');
+  //     }
+  // });
 
-  // Close dropdown menu when option is selected
-  const dropdownItems = dropdownMenu.querySelectorAll('.dropdown-item');
-  dropdownItems.forEach(function (item) {
-      item.addEventListener('click', function () {
-          dropdownMenu.classList.remove('open');
-      });
-  });
+  // // Close dropdown menu when option is selected
+  // const dropdownItems = dropdownMenu.querySelectorAll('.dropdown-item');
+  // dropdownItems.forEach(function (item) {
+  //     item.addEventListener('click', function () {
+  //         dropdownMenu.classList.remove('open');
+  //     });
+  // });
 });
 
 // Find the csrf token within the user's browser
@@ -229,6 +235,7 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted) {
     
     tweetImageContainer.style.display = "none";
     tweetImageElement.style.display = "none";
+    
     // Setting the image
     if (tweetImageFile && tweetImageFile !== "") {
       tweetImageContainer.style.display = "flex";

@@ -257,7 +257,6 @@ body {
 
 .tweet {
     margin-top: 0.3rem;
-    margin-bottom: 0.6rem;
 }
 
 .date-posted {
@@ -308,11 +307,25 @@ body {
 }
 
 .dropdown-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: none;
     border: none;
     cursor: pointer;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 0 0 3px rgba(0, 0, 0, 0.3); */
 }
+
+.dropdown-toggle:hover {
+    background-color: lightgray;
+    border-radius: 50%;
+}
+
+.dropdown-toggle-clicked {
+
+}
+
+
 
 .dropdown-menu {
     display: none;
