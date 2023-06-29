@@ -295,6 +295,13 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: 400;
+    padding-bottom: 0.29rem;
+}
+
+.edit-section:hover,
+.edit-section:hover .edit-button,
+.edit-section:hover .edit-button .material-symbols-outlined {
+    opacity: 0.5;
 }
 
 .like-section:hover,
