@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate, login, logout
-from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -176,3 +175,7 @@ def post_tweet(request):
 #         "user_profile": user_profile,
 #         "user_logged_in": user_logged_in
 #     })
+
+def load_feed(request, feed):
+    if request.METHOD == "GET":
+        

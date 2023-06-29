@@ -1,6 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
+import os
+from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 class User(AbstractUser, models.Model):
     pass
@@ -15,6 +19,19 @@ class Tweet(models.Model):
 
     def __str__(self):
         return f"{self.user} posted: '{self.tweet}'"
+
+@receiver(pre_delete, sender=Tweet)
+def delete_tweet_images(sender, instance, **kwargs):
+    # Check if the Tweet instance has an associated image
+    if instance.image:
+        # Get the path to the image file
+        image_path = instance.image.path
+
+        # Delete the image file from the media directory
+        if os.path.exists(image_path):
+            os.remove(image_path)
+            
+pre_delete.connect(delete_tweet_images, sender=Tweet)
 
 class Comment(models.Model):
     tweet = models.ForeignKey('Tweet', on_delete=models.CASCADE, null=True)
