@@ -48,9 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
             file = file.replace(/ /g, "_");
           }
           console.log(file);
-          addPostToPage(tweet, `/media/tweet-pictures/${file}`, username, data.date_posted);
+          addPostToPage(tweet, `/media/tweet-pictures/${file}`, username, data.date_posted, likesCount=0, commentsCount=0);
         } else {
-          addPostToPage(tweet, "", username, data.date_posted);
+          addPostToPage(tweet, "", username, data.date_posted, likesCount=0, commentsCount=0);
         }
 
         clearPostSection();
@@ -75,6 +75,41 @@ document.addEventListener('DOMContentLoaded', () => {
     disableButton("post");
     enableButton("image");
   }
+
+  // Function to initially populate the feed
+  function populateFeed(feed) {
+    fetch(`/load_feed/${feed}`, {
+      method: "GET",
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      const feedPosts = data.feed_posts;
+      console.log(feedPosts);
+
+      feedPosts.forEach(post => {
+        addPostToPage(
+          post.tweet,
+          post.tweet_image_url,
+          post.username,
+          post.date_posted,
+          post.tweet_likes,
+          post.tweet_comments
+        );
+      });
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+  
+
+  // Call the loadFeed function when the page is loaded to load the home page
+  window.addEventListener("load", () => populateFeed('home'));
 
 });
 
@@ -193,7 +228,7 @@ function deletePreview(previewContainer) {
 }
   
 // Function to add posts to page (and sort them by date added)
-function addPostToPage(tweet, tweetImageFile = "", username, date_posted) {
+function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesCount, commentsCount) {
     const feed = document.querySelector(".posts");
     const postTemplate = document.querySelector(".post");
   
@@ -207,7 +242,8 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted) {
     const tweetImageElement = tweetDetails.querySelector(".posted-tweet-picture");
     const usernameElement = tweetDetails.querySelector(".username-post");
     const datePostedElement = newPost.querySelector(".date-posted");
-    console.log(date_posted);
+    const tweetLikes = newPost.querySelector(".like-counter");
+    const tweetComments = newPost.querySelector(".comment-counter");
     
     tweetImageContainer.style.display = "none";
     tweetImageElement.style.display = "none";
@@ -227,6 +263,10 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted) {
     
     // Loading the tweet
     tweetText.textContent = tweet;
+
+    // Loading the tweet likes and comments (if any)
+    tweetLikes.textContent = `${likesCount} Likes`;
+    tweetComments.textContent = `${commentsCount} Comments`;
   
     feed.insertBefore(newPost, feed.firstChild);
 }

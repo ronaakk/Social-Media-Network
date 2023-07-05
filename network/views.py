@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.templatetags.static import static
 import datetime
+from django.core.files.storage import default_storage
 
 from .models import *
 
@@ -24,7 +25,6 @@ def index(request):
     return render(request, "network/index.html", {
         "user_profile" : user_profile
     })
-
 
 def login_view(request):
     if request.method == "POST":
@@ -44,11 +44,9 @@ def login_view(request):
     else:
         return render(request, "network/login.html")
 
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
@@ -101,14 +99,13 @@ def change_profile(request):
                         img = img.crop((left, top, right, bottom))
                         img = img.resize((60, 60), Image.ANTIALIAS)
 
-                    # Get the old profile picture path (to delete)
-                    old_profile_picture_path = user_profile.profile_picture.path
-                    if new_profile_pic and old_profile_picture_path != new_profile_pic.path:
+            
+                    if new_profile_pic and new_profile_pic.name != user_profile.profile_picture.name:
                         # Delete the old profile picture file
-                        if os.path.exists(old_profile_picture_path):
-                            os.remove(old_profile_picture_path)
-
-                    user_profile.profile_picture = new_profile_pic
+                        if user_profile.profile_picture:
+                            user_profile.profile_picture.delete()
+                            # Set it to the new one
+                            user_profile.profile_picture = new_profile_pic
                 except IOError:
                     raise ValidationError('The picture uploaded is not a valid image file.')
             else:
@@ -177,5 +174,27 @@ def post_tweet(request):
 #     })
 
 def load_feed(request, feed):
-    if request.METHOD == "GET":
-        
+    if request.method == "GET":
+
+        if feed == "home":
+            # Sort the feed by date posted
+            feed_posts = Tweet.objects.all().order_by("date_posted")
+            # print("---- {} -----".format(feed_posts))
+            feed_data = []
+            for post in feed_posts:
+                feed_data.append({
+                    "tweet": post.tweet,
+                    "tweet_image_url": post.image.url if post.image else "",
+                    "username": post.user.username,
+                    "date_posted": post.date_posted.strftime("%B %d, %Y"),
+                    "tweet_comments": post.comments.count() if post.comments.exists() else 0,
+                    "tweet_likes": post.likes
+                })
+            return JsonResponse({"feed_posts": feed_data}, status=200, content_type="application/json")
+
+        # Implement this later
+        # if feed == "following":
+        #     following_feed_posts = Tweet.objects.filter()
+            
+    else:
+        return JsonResponse({"error": "GET request requried."}, status=400, content_type="application/json")
