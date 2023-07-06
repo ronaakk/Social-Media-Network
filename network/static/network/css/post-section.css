@@ -259,6 +259,7 @@ body {
 
 .tweet {
     margin-top: 0.3rem;
+    max-width: 95%;
 }
 
 .date-posted {
@@ -269,9 +270,9 @@ body {
 /* Tweet action section styles */
 .tweet-actions-section {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    width: 60%;
+    width: 70%;
 }
 
 .like-section, .comment-section, .edit-section {
@@ -279,6 +280,11 @@ body {
     align-items: center;
     gap: 0.6rem;
     transition: 0.1s color ease;
+}
+
+/* When edit section is not visible */
+.like-section, .comment-section, .edit-section {
+    margin-right: 2.3rem;
 }
 
 .edit-button, .like-button, .comment-button {

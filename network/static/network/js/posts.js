@@ -48,9 +48,25 @@ document.addEventListener('DOMContentLoaded', () => {
             file = file.replace(/ /g, "_");
           }
           console.log(file);
-          addPostToPage(tweet, `/media/tweet-pictures/${file}`, username, data.date_posted, likesCount=0, commentsCount=0);
+          addPostToPage(
+            tweet, 
+            `/media/tweet-pictures/${file}`, 
+            username, 
+            data.date_posted, 
+            likesCount=0, 
+            commentsCount=0, 
+            data.profile_pic, 
+            data.logged_in_user);
         } else {
-          addPostToPage(tweet, "", username, data.date_posted, likesCount=0, commentsCount=0);
+          addPostToPage(
+            tweet, 
+            "", 
+            username, 
+            data.date_posted, 
+            likesCount=0, 
+            commentsCount=0, 
+            data.profile_pic, 
+            data.logged_in_user);
         }
 
         clearPostSection();
@@ -98,7 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
           post.username,
           post.date_posted,
           post.tweet_likes,
-          post.tweet_comments
+          post.tweet_comments,
+          post.tweet_user_profile_pic,
+          data.logged_in_user,
         );
       });
     })
@@ -107,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-
   // Call the loadFeed function when the page is loaded to load the home page
   window.addEventListener("load", () => populateFeed('home'));
 
@@ -228,7 +245,7 @@ function deletePreview(previewContainer) {
 }
   
 // Function to add posts to page (and sort them by date added)
-function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesCount, commentsCount) {
+function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesCount, commentsCount, profilePic, loggedInUser) {
     const feed = document.querySelector(".posts");
     const postTemplate = document.querySelector(".post");
   
@@ -236,7 +253,7 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
     newPost.classList.remove("hidden");
   
     const tweetDetails = newPost.querySelector(".tweet-details");
-
+    const profilePicElement = newPost.querySelector(".tweet-creator");
     const tweetText = tweetDetails.querySelector(".tweet");
     const tweetImageContainer = tweetDetails.querySelector(".tweet-details__image");
     const tweetImageElement = tweetDetails.querySelector(".posted-tweet-picture");
@@ -255,6 +272,9 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
       tweetImageElement.style.display = "flex";
     } 
 
+    // Setting the profile pic
+    profilePicElement.src = profilePic;
+
     // Setting the date posted
     datePostedElement.textContent = ` • ${date_posted}`;
     
@@ -265,8 +285,16 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
     tweetText.textContent = tweet;
 
     // Loading the tweet likes and comments (if any)
-    tweetLikes.textContent = `${likesCount} Likes`;
-    tweetComments.textContent = `${commentsCount} Comments`;
+    tweetLikes.textContent = likesCount > 1 || likesCount === 0 ? `${likesCount} Likes` : `${likesCount} Like`;
+    tweetComments.textContent = commentsCount > 1 || commentsCount === 0 ? `${commentsCount} Comments` : `${likesCount} Comment`;
+
+    // Checking to see if authenticated user is creator of tweet
+    const editSection = tweetDetails.querySelector(".edit-section");
+    if (loggedInUser !== username) {
+      editSection.style.display = "none";
+    } else {
+      editSection.style.display = "flex";
+    }
   
     feed.insertBefore(newPost, feed.firstChild);
 }

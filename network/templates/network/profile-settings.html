@@ -67,7 +67,11 @@
             <div class="container__row">
                 <p class="bio">Bio</p>
                 <div class="bio-section">
-                    <textarea id="bio" name="bio" maxlength="150" oninput="updateCharacterCount(this)">{{ user_profile.bio }}</textarea>
+                    {% if user_profile.bio %}
+                        <textarea id="bio" name="bio" maxlength="150" oninput="updateCharacterCount(this)">{{ user_profile.bio }}</textarea>
+                    {% else %}
+                        <textarea id="bio" name="bio" maxlength="150" oninput="updateCharacterCount(this)"></textarea>
+                    {% endif %}
                     <div id="character-count"></div>
                 </div>
             </div>

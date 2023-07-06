@@ -101,10 +101,13 @@ def change_profile(request):
 
             
                     if new_profile_pic and new_profile_pic.name != user_profile.profile_picture.name:
-                        # Delete the old profile picture file
-                        if user_profile.profile_picture:
+                        # Delete the old profile picture file IF it isn't the default
+                        if user_profile.profile_picture and user_profile.profile_picture.name != "profile-pictures/default-profile-pic.jpeg":
+                            # Delete the old pic
+                            print("---- {} ----".format(user_profile.profile_picture.name))
                             user_profile.profile_picture.delete()
-                            # Set it to the new one
+                            user_profile.profile_picture = new_profile_pic
+                        else:
                             user_profile.profile_picture = new_profile_pic
                 except IOError:
                     raise ValidationError('The picture uploaded is not a valid image file.')
@@ -150,28 +153,34 @@ def post_tweet(request):
         else:
             image_url = None
 
+        # Retrieve the profile picture of the user to set in tweet
+        user = UserProfile.objects.get(user=request.user)
+        user_profile_pic = user.profile_picture
+
         return JsonResponse({
             "message": "Tweet created successfully.", 
             "image_url": image_url, 
             "date_posted": new_tweet.date_posted.strftime("%B %d, %Y"),
+            "profile_pic": user_profile_pic.url,
+            "logged_in_user": request.user.username
         }, status=201)
     else:
         return JsonResponse({"error": "POST request required."}, status=400)
 
-# def view_profile(request, user_id):
+def view_profile(request, user_id):
 
-#     # Getting the user whos profile was clicked
-#     user_profile = UserProfile.objects.get(id=user_id)
+    # Getting the user whos profile was clicked
+    user_profile = UserProfile.objects.get(id=user_id)
 
-#     try:
-#         user_logged_in = UserProfile.objects.get(user=request.user)
-#     except:
-#         user_logged_in = None
+    try:
+        user_logged_in = UserProfile.objects.get(user=request.user)
+    except:
+        user_logged_in = None
     
-#     return render(request, "network/user-profile.html", {
-#         "user_profile": user_profile,
-#         "user_logged_in": user_logged_in
-#     })
+    return render(request, "network/user-profile.html", {
+        "user_profile": user_profile,
+        "user_logged_in": user_logged_in
+    })
 
 def load_feed(request, feed):
     if request.method == "GET":
@@ -182,15 +191,22 @@ def load_feed(request, feed):
             # print("---- {} -----".format(feed_posts))
             feed_data = []
             for post in feed_posts:
+                # Access the user profile for each profile picture
+                user = UserProfile.objects.get(user = post.user)
+                profile_pic = user.profile_picture
                 feed_data.append({
                     "tweet": post.tweet,
                     "tweet_image_url": post.image.url if post.image else "",
                     "username": post.user.username,
                     "date_posted": post.date_posted.strftime("%B %d, %Y"),
                     "tweet_comments": post.comments.count() if post.comments.exists() else 0,
-                    "tweet_likes": post.likes
+                    "tweet_likes": post.likes,
+                    "tweet_user_profile_pic": profile_pic.url
                 })
-            return JsonResponse({"feed_posts": feed_data}, status=200, content_type="application/json")
+            return JsonResponse({
+                "feed_posts": feed_data, 
+                "logged_in_user": request.user.username
+                }, status=200, content_type="application/json")
 
         # Implement this later
         # if feed == "following":
