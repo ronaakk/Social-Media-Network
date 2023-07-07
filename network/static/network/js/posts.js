@@ -295,6 +295,19 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
     } else {
       editSection.style.display = "flex";
     }
+
+    // Load the correct url
+    loadUserUrl(username, newPost);
   
     feed.insertBefore(newPost, feed.firstChild);
+}
+
+// Function to load appropriate user url on each post
+function loadUserUrl(username, post) {
+  const userProfileLinks = post.querySelectorAll(".user-profile-link");
+  const baseUrl = "/user/";
+
+  userProfileLinks.forEach(tag => {
+    tag.href = baseUrl + username;
+  });
 }

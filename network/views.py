@@ -167,19 +167,24 @@ def post_tweet(request):
     else:
         return JsonResponse({"error": "POST request required."}, status=400)
 
-def view_profile(request, user_id):
+def view_profile(request, username):
+    print(username)
 
     # Getting the user whos profile was clicked
-    user_profile = UserProfile.objects.get(id=user_id)
+    clicked_user = User.objects.get(username=username)
+    users_profile = UserProfile.objects.get(user = clicked_user)
+    users_tweets = Tweet.objects.filter(user = clicked_user)
 
+    # Current users profile
     try:
-        user_logged_in = UserProfile.objects.get(user=request.user)
+        current_user_profile = UserProfile.objects.get(user=request.user)
     except:
-        user_logged_in = None
+        current_user_profile = None
     
     return render(request, "network/user-profile.html", {
-        "user_profile": user_profile,
-        "user_logged_in": user_logged_in
+        "users_profile": users_profile,
+        "user_tweets": users_tweets,
+        "user_profile": current_user_profile
     })
 
 def load_feed(request, feed):

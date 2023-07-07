@@ -55,6 +55,8 @@ class UserProfile(models.Model):
     profile_picture = models.ImageField(default="profile-pictures/default-profile-pic.jpeg", upload_to='profile-pictures')
     user = models.OneToOneField('User', on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True, max_length=150)
+    followers = models.IntegerField(default=0)
+    following = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.user}: {self.bio}"
