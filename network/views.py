@@ -168,7 +168,6 @@ def post_tweet(request):
         return JsonResponse({"error": "POST request required."}, status=400)
 
 def view_profile(request, username):
-    print(username)
 
     # Getting the user whos profile was clicked
     clicked_user = User.objects.get(username=username)

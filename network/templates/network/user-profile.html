@@ -2,44 +2,90 @@
 {% load static %}
 
 {% block extra_head %}
-    <link href="{% static 'network/css/profile-settings-form.css' %}" rel="stylesheet">
-    {% comment %} <script src= {% static 'network/js/profile-settings.js' %} type="text/javascript"></script> {% endcomment %}
+    <link href="{% static 'network/css/profile-page.css' %}" rel="stylesheet">
+    <script src= {% static 'network/js/user-profile.js' %} type="text/javascript"></script>
+    {% comment %} <script src= {% static 'network/js/posts.js' %} type="text/javascript"></script> {% endcomment %}
     <title> {% block title %}{{ users_profile.user }}{% endblock title %} </title>
 {% endblock extra_head %}
 
 {% block body %}
-    <!-- To display the register form validation errors, and success message-->
-    {% comment %} {% with register_form_errors=register_form.errors %}
-    {% if register_form_errors %}
-        <div class="alert alert-danger" role="alert">
-            {% for field in register_form %}
-                {% if field.errors %}
-                    {% for error in field.errors %}
-                        {{ error }}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
+    <div class="profile-layout">
+        <div class="profile-header">
+            <img src="{{ users_profile.profile_picture.url }}" class="profile-pic large">
+            <div class="user-stats">
+                <span class="followers">5 Followers</span>
+                <span class="following">5 Following</span>
+            </div>
         </div>
-    {% endif %}
-    {% endwith %}
 
-    {% with messages=messages %}
-    {% if messages %}
-        {% for message in messages %}
-            {% if message.tags == "error" %}
-                <div class="{{ message.tags }} alert alert-danger message" role="alert">{{ message }}</div> 
-            {% else %}
-                <div class="{{ message.tags }} alert alert-primary" role="alert">{{ message }}</div> 
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-    {% endwith %} {% endcomment %}
+        <div class="user-details">
+            <span class="user-username">{{ users_profile.user.username }}</span>
+            <span class="user-bio">{{ users_profile.bio }}</span>
+        </div>
 
-    <div class="user">
-        <img src="{{ users_profile.profile_picture.url }}" class="profile-pic large">
-        {{ users_profile.bio }}
+        <!-- TODO: Need to edit this to either show follow/following-->
+        <div class="action-section">
+            <button class="action-button">Follow</button>
+        </div>
 
-        <!-- User following, followers, posts, etc. -->
-    </div>
+        <div class="user-tweets">
+            <!-- TODO: Clicking on a post should go to a separate page and show all comments, etc. -->
+            <div class="post hidden">
 
+                <div class="post-layout">
+                    <!-- Actual post content (profile image, username, tweet, and image) -->
+                    <div class="section-row"> 
+                        <div class="tweet-details"> 
+                            <div class="tweet-header">
+                                <a class="user-profile-link" href=""> 
+                                    <input type="hidden" id="tweet-username" value="{{ user_profile.user }}">
+                                </a>
+                                <p class="username-post"></p>
+                                <p class="date-posted"></p>
+                            </div>
+                            
+                            <p class="tweet"></p>
+                            
+                            <div class="tweet-details__image">
+                                <img src="" class="posted-tweet-picture">
+                            </div>
+
+                            <!-- Edit/Delete a post (given creator is authenticated), Likes, Comments (give this div a class of "tweet-actions") -->
+                            <div class="tweet-actions-post">
+                                <div class="tweet-actions-section">
+                                    <div class="edit-section">
+                                        <!-- Edit Button -->
+                                        <button class="edit-button">
+                                            <span class="material-symbols-outlined">edit_square</span>
+                                            <span class="tooltiptext">Edit Post</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="like-section">
+                                        <!-- Like Button -->
+                                        <button class="like-button">
+                                            <span class="material-symbols-outlined">favorite</span>
+                                            <span class="tooltiptext">Like</span>
+                                        </button>
+                                        <!-- Like Counter -->
+                                        <span class="like-counter"></span>
+                                    </div>
+                                    
+                                    <div class="comment-section">
+                                        <!-- Comment Button -->
+                                        <button class="comment-button">
+                                            <span class="material-symbols-outlined">chat_bubble</span>
+                                            <span class="tooltiptext">Comment</span>
+                                        </button>
+                                        <!-- Comment Counter -->
+                                        <span class="comment-counter"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
 {% endblock body %}

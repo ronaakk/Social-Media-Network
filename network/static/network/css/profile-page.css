@@ -1,0 +1,69 @@
+@import "./styles.css";
+
+.profile-layout, .profile-header, .user-details, .user-stats, .user-tweets {
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile-layout {
+    flex-direction: column;
+    margin: 2rem auto;
+    width: 50%;
+    min-width: 450px;
+    max-width: 750px;
+    border-radius: .5rem;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);  
+    padding: 1.5rem;
+
+    background-color: white;
+}
+
+.user-details {
+    flex-direction: column;
+    max-width: max-content;
+    margin-top: 1rem;
+    margin-left: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.user-stats {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 1.6rem;
+    min-width: 80%;
+}
+
+.user-username {
+    font-weight: bold;
+}
+
+.followers {
+    margin-right: 4.5rem;
+    margin-left: 5rem;
+}
+
+.following {
+    margin-left: 4.5rem;
+}
+
+.action-section {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.action-button {
+    background-color: var(--main-color);
+    color: var(--text-color);
+    border-radius: 1rem;
+    border: none;
+    padding: 0.3rem 0.95rem;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.action-button:hover {
+    background-color: var(--main-color-focus);
+}

@@ -45,7 +45,6 @@
 
             <div class="post-layout">
                 <a class="user-profile-link" href=""> 
-                {% comment %} <a href="{% url 'view_profile' username=user_profile.user.username %}"> {% endcomment %}
                     <img src="" class="profile-pic small-post-section tweet-creator">
                 </a>
 
@@ -54,7 +53,6 @@
                     <div class="tweet-details"> 
                         <div class="tweet-header">
                             <a class="user-profile-link" href=""> 
-                            {% comment %} <a href="{% url 'view_profile' username=user_profile.user.username %}">  {% endcomment %}
                                 <input type="hidden" id="tweet-username" value="{{ user_profile.user }}">
                             </a>
                             <p class="username-post"></p>
