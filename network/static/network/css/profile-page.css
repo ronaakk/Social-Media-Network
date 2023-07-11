@@ -47,10 +47,15 @@
     margin-left: 4.5rem;
 }
 
+.user-tweets {
+    flex-direction: column;
+}
+
 .action-section {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    margin-left: 0.4rem;
 }
 
 .action-button {
@@ -66,4 +71,152 @@
 
 .action-button:hover {
     background-color: var(--main-color-focus);
+}
+
+/* User tweet styles */
+.post {
+    margin: 1.3rem auto;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    min-width: 450px;
+    max-width: 625px;
+
+    border-radius: .5rem;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);  
+    padding: 1.5rem;
+    justify-content: space-between;
+    background-color: white;
+}
+
+.post:hover {
+    cursor: pointer;
+}
+
+.post-layout {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.small-post-section {
+    margin-right: 0.5rem;
+}
+
+.section-row {
+    min-width: 90%;
+}
+
+.tweet-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+}
+
+.tweet-header {
+    display: flex;
+    gap: 0.3rem;
+    align-items: flex-end;
+}
+
+.username-post {
+    width: max-content;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.username-post:hover {
+    color: var(--main-color);
+    text-decoration: none;
+}
+
+.date-posted {
+    font-size: 0.9rem;
+    color: gray;
+}
+
+.tweet {
+    margin-top: 0.3rem;
+    max-width: 95%;
+}
+
+.tweet-details__image {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.posted-tweet-picture {
+    max-width: 90%;
+    max-height: 700px;
+    object-fit: contain;
+    border-radius: 0.5rem;
+}
+
+.tweet-actions-post {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    margin-top: 0.5rem;
+    justify-content: space-between;
+}
+
+.tweet-actions-section {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 70%;
+    margin-top: 0.3rem;
+}
+
+.like-section, .comment-section, .edit-section {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: 0.1s color ease;
+}
+
+/* When edit section is not visible */
+.like-section, .comment-section, .edit-section {
+    margin-right: 2.3rem;
+}
+
+.edit-button, .like-button, .comment-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none; 
+    padding: 0; 
+}
+
+.edit-button .material-symbols-outlined {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
+    padding-bottom: 0.29rem;
+}
+
+.edit-section:hover,
+.edit-section:hover .edit-button,
+.edit-section:hover .edit-button .material-symbols-outlined {
+    opacity: 0.5;
+}
+
+.like-section:hover,
+.like-section:hover .like-button,
+.like-section:hover .like-button .material-symbols-outlined {
+    color: red;
+}
+
+.comment-section:hover,
+.comment-section:hover .comment-button,
+.comment-section:hover .comment-button .material-symbols-outlined {
+    color: var(--main-color);
 }

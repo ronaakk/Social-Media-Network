@@ -286,7 +286,7 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
 
     // Loading the tweet likes and comments (if any)
     tweetLikes.textContent = likesCount > 1 || likesCount === 0 ? `${likesCount} Likes` : `${likesCount} Like`;
-    tweetComments.textContent = commentsCount > 1 || commentsCount === 0 ? `${commentsCount} Comments` : `${likesCount} Comment`;
+    tweetComments.textContent = commentsCount > 1 || commentsCount === 0 ? `${commentsCount} Comments` : `${commentsCount} Comment`;
 
     // Checking to see if authenticated user is creator of tweet
     const editSection = tweetDetails.querySelector(".edit-section");

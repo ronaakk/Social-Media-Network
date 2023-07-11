@@ -4,7 +4,7 @@
 {% block extra_head %}
     <link href="{% static 'network/css/profile-page.css' %}" rel="stylesheet">
     <script src= {% static 'network/js/user-profile.js' %} type="text/javascript"></script>
-    {% comment %} <script src= {% static 'network/js/posts.js' %} type="text/javascript"></script> {% endcomment %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title> {% block title %}{{ users_profile.user }}{% endblock title %} </title>
 {% endblock extra_head %}
 
@@ -20,72 +20,83 @@
 
         <div class="user-details">
             <span class="user-username">{{ users_profile.user.username }}</span>
-            <span class="user-bio">{{ users_profile.bio }}</span>
+            {% if users_profile.bio %}
+                <span class="user-bio">{{ users_profile.bio }}</span>
+            {% endif %}
         </div>
 
-        <!-- TODO: Need to edit this to either show follow/following-->
-        <div class="action-section">
-            <button class="action-button">Follow</button>
-        </div>
+       
+        {% if user_profile %}
+            <!-- TODO: Need to edit this to either show follow/following-->
+            <div class="action-section">
+                <button class="action-button">Follow</button>
+            </div>
+        {% endif %}
 
         <div class="user-tweets">
-            <!-- TODO: Clicking on a post should go to a separate page and show all comments, etc. -->
-            <div class="post hidden">
-
-                <div class="post-layout">
-                    <!-- Actual post content (profile image, username, tweet, and image) -->
-                    <div class="section-row"> 
-                        <div class="tweet-details"> 
-                            <div class="tweet-header">
-                                <a class="user-profile-link" href=""> 
-                                    <input type="hidden" id="tweet-username" value="{{ user_profile.user }}">
-                                </a>
-                                <p class="username-post"></p>
-                                <p class="date-posted"></p>
-                            </div>
+            {% if users_tweets %}
+                {% for tweet in users_tweets %}
+                    <div class="post">
+                        <div class="post-layout">
                             
-                            <p class="tweet"></p>
-                            
-                            <div class="tweet-details__image">
-                                <img src="" class="posted-tweet-picture">
-                            </div>
-
-                            <!-- Edit/Delete a post (given creator is authenticated), Likes, Comments (give this div a class of "tweet-actions") -->
-                            <div class="tweet-actions-post">
-                                <div class="tweet-actions-section">
-                                    <div class="edit-section">
-                                        <!-- Edit Button -->
-                                        <button class="edit-button">
-                                            <span class="material-symbols-outlined">edit_square</span>
-                                            <span class="tooltiptext">Edit Post</span>
-                                        </button>
-                                    </div>
-
-                                    <div class="like-section">
-                                        <!-- Like Button -->
-                                        <button class="like-button">
-                                            <span class="material-symbols-outlined">favorite</span>
-                                            <span class="tooltiptext">Like</span>
-                                        </button>
-                                        <!-- Like Counter -->
-                                        <span class="like-counter"></span>
+                            <img src="{{ users_profile.profile_picture.url }}" class="profile-pic small-post-section tweet-creator">
+                
+                            <!-- Actual post content (profile image, username, tweet, and image) -->
+                            <div class="section-row"> 
+                                <div class="tweet-details"> 
+                                    <div class="tweet-header">
+                                        <input type="hidden" id="tweet-username" value="{{ users_profile.user }}">
+                                        <p class="username-post">{{ users_profile.user.username }}</p>
+                                        <p class="date-posted"> • {{ tweet.date_posted }}</p>
                                     </div>
                                     
-                                    <div class="comment-section">
-                                        <!-- Comment Button -->
-                                        <button class="comment-button">
-                                            <span class="material-symbols-outlined">chat_bubble</span>
-                                            <span class="tooltiptext">Comment</span>
-                                        </button>
-                                        <!-- Comment Counter -->
-                                        <span class="comment-counter"></span>
+                                    <p class="tweet">{{ tweet.tweet }}</p>
+                                    
+                                    {% if tweet.image %}
+                                    <div class="tweet-details__image">
+                                        <img src="{{ tweet.image.url }}" class="posted-tweet-picture">
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- Edit/Delete a post (given creator is authenticated), Likes, Comments (give this div a class of "tweet-actions") -->
+                                    <div class="tweet-actions-post">
+                                        <div class="tweet-actions-section">
+                                            {% if user_profile.user.username == users_profile.user.username %}
+                                                <div class="edit-section">
+                                                    <!-- Edit Button -->
+                                                    <button class="edit-button">
+                                                        <span class="material-symbols-outlined">edit_square</span>
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+
+                                            <div class="like-section">
+                                                <!-- Like Button -->
+                                                <button class="like-button">
+                                                    <span class="material-symbols-outlined">favorite</span>
+                                                    <span class="tooltiptext">Like</span>
+                                                </button>
+                                                <!-- Like Counter -->
+                                                <span class="like-counter"></span>
+                                            </div>
+                                            
+                                            <div class="comment-section">
+                                                <!-- Comment Button -->
+                                                <button class="comment-button">
+                                                    <span class="material-symbols-outlined">chat_bubble</span>
+                                                    <span class="tooltiptext">Comment</span>
+                                                </button>
+                                                <!-- Comment Counter -->
+                                                <span class="comment-counter"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div> 
 {% endblock body %}

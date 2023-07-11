@@ -324,23 +324,3 @@ body {
 }
 
 /* Edit button styles */
-
-/* .dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-toggle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.dropdown-toggle:hover {
-    background-color: lightgray;
-    border-radius: 50%;
-    padding: 0.2rem;
-}

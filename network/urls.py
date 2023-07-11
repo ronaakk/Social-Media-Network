@@ -14,5 +14,4 @@ urlpatterns = [
     # API Routes (to handle saving, retrieving tweet data)
     path("post_tweet/", views.post_tweet, name="post_tweet"),
     path("load_feed/<str:feed>", views.load_feed, name="load_feed"),
-
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

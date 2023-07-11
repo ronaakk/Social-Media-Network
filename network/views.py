@@ -169,22 +169,20 @@ def post_tweet(request):
 
 def view_profile(request, username):
 
-    # Getting the user whos profile was clicked
-    clicked_user = User.objects.get(username=username)
-    users_profile = UserProfile.objects.get(user = clicked_user)
-    users_tweets = Tweet.objects.filter(user = clicked_user)
+    if request.method == "GET":
 
-    # Current users profile
-    try:
-        current_user_profile = UserProfile.objects.get(user=request.user)
-    except:
-        current_user_profile = None
-    
-    return render(request, "network/user-profile.html", {
-        "users_profile": users_profile,
-        "user_tweets": users_tweets,
-        "user_profile": current_user_profile
-    })
+        # Getting the user whos profile was clicked
+        clicked_user = User.objects.get(username=username)
+        users_profile = UserProfile.objects.get(user = clicked_user)
+        users_tweets = Tweet.objects.filter(user = clicked_user)
+        current_user_profile = UserProfile.objects.get(user=request.user) if request.user.is_authenticated else None
+        
+        print(users_tweets)
+        return render(request, "network/user-profile.html", {
+            "users_profile": users_profile,
+            "users_tweets": users_tweets.order_by("-date_posted"),
+            "user_profile": current_user_profile
+        })
 
 def load_feed(request, feed):
     if request.method == "GET":
