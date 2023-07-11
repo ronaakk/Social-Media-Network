@@ -295,6 +295,7 @@ body {
     border: none;
     background: none; 
     padding: 0; 
+    /* gap: 0.5rem; */
 }
 
 .edit-button .material-symbols-outlined {

@@ -13,8 +13,8 @@
         <div class="profile-header">
             <img src="{{ users_profile.profile_picture.url }}" class="profile-pic large">
             <div class="user-stats">
-                <span class="followers">5 Followers</span>
-                <span class="following">5 Following</span>
+                <span class="followers">{{ users_profile.followers }} Followers</span>
+                <span class="following">{{ users_profile.following }} Following</span>
             </div>
         </div>
 
@@ -74,20 +74,18 @@
                                                 <!-- Like Button -->
                                                 <button class="like-button">
                                                     <span class="material-symbols-outlined">favorite</span>
-                                                    <span class="tooltiptext">Like</span>
                                                 </button>
                                                 <!-- Like Counter -->
-                                                <span class="like-counter"></span>
+                                                <span class="like-counter">{{ tweet.likes }} Likes</span>
                                             </div>
                                             
                                             <div class="comment-section">
                                                 <!-- Comment Button -->
                                                 <button class="comment-button">
                                                     <span class="material-symbols-outlined">chat_bubble</span>
-                                                    <span class="tooltiptext">Comment</span>
                                                 </button>
                                                 <!-- Comment Counter -->
-                                                <span class="comment-counter"></span>
+                                                <span class="comment-counter">{{ tweet.comments_count }} Comments</span>
                                             </div>
                                         </div>
                                     </div>

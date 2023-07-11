@@ -1,19 +1,21 @@
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
-from django.urls import reverse
-from .forms import *
-from django.contrib import messages
-from PIL import Image
-import os
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
-from django.conf import settings
-from django.templatetags.static import static
 import datetime
-from django.core.files.storage import default_storage
+import os
 
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.core.files.storage import default_storage
+from django.db.models import Count
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import render
+from django.templatetags.static import static
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from PIL import Image
+
+from .forms import *
 from .models import *
+
 
 def index(request):
     # If user is logged in
@@ -174,7 +176,7 @@ def view_profile(request, username):
         # Getting the user whos profile was clicked
         clicked_user = User.objects.get(username=username)
         users_profile = UserProfile.objects.get(user = clicked_user)
-        users_tweets = Tweet.objects.filter(user = clicked_user)
+        users_tweets = Tweet.objects.filter(user = clicked_user).annotate(comments_count=Count('comments'))
         current_user_profile = UserProfile.objects.get(user=request.user) if request.user.is_authenticated else None
         
         print(users_tweets)
