@@ -73,6 +73,10 @@
     background-color: var(--main-color-focus);
 }
 
+.action-button:focus {
+    border: none;
+}
+
 /* User tweet styles */
 .post {
     margin: 1.3rem auto;

@@ -26,10 +26,16 @@
         </div>
 
        
-        {% if user_profile %}
+        {% if user_profile and user_profile.user.username != users_profile.user.username %}
             <!-- TODO: Need to edit this to either show follow/following-->
             <div class="action-section">
                 <button class="action-button">Follow</button>
+            </div>
+        {% else %}
+            <div class="action-section">
+                <a href="{% url 'change_profile' %}">
+                    <button class="action-button">Edit Profile</button>
+                </a>
             </div>
         {% endif %}
 

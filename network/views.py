@@ -4,10 +4,11 @@ import os
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.templatetags.static import static
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -192,7 +193,7 @@ def view_profile(request, username):
             "users_profile": users_profile,
             "users_relationships": users_relationships,
             "followers_count": followers_count,
-            "following_count": followers_count,
+            "following_count": following_count,
             "users_tweets": users_tweets.order_by("-date_posted"),
             "user_profile": current_user_profile
         })
@@ -227,5 +228,35 @@ def load_feed(request, feed):
         # if feed == "following":
         #     following_feed_posts = Tweet.objects.filter()
             
+    else:
+        return JsonResponse({"error": "GET request requried."}, status=400, content_type="application/json")
+
+@login_required(login_url='login')
+def follow_user(request, username):
+    if request.method == "GET":
+
+        # Get the current user
+        new_follower = User.objects.get(username = request.user.username)
+        new_follower_profile = UserProfile.objects.get(user = new_follower)
+        new_followers_relationships = UserRelationship.objects.get(user = new_follower)
+
+        # Get user who is to be followed
+        user_to_follow = User.objects.get(username = username)
+        user_to_follow_profile = UserProfile.objects.get(user = user_to_follow)
+
+        # Get their userRelationships model and add the user to their followers list
+        user_to_follow = UserRelationship.objects.get(user = user_to_follow)
+        user_to_follow.followers.add(new_follower_profile)
+
+        # Add the user_to_follow to the current users following
+        new_followers_relationships.following.add(user_to_follow_profile)
+
+        return JsonResponse({
+            "message": f"{user_to_follow.user.username} added to {new_follower.username}'s following.",
+            "user_to_follow": user_to_follow.user.username,
+            "new_follower": new_follower.username,
+            "new_follower_count": user_to_follow.followers_count()
+        }, status=200, content_type = "application/json")
+
     else:
         return JsonResponse({"error": "GET request requried."}, status=400, content_type="application/json")
