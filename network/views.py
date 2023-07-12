@@ -57,9 +57,12 @@ def register(request):
             # This will automatically save the user to the User Model
             user = register_form.save()
 
-            # Also create a new "User Profile" object for each user
+            # Also create a new "UserProfile" and "UserRelationships" object for each user
             new_user_profile = UserProfile.objects.create(user=user)
             new_user_profile.save()
+
+            new_user_relationships = UserRelationship.objects.create(user=user)
+            new_user_relationships.save()
 
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
@@ -176,12 +179,20 @@ def view_profile(request, username):
         # Getting the user whos profile was clicked
         clicked_user = User.objects.get(username=username)
         users_profile = UserProfile.objects.get(user = clicked_user)
-        users_tweets = Tweet.objects.filter(user = clicked_user).annotate(comments_count=Count('comments'))
+        users_tweets = Tweet.objects.filter(user = clicked_user)
+
+        users_relationships = UserRelationship.objects.get(user = clicked_user)
+        followers_count = users_relationships.followers_count()
+        following_count = users_relationships.following_count()
+        
         current_user_profile = UserProfile.objects.get(user=request.user) if request.user.is_authenticated else None
         
         print(users_tweets)
         return render(request, "network/user-profile.html", {
             "users_profile": users_profile,
+            "users_relationships": users_relationships,
+            "followers_count": followers_count,
+            "following_count": followers_count,
             "users_tweets": users_tweets.order_by("-date_posted"),
             "user_profile": current_user_profile
         })

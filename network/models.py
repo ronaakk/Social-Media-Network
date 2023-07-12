@@ -55,8 +55,20 @@ class UserProfile(models.Model):
     profile_picture = models.ImageField(default="profile-pictures/default-profile-pic.jpeg", upload_to='profile-pictures')
     user = models.OneToOneField('User', on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True, max_length=150)
-    followers = models.IntegerField(default=0)
-    following = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.user}: {self.bio}"
+
+class UserRelationship(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    followers = models.ManyToManyField('UserProfile', related_name="followed_by", blank=True)
+    following = models.ManyToManyField('UserProfile', related_name="following", blank=True)
+
+    def followers_count(self):
+        return self.followers.count()
+    
+    def following_count(self):
+        return self.following.count()
+    
+    def __str__(self):
+        return f"{self.user}: {self.followers_count()} Followers, {self.following_count()} Following"
