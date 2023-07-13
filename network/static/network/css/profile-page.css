@@ -75,6 +75,7 @@
 
 .action-button:focus {
     border: none;
+    outline: none !important;
 }
 
 /* User tweet styles */

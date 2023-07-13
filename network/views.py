@@ -187,7 +187,12 @@ def view_profile(request, username):
         following_count = users_relationships.following_count()
         
         current_user_profile = UserProfile.objects.get(user=request.user) if request.user.is_authenticated else None
+        current_user_relationships = UserRelationship.objects.get(user = request.user)
+        current_user_following = current_user_relationships.following.all().values_list('user__username', flat=True)
         
+        print(users_profile.user.username)
+        print(current_user_following)
+        print("---------------------------")
         print(users_tweets)
         return render(request, "network/user-profile.html", {
             "users_profile": users_profile,
@@ -195,7 +200,8 @@ def view_profile(request, username):
             "followers_count": followers_count,
             "following_count": following_count,
             "users_tweets": users_tweets.order_by("-date_posted"),
-            "user_profile": current_user_profile
+            "user_profile": current_user_profile,
+            "current_user_following": current_user_following
         })
 
 def load_feed(request, feed):

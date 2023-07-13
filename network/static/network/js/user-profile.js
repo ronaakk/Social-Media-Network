@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const username = usernameElement.textContent;
 
     if (actionButton.textContent === "Follow") {
-        actionButton.addEventListener('click', addFollower(username));
+        actionButton.addEventListener('click', () => addFollower(username));
     }
 
 
@@ -28,6 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error(error);
         });
+    }
+
+    function editActionButton() {
+        const actionButton = document.querySelector(".action-button");
+        
     }
 
 })

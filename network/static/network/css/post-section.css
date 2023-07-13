@@ -211,11 +211,16 @@ body {
     min-width: 90%;
 }
 
+.user-profile-link:hover {
+    text-decoration: none;
+}
+
 .username-post {
     width: max-content;
     transition: all 0.3s ease;
     font-weight: bold;
     cursor: pointer;
+    color: var(--bg-color);
 }
 
 .username-post:hover {
