@@ -105,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(data => {
       const feedPosts = data.feed_posts;
-      console.log(feedPosts);
 
       feedPosts.forEach(post => {
         addPostToPage(

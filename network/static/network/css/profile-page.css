@@ -73,9 +73,9 @@
     background-color: var(--main-color-focus);
 }
 
-.action-button:focus {
-    border: none;
+.action-section .action-button:focus {
     outline: none !important;
+    border: none;
 }
 
 /* User tweet styles */
@@ -224,4 +224,11 @@
 .comment-section:hover .comment-button,
 .comment-section:hover .comment-button .material-symbols-outlined {
     color: var(--main-color);
+}
+
+.action-button.following-button:hover {
+    background-color: white;
+    color: red;
+    border: 1px solid red;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

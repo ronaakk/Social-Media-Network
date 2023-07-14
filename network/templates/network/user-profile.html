@@ -25,11 +25,7 @@
             {% endif %}
         </div>
 
-        {% if user_profile and users_profile.user.username in current_user_following %}
-            <div class="action-section">
-                <button class="action-button following-button">Following</button>
-            </div>
-        {% elif user_profile.user.username == users_profile.user.username %}
+        {% if user_profile.user.username == users_profile.user.username %}
             <div class="action-section">
                 <a href="{% url 'change_profile' %}">
                     <button class="action-button">Edit Profile</button>
@@ -37,7 +33,13 @@
             </div>
         {% else %}
             <div class="action-section">
-                <button class="action-button">Follow</button>
+                <button class="action-button {% if user_profile and users_profile.user.username in current_user_following %} following-button {% endif %}">
+                    {% if user_profile and users_profile.user.username in current_user_following %}
+                        Following
+                    {% else %}
+                        Follow
+                    {% endif %}
+                </button>
             </div>
         {% endif %}
 

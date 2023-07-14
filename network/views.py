@@ -259,10 +259,36 @@ def follow_user(request, username):
 
         return JsonResponse({
             "message": f"{user_to_follow.user.username} added to {new_follower.username}'s following.",
-            "user_to_follow": user_to_follow.user.username,
-            "new_follower": new_follower.username,
             "new_follower_count": user_to_follow.followers_count()
         }, status=200, content_type = "application/json")
 
     else:
         return JsonResponse({"error": "GET request requried."}, status=400, content_type="application/json")
+
+def unfollow_user(request, username):
+    if request.method == "GET":
+
+        # Get the current user
+        follower_to_remove = User.objects.get(username = request.user.username)
+        follower_to_remove_profile = UserProfile.objects.get(user = follower_to_remove)
+        follower_to_remove_relationships = UserRelationship.objects.get(user = follower_to_remove)
+
+        # Get user who is displayed currently
+        user_displayed = User.objects.get(username = username)
+        user_displayed_profile = UserProfile.objects.get(user = user_displayed)
+
+        # Get their userRelationships model and remove the user from their followers list
+        user_displayed_relationships = UserRelationship.objects.get(user = user_displayed)
+        user_displayed_relationships.followers.remove(follower_to_remove_profile)
+
+        # Remove the user_displayed from the current users following
+        follower_to_remove_relationships.following.remove(user_displayed_profile)
+
+        return JsonResponse({
+            "message": f"{follower_to_remove.username} removed from {user_displayed.username}'s following.",
+            "new_follower_count": user_displayed_relationships.followers_count()
+        }, status=200, content_type = "application/json")
+
+    else:
+        return JsonResponse({"error": "GET request requried."}, status=400, content_type="application/json")
+
