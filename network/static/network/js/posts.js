@@ -92,9 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
     enableButton("image");
   }
 
-  // Function to initially populate the feed
-  function populateFeed(feed) {
-    fetch(`/load_feed/${feed}`, {
+  function populateHomeFeed() {
+    fetch(`/home`, {
       method: "GET",
     })
     .then(response => {
@@ -124,9 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  // Call the loadFeed function when the page is loaded to load the home page
-  window.addEventListener("load", () => populateFeed('home'));
-
+  // Call the populateHomeFeed function when the page is loaded to load the home page
+  window.addEventListener("load", () => {
+    populateHomeFeed();
+  })
 });
 
 // Find the csrf token within the user's browser

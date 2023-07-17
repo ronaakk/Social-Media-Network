@@ -10,10 +10,11 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("profile_settings", views.change_profile, name="change_profile"),
     path("user/<str:username>", views.view_profile, name="view_profile"),
+    path("following", views.following_feed, name="following_feed"),
 
-    # API Routes (to handle saving, retrieving tweet data)
+    # API Routes (to handle saving, retrieving tweet data through AJAX)
     path("post_tweet/", views.post_tweet, name="post_tweet"),
-    path("load_feed/<str:feed>", views.load_feed, name="load_feed"),
+    path("home", views.home_feed, name="home_feed"),
     path("follow_user/<str:username>", views.follow_user, name="follow_user"),
     path("unfollow_user/<str:username>", views.unfollow_user, name="unfollow_user")
     

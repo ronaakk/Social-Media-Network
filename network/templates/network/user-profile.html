@@ -63,9 +63,9 @@
                                     <p class="tweet">{{ tweet.tweet }}</p>
                                     
                                     {% if tweet.image %}
-                                    <div class="tweet-details__image">
-                                        <img src="{{ tweet.image.url }}" class="posted-tweet-picture">
-                                    </div>
+                                        <div class="tweet-details__image">
+                                            <img src="{{ tweet.image.url }}" class="posted-tweet-picture">
+                                        </div>
                                     {% endif %}
 
                                     <!-- Edit/Delete a post (given creator is authenticated), Likes, Comments (give this div a class of "tweet-actions") -->

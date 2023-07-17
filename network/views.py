@@ -190,10 +190,6 @@ def view_profile(request, username):
         current_user_relationships = UserRelationship.objects.get(user = request.user)
         current_user_following = current_user_relationships.following.all().values_list('user__username', flat=True)
         
-        print(users_profile.user.username)
-        print(current_user_following)
-        print("---------------------------")
-        print(users_tweets)
         return render(request, "network/user-profile.html", {
             "users_profile": users_profile,
             "users_relationships": users_relationships,
@@ -204,38 +200,62 @@ def view_profile(request, username):
             "current_user_following": current_user_following
         })
 
-def load_feed(request, feed):
+def home_feed(request):
     if request.method == "GET":
-
-        if feed == "home":
-            # Sort the feed by date posted
-            feed_posts = Tweet.objects.all().order_by("date_posted")
-            # print("---- {} -----".format(feed_posts))
-            feed_data = []
-            for post in feed_posts:
-                # Access the user profile for each profile picture
-                user = UserProfile.objects.get(user = post.user)
-                profile_pic = user.profile_picture
-                feed_data.append({
-                    "tweet": post.tweet,
-                    "tweet_image_url": post.image.url if post.image else "",
-                    "username": post.user.username,
-                    "date_posted": post.date_posted.strftime("%B %d, %Y"),
-                    "tweet_comments": post.comments.count() if post.comments.exists() else 0,
-                    "tweet_likes": post.likes,
-                    "tweet_user_profile_pic": profile_pic.url
-                })
-            return JsonResponse({
-                "feed_posts": feed_data, 
-                "logged_in_user": request.user.username
-                }, status=200, content_type="application/json")
-
-        # Implement this later
-        # if feed == "following":
-        #     following_feed_posts = Tweet.objects.filter()
-            
+        feed_data = []
+        # Sort the feed by date posted
+        feed_posts = Tweet.objects.all().order_by("date_posted")
+        for post in feed_posts:
+            # Access the user profile for each profile picture
+            user = UserProfile.objects.get(user = post.user)
+            profile_pic = user.profile_picture
+            feed_data.append({
+                "tweet": post.tweet,
+                "tweet_image_url": post.image.url if post.image else "",
+                "username": post.user.username,
+                "date_posted": post.date_posted.strftime("%B %d, %Y"),
+                "tweet_comments": post.comments.count() if post.comments.exists() else 0,
+                "tweet_likes": post.likes,
+                "tweet_user_profile_pic": profile_pic.url
+            })
+        return JsonResponse({
+            "feed_posts": feed_data, 
+            "logged_in_user": request.user.username
+        }, status=200, content_type="application/json")    
     else:
         return JsonResponse({"error": "GET request requried."}, status=400, content_type="application/json")
+
+def following_feed(request):
+    if request.method == "GET":
+        feed_data = []
+        # Get current user profile and their user relationships (their following)
+        current_user_profile = UserProfile.objects.get(user = request.user)
+        current_user = UserRelationship.objects.get(user = request.user)
+
+        # Get the users following list
+        user_following = current_user.following.all()
+        
+        # Get all tweets from users list then add to feed_data
+        following_feed_posts = Tweet.objects.filter(user__userprofile__in=user_following).order_by("-date_posted")
+        for post in following_feed_posts:
+            user = post.user
+            user_profile = UserProfile.objects.get(user = user)
+            profile_pic = user_profile.profile_picture
+            feed_data.append({
+                "tweet": post.tweet,
+                "tweet_image_url": post.image.url if post.image else "",
+                "username": user.username,
+                "date_posted": post.date_posted.strftime("%B %d, %Y"),
+                "tweet_comments": post.comments.count() if post.comments.exists() else 0,
+                "tweet_likes": post.likes,
+                "tweet_user_profile_pic": profile_pic.url
+            })
+
+        return render(request, "network/following.html", {
+            "logged_in_user": request.user.username,
+            "user_profile": current_user_profile,
+            "feed_posts": feed_data
+        })
 
 @login_required(login_url='login')
 def follow_user(request, username):
