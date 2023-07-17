@@ -13,14 +13,18 @@
             <div class="post">
                 <div class="post-layout">
                     
-                    <img src="{{ post.tweet_user_profile_pic }}" class="profile-pic small-post-section tweet-creator">
+                    <a href={% url 'view_profile' post.user %} class="user-profile-link">
+                        <img src="{{ post.tweet_user_profile_pic }}" class="profile-pic small-post-section tweet-creator">
+                    </a>
         
                     <!-- Actual post content (profile image, username, tweet, and image) -->
                     <div class="section-row"> 
                         <div class="tweet-details"> 
                             <div class="tweet-header">
-                                <input type="hidden" id="tweet-username" value="{{ users_profile.user }}">
-                                <p class="username-post">{{ post.username }}</p>
+                                <a href={% url 'view_profile' post.user %} class="user-profile-link">
+                                    <input type="hidden" id="tweet-username" value="{{ users_profile.user }}">
+                                    <p class="username-post">{{ post.username }}</p>
+                                </a>
                                 <p class="date-posted"> • {{ post.date_posted }}</p>
                             </div>
                             

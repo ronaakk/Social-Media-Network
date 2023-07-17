@@ -244,6 +244,7 @@ def following_feed(request):
             feed_data.append({
                 "tweet": post.tweet,
                 "tweet_image_url": post.image.url if post.image else "",
+                "user": user,
                 "username": user.username,
                 "date_posted": post.date_posted.strftime("%B %d, %Y"),
                 "tweet_comments": post.comments.count() if post.comments.exists() else 0,
