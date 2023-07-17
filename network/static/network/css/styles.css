@@ -156,3 +156,7 @@ header {
 .body {
     margin-top: 3.5rem;
 }
+
+.active {
+    color: var(--main-color-focus);
+}
