@@ -1,0 +1,10 @@
+#tweet-editing {
+    border: none;
+    width: 100%;
+    font-size: 1.1rem;
+    resize: none;
+}
+
+#tweet-editing:focus {
+    outline: none;
+}

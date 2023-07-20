@@ -165,6 +165,7 @@ def post_tweet(request):
 
         return JsonResponse({
             "message": "Tweet created successfully.", 
+            "tweet_id": new_tweet.id,
             "image_url": image_url, 
             "date_posted": new_tweet.date_posted.strftime("%B %d, %Y"),
             "profile_pic": user_profile_pic.url,
@@ -211,6 +212,7 @@ def home_feed(request):
             profile_pic = user.profile_picture
             feed_data.append({
                 "tweet": post.tweet,
+                "tweet_id": post.id,
                 "tweet_image_url": post.image.url if post.image else "",
                 "username": post.user.username,
                 "date_posted": post.date_posted.strftime("%B %d, %Y"),
@@ -218,6 +220,8 @@ def home_feed(request):
                 "tweet_likes": post.likes,
                 "tweet_user_profile_pic": profile_pic.url
             })
+            print(f"{post.tweet}: {post.id}")
+        print(feed_posts)
         return JsonResponse({
             "feed_posts": feed_data, 
             "logged_in_user": request.user.username
@@ -313,3 +317,30 @@ def unfollow_user(request, username):
     else:
         return JsonResponse({"error": "GET request requried."}, status=400, content_type="application/json")
 
+def edit_tweet(request, tweet_id):
+    if request.method == "POST":
+        tweet = Tweet.objects.get(id = tweet_id)
+
+        # Update tweet content
+        new_tweet_content = request.POST.get("tweet", "").strip()
+        new_tweet_image = request.FILES.get("tweet_image")
+        tweet.tweet = new_tweet_content
+        tweet.image = new_tweet_image
+        tweet.save()
+
+         # Generate the URL for the uploaded image
+        if new_tweet_image:
+            image_url = settings.MEDIA_URL + str(new_tweet_image)
+        else:
+            image_url = None
+
+        return JsonResponse({
+            "message": "Tweet updated successfully.", 
+            "tweet_image": image_url, 
+            "tweet_content": new_tweet_content
+        }, status=201)
+    else:
+        return JsonResponse({"error": "POST request requried."}, status=400, content_type="application/json")
+
+def delete_tweet(request, tweet_id):
+    pass

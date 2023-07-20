@@ -56,7 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
             likesCount=0, 
             commentsCount=0, 
             data.profile_pic, 
-            data.logged_in_user);
+            data.logged_in_user,
+            data.tweet_id);
         } else {
           addPostToPage(
             tweet, 
@@ -66,7 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
             likesCount=0, 
             commentsCount=0, 
             data.profile_pic, 
-            data.logged_in_user);
+            data.logged_in_user,
+            data.tweet_id);
         }
 
         clearPostSection();
@@ -115,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
           post.tweet_comments,
           post.tweet_user_profile_pic,
           data.logged_in_user,
+          post.tweet_id
         );
       });
     })
@@ -244,12 +247,13 @@ function deletePreview(previewContainer) {
 }
   
 // Function to add posts to page (and sort them by date added)
-function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesCount, commentsCount, profilePic, loggedInUser) {
+function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesCount, commentsCount, profilePic, loggedInUser, tweetId) {
     const feed = document.querySelector(".posts");
     const postTemplate = document.querySelector(".post");
   
     const newPost = postTemplate.cloneNode(true);
     newPost.classList.remove("hidden");
+    newPost.id = `post-${tweetId}`;
   
     const tweetDetails = newPost.querySelector(".tweet-details");
     const profilePicElement = newPost.querySelector(".tweet-creator");
@@ -260,7 +264,7 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
     const datePostedElement = newPost.querySelector(".date-posted");
     const tweetLikes = newPost.querySelector(".like-counter");
     const tweetComments = newPost.querySelector(".comment-counter");
-    
+
     tweetImageContainer.style.display = "none";
     tweetImageElement.style.display = "none";
 
@@ -293,6 +297,12 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
       editSection.style.display = "none";
     } else {
       editSection.style.display = "flex";
+      const editButton = editSection.querySelector(".edit-button");
+      editButton.dataset.tweetId = tweetId;
+      editButton.addEventListener('click', () => {
+        editPost(tweetId);
+        console.log("edit button clicked");
+      });
     }
 
     // Load the correct url

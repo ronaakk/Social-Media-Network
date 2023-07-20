@@ -16,6 +16,7 @@ urlpatterns = [
     path("post_tweet/", views.post_tweet, name="post_tweet"),
     path("home", views.home_feed, name="home_feed"),
     path("follow_user/<str:username>", views.follow_user, name="follow_user"),
-    path("unfollow_user/<str:username>", views.unfollow_user, name="unfollow_user")
+    path("unfollow_user/<str:username>", views.unfollow_user, name="unfollow_user"),
+    path("edit_tweet/<int:tweet_id>", views.edit_tweet, name="edit_tweet"),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
