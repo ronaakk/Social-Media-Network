@@ -220,8 +220,6 @@ def home_feed(request):
                 "tweet_likes": post.likes,
                 "tweet_user_profile_pic": profile_pic.url
             })
-            print(f"{post.tweet}: {post.id}")
-        print(feed_posts)
         return JsonResponse({
             "feed_posts": feed_data, 
             "logged_in_user": request.user.username

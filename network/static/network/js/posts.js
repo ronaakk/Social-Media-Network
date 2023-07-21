@@ -301,7 +301,6 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
       editButton.dataset.tweetId = tweetId;
       editButton.addEventListener('click', () => {
         editPost(tweetId);
-        console.log("edit button clicked");
       });
     }
 

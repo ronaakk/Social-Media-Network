@@ -3,8 +3,66 @@
     width: 100%;
     font-size: 1.1rem;
     resize: none;
+    height: 1.4rem;
+    margin-bottom: 0.5rem;
 }
 
 #tweet-editing:focus {
-    outline: none;
+    outline: none; 
 }
+
+#tweet-actions-editing {
+    justify-content: flex-start;
+    align-items: center;
+    width: 70%;
+    margin-top: 0.3rem;
+}
+
+#tweet-image-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  
+  #tweet-picture-editing {
+    max-width: 90%;
+    max-height: 700px;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    transition: opacity 0.3s ease;
+  }
+  
+  #tweet-image-container::after {
+    content: "Change Image";
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+  }
+  
+  #tweet-image-container:hover #tweet-picture-editing {
+    opacity: 0.7;
+  }
+  
+  #tweet-image-container:hover::after {
+    opacity: 1;
+  }
+  
+  #tweet-image-container #tweet-picture-editing:active {
+    opacity: 1;
+  }
+  
+  #tweet-image-container #tweet-picture-editing:focus {
+    outline: none;
+  }
+  

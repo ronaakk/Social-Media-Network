@@ -4,27 +4,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function checkCharacterCountEdit(event) {
     const tweetLength = event.value.length;
-    const tweet = document.querySelector("#post-content");
+    const tweet = document.querySelector("#tweet-editing");
   
     if (tweetLength > 140) {
       tweet.style.color = "red";
-      disableButtonEdit("save");
+      disableSaveButton();
     } else if (tweetLength <= 0) {
       tweet.style.color = "";
-      disableButtonEdit("save");
+      disableSaveButton();
     } else {
       tweet.style.color = "";
-      enableButtonEdit("save");
+      enableSaveButton();
     }
 }
 
 function disableSaveButton() {
-      const saveButton = document.querySelector("#save-button");
+      const saveButton = document.querySelector(".save-button");
       saveButton.disabled = true;
 }
   
-function enableSaveButton(button) {
-    const saveButton = document.querySelector("#save-button");
+function enableSaveButton() {
+    const saveButton = document.querySelector(".save-button");
     saveButton.disabled = false;
 }
 
@@ -43,7 +43,8 @@ function editPost(tweetId) {
     const tweetContent = post.querySelector('.tweet');
     const tweetImageContainer = post.querySelector('.tweet-details__image');
     const tweetImageElement = tweetImageContainer.querySelector(".posted-tweet-picture");
-    const actionsSection = post.querySelector('.tweet-actions-section');
+    const actionsSection = post.querySelector('.tweet-actions-post');
+    const originalChildren = Array.from(actionsSection.children);
   
     // Hide the existing tweet content
     tweetContent.style.display = 'none';
@@ -64,17 +65,46 @@ function editPost(tweetId) {
     // Show the tweet image container if there is an image
     if (tweetImageContainer.style.display !== "none") {
         tweetImageContainer.style.display = 'flex';
+        tweetImageContainer.id = "tweet-image-container";
+        tweetImageElement.id = "tweet-picture-editing";
+        // Add an event listener to the image element
+        tweetImageElement.addEventListener('click', () => {
+            // Open file picker dialog
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                // Update the image src with the selected image
+                tweetImageElement.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+            });
+            fileInput.click();
+        });
     } else {
         tweetImageContainer.style.display = 'none';
         tweetImageElement.style.display = "none";
     }
   
     // Hide the actions section and show the cancel, delete (implement later), and save buttons
-    actionsSection.style.display = 'none';
-    const saveButton = createSaveButton(tweetId);
+    originalChildren.forEach(child => {
+        child.style.display = "none";
+    })
+    actionsSection.id = "tweet-actions-editing";
+
     const cancelButton = createCancelButton(tweetId);
-    // editSection.parentNode.appendChild(saveButton);
-    // editSection.parentNode.appendChild(cancelButton);
+    const saveButton = createSaveButton(tweetId);
+    const deleteButton = createDeleteButton(tweetId);
+
+    actionsSection.appendChild(cancelButton);
+    actionsSection.appendChild(saveButton);
+    actionsSection.appendChild(deleteButton);
+    
 }
   
 // Function to create the save button for editing a post
@@ -94,44 +124,52 @@ function createCancelButton(tweetId) {
     cancelButton.addEventListener('click', () => cancelEdit(tweetId));
     return cancelButton;
 }
-  
+
+function createDeleteButton(tweetId) {
+    const deleteButton = document.createElement('button');
+    deleteButton.classList.add('delete-button');
+    deleteButton.textContent = 'Delete';
+    // deleteButton.addEventListener('click', () => deletePost(tweetId));
+    return deleteButton;
+}
+
 // Function to save the edited post
 function savePost(tweetId) {
     const post = document.getElementById(`post-${tweetId}`);
     const tweetContent = post.querySelector('.tweet');
-    const tweetInput = post.querySelector('.edit-tweet-input');
+    const tweetImage = post.querySelector('.posted-tweet-picture');
+    const newTweetInput = post.querySelector('.edit-tweet-input');
+
 
     // Get the edited tweet content
-    const newTweetContent = tweetInput.value;
+    const newTweetImage = tweetImage.src;
+    const newTweetContent = newTweetInput.value;
 
     // Send an AJAX request to update the tweet content on the server
     fetch(`/edit_tweet/${tweetId}/`, {
         method: 'POST',
-        body: JSON.stringify({ tweet: newTweetContent }),
+        body: JSON.stringify({ tweet: newTweetContent, tweet_image: newTweetImage }),
         headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': getCookie('csrftoken')
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
         }
     })
         .then(response => {
-        if (response.ok) {
-            // Update the tweet content on the page
-            tweetContent.textContent = newTweetContent;
+            if (response.ok) {
+                // Update the tweet content on the page
+                tweetContent.textContent = newTweetContent;
 
-            // Remove the edit input element
-            tweetInput.remove();
+                // Remove the edit input element
+                newTweetInput.remove();
 
-            // Show the tweet content
-            tweetContent.style.display = 'block';
+                // Show the tweet content
+                tweetContent.style.display = 'flex';
 
-            // Remove the save and cancel buttons
-            const saveButton = post.querySelector('.save-button');
-            const cancelButton = post.querySelector('.cancel-button');
-            saveButton.remove();
-            cancelButton.remove();
-        } else {
-            throw new Error('Failed to save the post');
-        }
+                // Remove the editing buttons and show the original tweet actions
+                removeEditingButtons(tweetId);
+            } else {
+                throw new Error('Failed to save the post');
+            }
         })
         .catch(error => {
             console.log(error);
@@ -144,7 +182,6 @@ function cancelEdit(tweetId) {
     const tweetContent = post.querySelector('.tweet');
     const tweetInput = post.querySelector('.edit-tweet-input');
     const tweetImageContainer = post.querySelector('.tweet-details__image');
-    const editSection = post.querySelector('.edit-section');
 
     // Show the existing tweet content
     tweetContent.style.display = 'block';
@@ -157,10 +194,30 @@ function cancelEdit(tweetId) {
         tweetImageContainer.style.display = 'none';
     }
 
-    // Hide the save and cancel buttons and show the edit button
+    // Remove the editing buttons and show the original tweet actions
+    removeEditingButtons(tweetId);
+}
+
+function removeEditingButtons(tweetId) {
+    // Remove edit buttons
+    const post = document.getElementById(`post-${tweetId}`);
     const saveButton = post.querySelector('.save-button');
     const cancelButton = post.querySelector('.cancel-button');
+    const deleteButton = post.querySelector('.delete-button');
     saveButton.remove();
     cancelButton.remove();
-    editSection.style.display = 'flex';
+    deleteButton.remove();
+
+    // Display the original tweet actions and remove id from tweet-actions
+    const tweetActions = post.querySelector(".tweet-actions-post");
+    tweetActions.removeAttribute('id');
+    const originalActions = post.querySelector(".tweet-actions-section");
+    originalActions.style.display = "flex";
+
+    // Remove id's from images
+    const tweetImageContainer = post.querySelector('.tweet-details__image');
+    const tweetImageElement = tweetImageContainer.querySelector(".posted-tweet-picture");
+
+    tweetImageContainer.removeAttribute('id');
+    tweetImageElement.removeAttribute('id');
 }

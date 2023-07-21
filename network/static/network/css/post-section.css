@@ -150,7 +150,7 @@ body {
 }
   
 .image-container::after {
-    content: "Remove image";
+    content: "Remove Image";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -182,28 +182,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.delete-image-button {
-    position: absolute;
-    cursor: pointer;
-    left: 0.5rem;
-    top: 0.4rem;
-    font-size: 1.2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    background-color: var(--bg-color);
-    color: white;
-    opacity: 0.7;
-    transition: all 0.3s ease;
-}
-
-.delete-image-button:hover {
-    opacity: 1;
 }
 
 /* The styles for the post layout itself */
@@ -300,7 +278,6 @@ body {
     border: none;
     background: none; 
     padding: 0; 
-    /* gap: 0.5rem; */
 }
 
 .edit-button .material-symbols-outlined {
@@ -328,5 +305,3 @@ body {
 .comment-section:hover .comment-button .material-symbols-outlined {
     color: var(--main-color);
 }
-
-/* Edit button styles */
