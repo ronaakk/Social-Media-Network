@@ -13,6 +13,7 @@ from django.templatetags.static import static
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from PIL import Image
+import json
 
 from .forms import *
 from .models import *
@@ -319,11 +320,17 @@ def edit_tweet(request, tweet_id):
     if request.method == "POST":
         tweet = Tweet.objects.get(id = tweet_id)
 
-        # Update tweet content
-        new_tweet_content = request.POST.get("tweet", "").strip()
-        new_tweet_image = request.FILES.get("tweet_image")
+        data = json.loads(request.body)
+        
+        # Get the edited tweet content and image URL from the JSON data
+        new_tweet_content = data.get("tweet", "").strip()
+        new_tweet_image = data.get("tweet_image", "").strip()
+
+        print(new_tweet_content)
+        print(new_tweet_image)
+
         tweet.tweet = new_tweet_content
-        tweet.image = new_tweet_image
+        tweet.image = new_tweet_image if new_tweet_image else ""
         tweet.save()
 
          # Generate the URL for the uploaded image

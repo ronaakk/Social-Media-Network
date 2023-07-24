@@ -99,9 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
       method: "GET",
     })
     .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
       return response.json();
     })
     .then(data => {
@@ -273,7 +270,9 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
       tweetImageContainer.style.display = "flex";
       tweetImageElement.src = tweetImageFile;
       tweetImageElement.style.display = "flex";
-    } 
+    } else {
+      tweetImageElement.src = '';
+    }
 
     // Setting the profile pic
     profilePicElement.src = profilePic;
