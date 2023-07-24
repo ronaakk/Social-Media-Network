@@ -348,4 +348,10 @@ def edit_tweet(request, tweet_id):
         return JsonResponse({"error": "POST request requried."}, status=400, content_type="application/json")
 
 def delete_tweet(request, tweet_id):
-    pass
+    if request.method == "DELETE":
+        tweet_to_delete = Tweet.objects.get(id = tweet_id)
+        tweet_to_delete.delete()
+
+        return JsonResponse({"message": "Tweet deleted successfully."}, status=200, content_type="application/json")
+    else:
+        return JsonResponse({"error": "DELETE request requed."}, status=400, content_type="application/json")

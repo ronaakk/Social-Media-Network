@@ -59,8 +59,7 @@ function editPost(tweetId) {
     tweetContent.parentNode.insertBefore(tweetInput, tweetContent.nextSibling);
 
     // Save existing tweet image in case cancel button is hit
-    const existingImage = tweetImageElement.src !== 'http://127.0.0.1:8000/' ? tweetImageElement.src : null;
-    console.log(`Existing image: ${existingImage}`);
+    const existingImage = tweetImageElement.src !== 'http://127.0.0.1:8000/' ? tweetImageElement.src : '';
   
     // Show the tweet image container if there is an image
     if (tweetImageContainer.style.display !== "none") {
@@ -137,7 +136,13 @@ function createDeleteButton(tweetId) {
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('delete-button');
     deleteButton.textContent = 'Delete';
-    // deleteButton.addEventListener('click', () => deletePost(tweetId));
+    deleteButton.addEventListener('click', () => {
+        // Show confirmation alert and proceed with deletion only if user confirms
+        const shouldDelete = window.confirm('Are you sure you want to delete this post?');
+        if (shouldDelete) {
+            deletePost(tweetId);
+        }
+    });
     return deleteButton;
 }
 
@@ -208,6 +213,26 @@ function cancelEdit(tweetId, existingImage) {
 
     // Remove the editing buttons and show the original tweet actions
     removeEditingButtons(tweetId);
+}
+
+function deletePost(tweetId) {
+    fetch(`/delete_tweet/${tweetId}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                const post = document.getElementById(`post-${tweetId}`);
+                post.remove();
+                alert('Tweet deleted successfully!');
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
 }
 
 function removeEditingButtons(tweetId) {
