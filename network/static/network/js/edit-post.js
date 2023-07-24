@@ -109,8 +109,8 @@ function editPost(tweetId) {
     const deleteButton = createDeleteButton(tweetId);
 
     actionsSection.appendChild(cancelButton);
-    actionsSection.appendChild(saveButton);
     actionsSection.appendChild(deleteButton);
+    actionsSection.appendChild(saveButton);
     
 }
   
