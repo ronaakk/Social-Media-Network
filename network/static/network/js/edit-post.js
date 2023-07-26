@@ -71,7 +71,16 @@ function editPost(tweetId) {
     // Replace the tweet content with the input element
     tweetContent.parentNode.insertBefore(tweetInput, tweetContent.nextSibling);
 
-    let tweetImageFileName = "";
+    // Hide the actions section and show the cancel, delete, and save buttons
+    originalChildren.forEach(child => {
+        child.style.display = "none";
+    })
+    actionsSection.id = "tweet-actions-editing";
+
+    // In the case the user doesn't change the picture
+    const cancelButton = createCancelButton(tweetId, existingImage);
+    let saveButton = createSaveButton(tweetId, fileName);
+    const deleteButton = createDeleteButton(tweetId);
 
     // Show the tweet image container if there is an image
     if (tweetImageContainer.style.display !== "none") {
@@ -98,8 +107,9 @@ function editPost(tweetId) {
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         tweetImageElement.src = e.target.result;
-                        tweetImageFileName = file.name;
-                        saveImageFileName(tweetId, tweetImageFileName);
+                        const tweetImageFileName = file.name;
+                        const newSaveButton = createSaveButton(tweetId, tweetImageFileName);
+                        saveButton = newSaveButton;
                     };
                     reader.readAsDataURL(file);
                 } 
@@ -107,32 +117,22 @@ function editPost(tweetId) {
         
             // Open file picker dialog
             tweetImageFileInput.click();    
-        })
+        });
+
+        actionsSection.appendChild(cancelButton);
+        actionsSection.appendChild(deleteButton);
+        actionsSection.appendChild(saveButton);
     } else {
         tweetImageContainer.style.display = 'none';
         tweetImageElement.style.display = "none";
-    }
-  
-    // Hide the actions section and show the cancel, delete (implement later), and save buttons
-    originalChildren.forEach(child => {
-        child.style.display = "none";
-    })
-    actionsSection.id = "tweet-actions-editing";
 
-    const cancelButton = createCancelButton(tweetId, existingImage);
-    const saveButton = createSaveButton(tweetId, fileName);
-    const deleteButton = createDeleteButton(tweetId);
-
-    actionsSection.appendChild(cancelButton);
-    actionsSection.appendChild(deleteButton);
-    actionsSection.appendChild(saveButton);
-    
-}
-
-// Function to save the tweetImageFileName from the File Reader
-function saveImageFileName(tweetId, file) {
-    const fileName = file;
-    createSaveButton(tweetId, fileName);
+        const newSaveButton = createSaveButton(tweetId);
+        saveButton = newSaveButton;
+        
+        actionsSection.appendChild(cancelButton);
+        actionsSection.appendChild(deleteButton);
+        actionsSection.appendChild(saveButton);
+    }   
 }
     
 // Function to create the save button for editing a post
@@ -203,7 +203,7 @@ function savePost(tweetId, tweetImageFileName = "") {
                 tweetContent.style.display = 'flex';
 
                 // Update the source of the image to the new file
-                tweetImage.src = `/media/tweet-pictures/${tweetImageFileName}`;
+                tweetImage.src = `${tweetImageFileName}`;
 
                 removeEditingButtons(tweetId);
             }

@@ -325,8 +325,8 @@ def edit_tweet(request, tweet_id):
         new_tweet_content = data.get("tweet", "").strip()
         new_tweet_image = data.get("tweet_image")
 
-        print(new_tweet_content)
-        print(new_tweet_image)
+        print(f"---- {new_tweet_content} ----")
+        print(f"---- {new_tweet_image} ----")
 
         existing_image = tweet.image
 
