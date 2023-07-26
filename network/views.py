@@ -141,7 +141,6 @@ def change_profile(request):
             "user_profile": user_profile
         })
 
-# Will be handled asynchronously with AJAX
 @csrf_exempt
 def post_tweet(request):
     if request.method == "POST":
@@ -324,13 +323,15 @@ def edit_tweet(request, tweet_id):
         
         # Get the edited tweet content and image URL from the JSON data
         new_tweet_content = data.get("tweet", "").strip()
-        new_tweet_image = data.get("tweet_image", "").strip()
+        new_tweet_image = data.get("tweet_image")
 
         print(new_tweet_content)
         print(new_tweet_image)
 
+        existing_image = tweet.image
+
         tweet.tweet = new_tweet_content
-        tweet.image = new_tweet_image if new_tweet_image else ""
+        tweet.image = new_tweet_image if new_tweet_image else existing_image
         tweet.save()
 
          # Generate the URL for the uploaded image

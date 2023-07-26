@@ -1,3 +1,12 @@
+document.addEventListener('DOMContentLoaded', () => {
+     // Remove id's from images
+     const tweetImageContainer = document.querySelector('.tweet-details__image');
+     const tweetImageElement = tweetImageContainer.querySelector(".posted-tweet-picture");
+ 
+     tweetImageContainer.removeAttribute('id');
+     tweetImageElement.removeAttribute('id');
+})
+
 function checkCharacterCountEdit(event) {
     const tweetLength = event.value.length;
     const tweet = document.querySelector("#tweet-editing");
@@ -41,7 +50,11 @@ function editPost(tweetId) {
     const tweetImageElement = tweetImageContainer.querySelector(".posted-tweet-picture");
     const actionsSection = post.querySelector('.tweet-actions-post');
     const originalChildren = Array.from(actionsSection.children);
-  
+
+    // Save existing tweet image in case cancel button is hit
+    const existingImage = tweetImageElement.src !== 'http://127.0.0.1:8000/' ? tweetImageElement.src : '';
+    const fileName = existingImage.split("/").pop();
+
     // Hide the existing tweet content
     tweetContent.style.display = 'none';
   
@@ -58,41 +71,43 @@ function editPost(tweetId) {
     // Replace the tweet content with the input element
     tweetContent.parentNode.insertBefore(tweetInput, tweetContent.nextSibling);
 
-    // Save existing tweet image in case cancel button is hit
-    const existingImage = tweetImageElement.src !== 'http://127.0.0.1:8000/' ? tweetImageElement.src : '';
-  
+    let tweetImageFileName = "";
+
     // Show the tweet image container if there is an image
     if (tweetImageContainer.style.display !== "none") {
         tweetImageContainer.style.display = 'flex';
         tweetImageContainer.id = "tweet-image-container";
         tweetImageElement.id = "tweet-picture-editing";
 
-        let isFilePickerOpen = false;
-
-        // Add an event listener to the image element
         tweetImageElement.addEventListener('click', () => {
-            // Check if the file picker is already open
-            if (!isFilePickerOpen) {
-                isFilePickerOpen = true;
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
-                fileInput.accept = 'image/*';
-                fileInput.addEventListener('change', (event) => {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            tweetImageElement.src = e.target.result;
-                            isFilePickerOpen = false;
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        isFilePickerOpen = false;
-                    }
-                });
-                fileInput.click();
-            }
-        });
+            // Create an input element for editing the tweet image
+            const tweetImageFileInput = document.createElement('input');
+            tweetImageFileInput.type = 'file';
+            tweetImageFileInput.id = "tweet-picture-file-input";
+            tweetImageFileInput.style.display = 'none';
+            tweetImageFileInput.accept = 'image/*';
+        
+            // Add the input element to the tweet-details__image div
+            tweetImageContainer.appendChild(tweetImageFileInput);
+        
+            // Add an event listener to the file input
+            tweetImageFileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    // Update the image source with the selected image
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        tweetImageElement.src = e.target.result;
+                        tweetImageFileName = file.name;
+                        saveImageFileName(tweetId, tweetImageFileName);
+                    };
+                    reader.readAsDataURL(file);
+                } 
+            });
+        
+            // Open file picker dialog
+            tweetImageFileInput.click();    
+        })
     } else {
         tweetImageContainer.style.display = 'none';
         tweetImageElement.style.display = "none";
@@ -105,7 +120,7 @@ function editPost(tweetId) {
     actionsSection.id = "tweet-actions-editing";
 
     const cancelButton = createCancelButton(tweetId, existingImage);
-    const saveButton = createSaveButton(tweetId);
+    const saveButton = createSaveButton(tweetId, fileName);
     const deleteButton = createDeleteButton(tweetId);
 
     actionsSection.appendChild(cancelButton);
@@ -113,13 +128,19 @@ function editPost(tweetId) {
     actionsSection.appendChild(saveButton);
     
 }
-  
+
+// Function to save the tweetImageFileName from the File Reader
+function saveImageFileName(tweetId, file) {
+    const fileName = file;
+    createSaveButton(tweetId, fileName);
+}
+    
 // Function to create the save button for editing a post
-function createSaveButton(tweetId) {
+function createSaveButton(tweetId, tweetImageFileName) {
     const saveButton = document.createElement('button');
-    saveButton.classList.add('save-button');
     saveButton.textContent = 'Save';
-    saveButton.addEventListener('click', () => savePost(tweetId));
+    saveButton.classList.add('save-button');
+    saveButton.addEventListener('click', () => savePost(tweetId, tweetImageFileName));
     return saveButton;
 }
   
@@ -137,7 +158,6 @@ function createDeleteButton(tweetId) {
     deleteButton.classList.add('delete-button');
     deleteButton.textContent = 'Delete';
     deleteButton.addEventListener('click', () => {
-        // Show confirmation alert and proceed with deletion only if user confirms
         const shouldDelete = window.confirm('Are you sure you want to delete this post?');
         if (shouldDelete) {
             deletePost(tweetId);
@@ -147,20 +167,25 @@ function createDeleteButton(tweetId) {
 }
 
 // Function to save the edited post
-function savePost(tweetId) {
+function savePost(tweetId, tweetImageFileName = "") {
     const post = document.getElementById(`post-${tweetId}`);
     const tweetContent = post.querySelector('.tweet');
     const tweetImage = post.querySelector('.posted-tweet-picture');
     const newTweetInput = post.querySelector('.edit-tweet-input');
 
     // Get the edited tweet content
-    const newTweetImage = tweetImage.src !== 'http://127.0.0.1:8000/' ? tweetImage.src : '';
     const newTweetContent = newTweetInput.value;
+    if (tweetImageFileName) {
+        if (tweetImageFileName.includes(" ")) {
+            // Replace spaces with underscores
+            file = file.replace(/ /g, "_");
+        }
+    }
 
     // Send an AJAX request to update the tweet content on the server
     fetch(`/edit_tweet/${tweetId}`, {
         method: 'POST',
-        body: JSON.stringify({ tweet: newTweetContent, tweet_image: newTweetImage }),
+        body: JSON.stringify({ tweet: newTweetContent, tweet_image: tweetImageFileName }),
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': getCookie('csrftoken')
@@ -177,7 +202,9 @@ function savePost(tweetId) {
                 // Show the tweet content
                 tweetContent.style.display = 'flex';
 
-                // Remove the editing buttons and show the original tweet actions
+                // Update the source of the image to the new file
+                tweetImage.src = `/media/tweet-pictures/${tweetImageFileName}`;
+
                 removeEditingButtons(tweetId);
             }
             return response.json();
@@ -211,7 +238,6 @@ function cancelEdit(tweetId, existingImage) {
         tweetImageContainer.style.display = 'none';
     }
 
-    // Remove the editing buttons and show the original tweet actions
     removeEditingButtons(tweetId);
 }
 
