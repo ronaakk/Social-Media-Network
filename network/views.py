@@ -1,4 +1,5 @@
 import datetime
+import json
 import os
 
 from django.conf import settings
@@ -6,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
@@ -13,7 +15,6 @@ from django.templatetags.static import static
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from PIL import Image
-import json
 
 from .forms import *
 from .models import *
@@ -155,9 +156,11 @@ def post_tweet(request):
 
         # Generate the URL for the uploaded image
         if image:
-            image_url = settings.MEDIA_URL + str(image)
+            image_url = settings.MEDIA_URL + "tweet-pictures/" + str(request.FILES['tweet_image'].name)
         else:
             image_url = None
+
+        print(image_url)
 
         # Retrieve the profile picture of the user to set in tweet
         user = UserProfile.objects.get(user=request.user)
@@ -330,20 +333,21 @@ def edit_tweet(request, tweet_id):
 
         existing_image = tweet.image
 
-        tweet.tweet = new_tweet_content
-        tweet.image = new_tweet_image if new_tweet_image else existing_image
-        tweet.save()
-
-         # Generate the URL for the uploaded image
         if new_tweet_image:
-            image_url = settings.MEDIA_URL + str(new_tweet_image)
+            # Extract the file name
+            image_name = new_tweet_image.split('/')[-1]
+             # Extract the base64-encoded content
+            image_content = new_tweet_image.split(',')[-1]
+            new_image = SimpleUploadedFile(name=image_name, content=image_content.encode())
         else:
-            image_url = None
+            new_image = None
+
+        tweet.tweet = new_tweet_content
+        tweet.image = new_image if new_image else existing_image
+        tweet.save()
 
         return JsonResponse({
             "message": "Tweet updated successfully.", 
-            "tweet_image": image_url, 
-            "tweet_content": new_tweet_content
         }, status=201)
     else:
         return JsonResponse({"error": "POST request requried."}, status=400, content_type="application/json")

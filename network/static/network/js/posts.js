@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Access the selected file and if there isn't any files, an empty string
     const tweetImageFile = tweetImageElement.files[0] ? tweetImageElement.files[0]: "";
+    let tweetImageFileName = tweetImageFile.name;
+    if (tweetImageFileName) {
+      tweetImageFileName = tweetImageFileName.replace(/\s+/g, "_");
+    }
     
     const userNameInput = document.querySelector("#tweet-username");
     const username = userNameInput.value;
@@ -29,9 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tweet.trim().length > 0) {
       const csrftoken = getCookie('csrftoken');
       const formData = new FormData();
-      formData.append('tweet', tweet);  // Add tweet content to FormData
-      formData.append('tweet_image', tweetImageFile);  // Add image file to FormData
-  
+      formData.append('tweet', tweet);
+      if (tweetImageFile) {
+        const fileExtension = tweetImageFile.name.split('.').pop();
+        const tweetImageFileName = `tweet_image_${Date.now()}.${fileExtension}`;
+        formData.append('tweet_image', tweetImageFile, tweetImageFileName);
+      } 
       fetch("/post_tweet/", {
         method: "POST",
         body: formData,
@@ -41,16 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .then(response => response.json())
       .then(data => {
-        if (tweetImageFile) {
-          file = tweetImageFile.name;
-          if (file.includes(" ")) {
-            // Replace spaces with underscores
-            file = file.replace(/ /g, "_");
-          }
-          console.log(file);
+        if (tweetImageFileName) {
           addPostToPage(
             tweet, 
-            `/media/tweet-pictures/${file}`, 
+            data.image_url,
             username, 
             data.date_posted, 
             likesCount=0, 
@@ -72,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         clearPostSection();
-        console.log(data.message);
       })
       .catch(error => {
         console.log(error);
@@ -103,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(data => {
       const feedPosts = data.feed_posts;
-
       feedPosts.forEach(post => {
         addPostToPage(
           post.tweet,

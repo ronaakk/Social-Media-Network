@@ -108,6 +108,7 @@ function editPost(tweetId) {
                     reader.onload = (e) => {
                         tweetImageElement.src = e.target.result;
                         const tweetImageFileName = file.name;
+                        console.log(tweetImageFileName);
                         const newSaveButton = createSaveButton(tweetId, tweetImageFileName);
                         saveButton = newSaveButton;
                     };
@@ -168,6 +169,8 @@ function createDeleteButton(tweetId) {
 
 // Function to save the edited post
 function savePost(tweetId, tweetImageFileName = "") {
+    console.log(tweetImageFileName);
+
     const post = document.getElementById(`post-${tweetId}`);
     const tweetContent = post.querySelector('.tweet');
     const tweetImage = post.querySelector('.posted-tweet-picture');
@@ -203,7 +206,7 @@ function savePost(tweetId, tweetImageFileName = "") {
                 tweetContent.style.display = 'flex';
 
                 // Update the source of the image to the new file
-                tweetImage.src = `${tweetImageFileName}`;
+                tweetImage.src = `/media/tweet-pictures/${tweetImageFileName}`;
 
                 removeEditingButtons(tweetId);
             }
