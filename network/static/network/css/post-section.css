@@ -228,7 +228,7 @@ body {
 
 .posted-tweet-picture {
     max-width: 90%;
-    max-height: 700px;
+    max-height: 400px;
     object-fit: contain;
     border-radius: 0.5rem;
 }

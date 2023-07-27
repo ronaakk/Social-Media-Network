@@ -22,10 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Access the selected file and if there isn't any files, an empty string
     const tweetImageFile = tweetImageElement.files[0] ? tweetImageElement.files[0]: "";
-    let tweetImageFileName = tweetImageFile.name;
-    if (tweetImageFileName) {
-      tweetImageFileName = tweetImageFileName.replace(/\s+/g, "_");
-    }
     
     const userNameInput = document.querySelector("#tweet-username");
     const username = userNameInput.value;
@@ -34,11 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const csrftoken = getCookie('csrftoken');
       const formData = new FormData();
       formData.append('tweet', tweet);
+
       if (tweetImageFile) {
         const fileExtension = tweetImageFile.name.split('.').pop();
         const tweetImageFileName = `tweet_image_${Date.now()}.${fileExtension}`;
         formData.append('tweet_image', tweetImageFile, tweetImageFileName);
+        console.log(tweetImageFileName);
       } 
+
       fetch("/post_tweet/", {
         method: "POST",
         body: formData,
@@ -46,37 +45,37 @@ document.addEventListener('DOMContentLoaded', () => {
           'X-CSRFToken': csrftoken,
         },
       })
-      .then(response => response.json())
-      .then(data => {
-        if (tweetImageFileName) {
-          addPostToPage(
-            tweet, 
-            data.image_url,
-            username, 
-            data.date_posted, 
-            likesCount=0, 
-            commentsCount=0, 
-            data.profile_pic, 
-            data.logged_in_user,
-            data.tweet_id);
-        } else {
-          addPostToPage(
-            tweet, 
-            "", 
-            username, 
-            data.date_posted, 
-            likesCount=0, 
-            commentsCount=0, 
-            data.profile_pic, 
-            data.logged_in_user,
-            data.tweet_id);
-        }
+        .then(response => response.json())
+        .then(data => {
+          if (tweetImageFile) {
+            addPostToPage(
+              tweet, 
+              data.image_url,
+              username, 
+              data.date_posted, 
+              likesCount=0, 
+              commentsCount=0, 
+              data.profile_pic, 
+              data.logged_in_user,
+              data.tweet_id);
+          } else {
+            addPostToPage(
+              tweet, 
+              "", 
+              username, 
+              data.date_posted, 
+              likesCount=0, 
+              commentsCount=0, 
+              data.profile_pic, 
+              data.logged_in_user,
+              data.tweet_id);
+          }
 
-        clearPostSection();
-      })
-      .catch(error => {
-        console.log(error);
-      });
+          clearPostSection();
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   });
 

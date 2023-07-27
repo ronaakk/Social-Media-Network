@@ -322,32 +322,36 @@ def edit_tweet(request, tweet_id):
     if request.method == "POST":
         tweet = Tweet.objects.get(id = tweet_id)
 
-        data = json.loads(request.body)
-        
-        # Get the edited tweet content and image URL from the JSON data
-        new_tweet_content = data.get("tweet", "").strip()
-        new_tweet_image = data.get("tweet_image")
-
-        print(f"---- {new_tweet_content} ----")
-        print(f"---- {new_tweet_image} ----")
+        new_tweet_content = request.POST.get("tweet", "").strip()
+        new_tweet_image = request.FILES.get("tweet_image")
 
         existing_image = tweet.image
 
-        if new_tweet_image:
-            # Extract the file name
-            image_name = new_tweet_image.split('/')[-1]
-             # Extract the base64-encoded content
-            image_content = new_tweet_image.split(',')[-1]
-            new_image = SimpleUploadedFile(name=image_name, content=image_content.encode())
-        else:
-            new_image = None
+        # if new_tweet_image:
+        #     # Extract the file name
+        #     image_name = new_tweet_image.split('/')[-1]
+        #      # Extract the base64-encoded content
+        #     image_content = new_tweet_image.split(',')[-1]
+        #     new_image = SimpleUploadedFile(name=image_name, content=image_content.encode())
+        # else:
+        #     new_image = None
 
         tweet.tweet = new_tweet_content
-        tweet.image = new_image if new_image else existing_image
+        tweet.image = new_tweet_image if new_tweet_image else existing_image
+
+        print(f"---- {new_tweet_content} ----")
+        print(f"---- {new_tweet_image} ----")
         tweet.save()
+
+        # Generate the URL for the uploaded image
+        if new_tweet_image:
+            image_url = settings.MEDIA_URL + "tweet-pictures/" + str(request.FILES['tweet_image'].name)
+        else:
+            image_url = None
 
         return JsonResponse({
             "message": "Tweet updated successfully.", 
+            "image_url": image_url
         }, status=201)
     else:
         return JsonResponse({"error": "POST request requried."}, status=400, content_type="application/json")

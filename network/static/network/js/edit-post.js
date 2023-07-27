@@ -55,6 +55,9 @@ function editPost(tweetId) {
     const existingImage = tweetImageElement.src !== 'http://127.0.0.1:8000/' ? tweetImageElement.src : '';
     const fileName = existingImage.split("/").pop();
 
+    // CHECK THE EXISTING FILE NAME AND SEE IF IT IS DIFFERENT WHEN SAVE BUTTON IS LOADED
+    console.log(`Existing image: ${fileName}`);
+
     // Hide the existing tweet content
     tweetContent.style.display = 'none';
   
@@ -88,37 +91,45 @@ function editPost(tweetId) {
         tweetImageContainer.id = "tweet-image-container";
         tweetImageElement.id = "tweet-picture-editing";
 
+        // Check if the input element already exists
+        const existingTweetImageFileInput = document.querySelector('#tweet-picture-file-input');
+
         tweetImageElement.addEventListener('click', () => {
-            // Create an input element for editing the tweet image
-            const tweetImageFileInput = document.createElement('input');
-            tweetImageFileInput.type = 'file';
-            tweetImageFileInput.id = "tweet-picture-file-input";
-            tweetImageFileInput.style.display = 'none';
-            tweetImageFileInput.accept = 'image/*';
-        
-            // Add the input element to the tweet-details__image div
-            tweetImageContainer.appendChild(tweetImageFileInput);
-        
-            // Add an event listener to the file input
-            tweetImageFileInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    // Update the image source with the selected image
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        tweetImageElement.src = e.target.result;
-                        const tweetImageFileName = file.name;
-                        console.log(tweetImageFileName);
-                        const newSaveButton = createSaveButton(tweetId, tweetImageFileName);
-                        saveButton = newSaveButton;
-                    };
-                    reader.readAsDataURL(file);
-                } 
-            });
-        
-            // Open file picker dialog
-            tweetImageFileInput.click();    
-        });
+            if (!existingTweetImageFileInput) {
+                // Create an input element for editing the tweet image
+                const tweetImageFileInput = document.createElement('input');
+                tweetImageFileInput.type = 'file';
+                tweetImageFileInput.id = 'tweet-picture-file-input';
+                tweetImageFileInput.style.display = 'none';
+                tweetImageFileInput.accept = 'image/*';
+    
+                // Add the input element to the tweet-details__image div
+                tweetImageContainer.appendChild(tweetImageFileInput);
+    
+                // Add an event listener to the file input
+                tweetImageFileInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        // Update the image source with the selected image
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            tweetImageElement.src = e.target.result;
+                            const tweetImageFileName = file.name;
+                            // CHECK NEW FILE NAME AND MAKE SURE IT IS DIFFERENT THAN LINE 59
+                            console.log(`New image: ${tweetImageFileName}`);
+                            const newSaveButton = createSaveButton(tweetId, tweetImageFileName);
+                            saveButton = newSaveButton;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+                // Open file picker dialog
+                tweetImageFileInput.click();
+            } else {
+                // If the input element already exists, open the file picker dialog
+                existingTweetImageFileInput.click();
+            }
+        })
 
         actionsSection.appendChild(cancelButton);
         actionsSection.appendChild(deleteButton);
@@ -137,7 +148,9 @@ function editPost(tweetId) {
 }
     
 // Function to create the save button for editing a post
-function createSaveButton(tweetId, tweetImageFileName) {
+function createSaveButton(tweetId, tweetImageFileName = "") {
+    // MAKE SURE THIS FILE IS THE CORRECT ONE
+    console.log(`Image that got sent to createSaveButton: ${tweetImageFileName}`);
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Save';
     saveButton.classList.add('save-button');
@@ -169,55 +182,65 @@ function createDeleteButton(tweetId) {
 
 // Function to save the edited post
 function savePost(tweetId, tweetImageFileName = "") {
-    console.log(tweetImageFileName);
 
     const post = document.getElementById(`post-${tweetId}`);
     const tweetContent = post.querySelector('.tweet');
-    const tweetImage = post.querySelector('.posted-tweet-picture');
+    const tweetImageFileInput = post.querySelector('#tweet-picture-file-input');
+    const tweetImageDisplay = post.querySelector(".posted-tweet-picture");
     const newTweetInput = post.querySelector('.edit-tweet-input');
 
     // Get the edited tweet content
     const newTweetContent = newTweetInput.value;
-    if (tweetImageFileName) {
-        if (tweetImageFileName.includes(" ")) {
-            // Replace spaces with underscores
-            file = file.replace(/ /g, "_");
-        }
+
+    // This line needs adjustment?
+    const newImage = tweetImageFileInput.files[tweetImageFileInput.files.length - 1] ? tweetImageFileInput.files[tweetImageFileInput.files.length - 1] : '';
+
+    // Code works well till here
+    console.log(`new image to save: ${newImage.name}`);
+
+    const formData = new FormData();
+    formData.append("tweet", newTweetContent);
+
+    if (newImage) {
+        const fileExtension = newImage.name.split('.').pop();
+        const tweetImageFileName = `tweet_image_${Date.now()}.${fileExtension}`;
+        formData.append('tweet_image', newImage, tweetImageFileName);
     }
 
     // Send an AJAX request to update the tweet content on the server
     fetch(`/edit_tweet/${tweetId}`, {
         method: 'POST',
-        body: JSON.stringify({ tweet: newTweetContent, tweet_image: tweetImageFileName }),
+        body: formData,
         headers: {
-            'Content-Type': 'application/json',
             'X-CSRFToken': getCookie('csrftoken')
         }
     })
-        .then(response => {
-            if (response.ok) {
-                // Update the tweet content on the page
-                tweetContent.textContent = newTweetContent;
+        .then(response => response.json())
+        .then(data => {
+            // Update the tweet content on the page
+            tweetContent.textContent = newTweetContent;
 
-                // Remove the edit input element
-                newTweetInput.remove();
+            // Remove the edit input element
+            newTweetInput.remove();
 
-                // Show the tweet content
-                tweetContent.style.display = 'flex';
+            // Show the tweet content
+            tweetContent.style.display = 'flex';
 
-                // Update the source of the image to the new file
-                tweetImage.src = `/media/tweet-pictures/${tweetImageFileName}`;
+            console.log(`Image that got saved to model: ${data.image_url}`);
 
-                removeEditingButtons(tweetId);
+            // Update the source of the image to the new file
+            if (newImage) {
+                tweetImageDisplay.src = data.image_url;
             }
-            return response.json();
+
+            removeEditingButtons(tweetId);
         })
         .catch(error => {
             console.log(error);
         });
 }
   
-  // Function to cancel the editing of a post
+// Function to cancel the editing of a post
 function cancelEdit(tweetId, existingImage) {
     const post = document.getElementById(`post-${tweetId}`);
     const tweetContent = post.querySelector('.tweet');
