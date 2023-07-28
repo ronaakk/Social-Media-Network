@@ -55,9 +55,6 @@ function editPost(tweetId) {
     const existingImage = tweetImageElement.src !== 'http://127.0.0.1:8000/' ? tweetImageElement.src : '';
     const fileName = existingImage.split("/").pop();
 
-    // CHECK THE EXISTING FILE NAME AND SEE IF IT IS DIFFERENT WHEN SAVE BUTTON IS LOADED
-    console.log(`Existing image: ${fileName}`);
-
     // Hide the existing tweet content
     tweetContent.style.display = 'none';
   
@@ -82,7 +79,7 @@ function editPost(tweetId) {
 
     // In the case the user doesn't change the picture
     const cancelButton = createCancelButton(tweetId, existingImage);
-    let saveButton = createSaveButton(tweetId, fileName);
+    let saveButton = createSaveButton(tweetId);
     const deleteButton = createDeleteButton(tweetId);
 
     // Show the tweet image container if there is an image
@@ -91,10 +88,10 @@ function editPost(tweetId) {
         tweetImageContainer.id = "tweet-image-container";
         tweetImageElement.id = "tweet-picture-editing";
 
-        // Check if the input element already exists
-        const existingTweetImageFileInput = document.querySelector('#tweet-picture-file-input');
-
         tweetImageElement.addEventListener('click', () => {
+            // Check if the input element already exists
+            const existingTweetImageFileInput = document.querySelector('#tweet-picture-file-input');
+
             if (!existingTweetImageFileInput) {
                 // Create an input element for editing the tweet image
                 const tweetImageFileInput = document.createElement('input');
@@ -114,10 +111,7 @@ function editPost(tweetId) {
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             tweetImageElement.src = e.target.result;
-                            const tweetImageFileName = file.name;
-                            // CHECK NEW FILE NAME AND MAKE SURE IT IS DIFFERENT THAN LINE 59
-                            console.log(`New image: ${tweetImageFileName}`);
-                            const newSaveButton = createSaveButton(tweetId, tweetImageFileName);
+                            const newSaveButton = createSaveButton(tweetId);
                             saveButton = newSaveButton;
                         };
                         reader.readAsDataURL(file);
@@ -148,13 +142,11 @@ function editPost(tweetId) {
 }
     
 // Function to create the save button for editing a post
-function createSaveButton(tweetId, tweetImageFileName = "") {
-    // MAKE SURE THIS FILE IS THE CORRECT ONE
-    console.log(`Image that got sent to createSaveButton: ${tweetImageFileName}`);
+function createSaveButton(tweetId) {
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Save';
     saveButton.classList.add('save-button');
-    saveButton.addEventListener('click', () => savePost(tweetId, tweetImageFileName));
+    saveButton.addEventListener('click', () => savePost(tweetId));
     return saveButton;
 }
   
@@ -181,7 +173,7 @@ function createDeleteButton(tweetId) {
 }
 
 // Function to save the edited post
-function savePost(tweetId, tweetImageFileName = "") {
+function savePost(tweetId) {
 
     const post = document.getElementById(`post-${tweetId}`);
     const tweetContent = post.querySelector('.tweet');
@@ -192,9 +184,10 @@ function savePost(tweetId, tweetImageFileName = "") {
     // Get the edited tweet content
     const newTweetContent = newTweetInput.value;
 
-    // This line needs adjustment?
-    const newImage = tweetImageFileInput.files[tweetImageFileInput.files.length - 1] ? tweetImageFileInput.files[tweetImageFileInput.files.length - 1] : '';
-
+    const newImage = tweetImageFileInput.files.length > 0
+        ? tweetImageFileInput.files[tweetImageFileInput.files.length - 1]
+        : '';
+   
     // Code works well till here
     console.log(`new image to save: ${newImage.name}`);
 

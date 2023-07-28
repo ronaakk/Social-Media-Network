@@ -327,15 +327,6 @@ def edit_tweet(request, tweet_id):
 
         existing_image = tweet.image
 
-        # if new_tweet_image:
-        #     # Extract the file name
-        #     image_name = new_tweet_image.split('/')[-1]
-        #      # Extract the base64-encoded content
-        #     image_content = new_tweet_image.split(',')[-1]
-        #     new_image = SimpleUploadedFile(name=image_name, content=image_content.encode())
-        # else:
-        #     new_image = None
-
         tweet.tweet = new_tweet_content
         tweet.image = new_tweet_image if new_tweet_image else existing_image
 
