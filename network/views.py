@@ -213,6 +213,10 @@ def home_feed(request):
             # Access the user profile for each profile picture
             user = UserProfile.objects.get(user = post.user)
             profile_pic = user.profile_picture
+
+            # Check if the current user has liked the tweet
+            has_liked = Like.objects.filter(user=request.user, tweet=post).exists()
+
             feed_data.append({
                 "tweet": post.tweet,
                 "tweet_id": post.id,
@@ -221,7 +225,8 @@ def home_feed(request):
                 "date_posted": post.date_posted.strftime("%B %d, %Y"),
                 "tweet_comments": post.comments.count() if post.comments.exists() else 0,
                 "tweet_likes": post.likes,
-                "tweet_user_profile_pic": profile_pic.url
+                "tweet_user_profile_pic": profile_pic.url,
+                "has_liked": has_liked
             })
         return JsonResponse({
             "feed_posts": feed_data, 
@@ -246,7 +251,12 @@ def following_feed(request):
             user = post.user
             user_profile = UserProfile.objects.get(user = user)
             profile_pic = user_profile.profile_picture
+            
+            # Check if the current user has liked the tweet
+            has_liked = Like.objects.filter(user=request.user, tweet=post).exists()
+
             feed_data.append({
+                "id": post.id,
                 "tweet": post.tweet,
                 "tweet_image_url": post.image.url if post.image else "",
                 "user": user,
@@ -254,7 +264,8 @@ def following_feed(request):
                 "date_posted": post.date_posted.strftime("%B %d, %Y"),
                 "tweet_comments": post.comments.count() if post.comments.exists() else 0,
                 "tweet_likes": post.likes,
-                "tweet_user_profile_pic": profile_pic.url
+                "tweet_user_profile_pic": profile_pic.url,
+                "has_liked": has_liked
             })
 
         return render(request, "network/following.html", {
@@ -330,8 +341,6 @@ def edit_tweet(request, tweet_id):
         tweet.tweet = new_tweet_content
         tweet.image = new_tweet_image if new_tweet_image else existing_image
 
-        print(f"---- {new_tweet_content} ----")
-        print(f"---- {new_tweet_image} ----")
         tweet.save()
 
         # Generate the URL for the uploaded image
@@ -355,3 +364,48 @@ def delete_tweet(request, tweet_id):
         return JsonResponse({"message": "Tweet deleted successfully."}, status=200, content_type="application/json")
     else:
         return JsonResponse({"error": "DELETE request requed."}, status=400, content_type="application/json")
+
+@login_required(login_url='login')
+def like_tweet(request, tweet_id):
+    if request.method == "POST":
+        tweet_to_like = Tweet.objects.get(id=tweet_id)
+        user = request.user
+
+        # Check if the user has already liked the tweet
+        if Like.objects.filter(user=user, tweet=tweet_to_like).exists():
+            return JsonResponse({
+                "message": "Tweet already liked.",
+                "likesCount": tweet_to_like.likes
+            }, status=200, content_type="application/json")
+
+        # Update the likes count of the tweet
+        tweet_to_like.likes += 1
+        tweet_to_like.save()
+
+        new_like = Like.objects.create(user=user, tweet=tweet_to_like)
+
+        return JsonResponse({
+            "message": "Tweet liked successfully.",
+            "likesCount": tweet_to_like.likes
+        }, status=200, content_type="application/json")
+    else:
+        return JsonResponse({"error": "POST request required."}, status=400, content_type="application/json")
+
+@login_required(login_url='login')
+def unlike_tweet(request, tweet_id):
+    if request.method == "POST":
+        tweet_to_unlike = Tweet.objects.get(id=tweet_id)
+        user = request.user
+
+        # Update the likes count of the tweet
+        tweet_to_unlike.likes -= 1
+        tweet_to_unlike.save()
+
+        Like.objects.filter(user=user, tweet=tweet_to_unlike).delete()
+
+        return JsonResponse({
+            "message": "Tweet unliked successfully.",
+            "likesCount": tweet_to_unlike.likes
+        }, status=200, content_type="application/json")
+    else:
+        return JsonResponse({"error": "POST request required."}, status=400, content_type="application/json")

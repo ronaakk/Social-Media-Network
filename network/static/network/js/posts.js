@@ -57,7 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
               commentsCount=0, 
               data.profile_pic, 
               data.logged_in_user,
-              data.tweet_id);
+              data.tweet_id,
+              "");
           } else {
             addPostToPage(
               tweet, 
@@ -68,7 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
               commentsCount=0, 
               data.profile_pic, 
               data.logged_in_user,
-              data.tweet_id);
+              data.tweet_id,
+              "");
           }
 
           clearPostSection();
@@ -112,7 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
           post.tweet_comments,
           post.tweet_user_profile_pic,
           data.logged_in_user,
-          post.tweet_id
+          post.tweet_id,
+          post.has_liked
         );
       });
     })
@@ -242,7 +245,7 @@ function deletePreview(previewContainer) {
 }
   
 // Function to add posts to page (and sort them by date added)
-function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesCount, commentsCount, profilePic, loggedInUser, tweetId) {
+function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesCount, commentsCount, profilePic, loggedInUser, tweetId, hasLiked = "") {
     const feed = document.querySelector(".posts");
     const postTemplate = document.querySelector(".post");
   
@@ -287,6 +290,21 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
     // Loading the tweet likes and comments (if any)
     tweetLikes.textContent = likesCount > 1 || likesCount === 0 ? `${likesCount} Likes` : `${likesCount} Like`;
     tweetComments.textContent = commentsCount > 1 || commentsCount === 0 ? `${commentsCount} Comments` : `${commentsCount} Comment`;
+
+    // Adding appropriate id to like button
+    const likeButton = tweetDetails.querySelector(".like-button");
+    likeButton.dataset.tweetId = tweetId;
+
+    // Checking to see whether user has liked the current tweet
+    const likeSection = tweetDetails.querySelector(".like-section");
+    console.log(`${tweet}: ${hasLiked}`)
+    if (hasLiked) {
+      likeSection.classList.add('liked');
+      likeButton.classList.add('liked');
+    } else {
+      likeSection.classList.remove('liked');
+      likeButton.classList.remove('liked');
+    }
 
     // Checking to see if authenticated user is creator of tweet
     const editSection = tweetDetails.querySelector(".edit-section");

@@ -42,6 +42,14 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.user} commented: {self.comment}"
 
+class Like(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    tweet = models.ForeignKey('Tweet', on_delete=models.CASCADE, related_name="tweet_likes")
+    date_liked = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} liked '{self.tweet.tweet}'"
+
 class Reply(models.Model):
     reply = models.CharField(max_length=140, null=True, blank=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE)

@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block extra_head %}
+    <script src= {% static 'network/js/post-interactions.js' %} type="text/javascript"></script>
     <link rel="stylesheet" href= {% static 'network/css/post-section.css' %}>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 {% endblock extra_head %}
@@ -9,7 +10,7 @@
 {% block body %}
     <div class="posts">
         {% for post in feed_posts %}
-            <div class="post">
+            <div class="post" id="post-{{ post.id }}">
                 <div class="post-layout">
                     
                     <a href={% url 'view_profile' post.user %} class="user-profile-link">
@@ -38,13 +39,19 @@
                             <!-- Edit/Delete a post (given creator is authenticated), Likes, Comments (give this div a class of "tweet-actions") -->
                             <div class="tweet-actions-post">
                                 <div class="tweet-actions-section">
-                                    <div class="like-section">
+                                    <div class="like-section {% if post.has_liked %}liked{% endif %}">
                                         <!-- Like Button -->
-                                        <button class="like-button">
-                                            <span class="material-symbols-outlined">favorite</span>
+                                        <button class="like-button {% if post.has_liked %}liked{% endif %}">
+                                            <span class="material-symbols-outlined" data-tweet-id="{{ post.id }}">favorite</span>
                                         </button>
                                         <!-- Like Counter -->
-                                        <span class="like-counter">{{ post.tweet_likes }} Likes</span>
+                                        <span class="like-counter">
+                                            {% if post.tweet_likes == 1 %}
+                                                1 Like
+                                            {% else %}
+                                                {{ post.tweet_likes }} Likes
+                                            {% endif %}
+                                        </span>
                                     </div>
                                     
                                     <div class="comment-section">
@@ -53,7 +60,13 @@
                                             <span class="material-symbols-outlined">chat_bubble</span>
                                         </button>
                                         <!-- Comment Counter -->
-                                        <span class="comment-counter">{{ post.tweet_comments }} Comments</span>
+                                        <span class="comment-counter">
+                                            {% if post.tweet_comments == 1 %}
+                                                1 Comment
+                                            {% else %}
+                                                {{ post.tweet_comments }} Comments
+                                            {% endif %}
+                                        </span>
                                     </div>
                                 </div>
                             </div>

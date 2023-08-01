@@ -305,3 +305,12 @@ body {
 .comment-section:hover .comment-button .material-symbols-outlined {
     color: var(--main-color);
 }
+
+.liked, .liked .like-button {
+    color: red;
+}
+
+.like-section .like-button:focus {
+    outline: none !important;
+    border: none;
+}
