@@ -5,6 +5,7 @@ import os
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+from django.db.models.signals import post_delete
 
 class User(AbstractUser, models.Model):
     pass
@@ -49,6 +50,15 @@ class Like(models.Model):
 
     def __str__(self):
         return f"{self.user.username} liked '{self.tweet.tweet}'"
+
+@receiver(post_delete, sender=Like)
+def update_tweet_likes(sender, instance, **kwargs):
+    # Get the tweet associated with the deleted Like object
+    tweet = instance.tweet
+
+    # Update the likes count in the Tweet model
+    tweet.likes = Like.objects.filter(tweet=tweet).count()
+    tweet.save()
 
 class Reply(models.Model):
     reply = models.CharField(max_length=140, null=True, blank=False)

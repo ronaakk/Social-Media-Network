@@ -7,9 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleLikeToggle(event) {
         console.log('button clicked');
         const likeButton = event.currentTarget;
+        const parentElement = likeButton.parentNode;
         const tweetId = likeButton.dataset.tweetId;
 
-        if (likeButton.classList.contains('liked')) {
+        if (parentElement.classList.contains('liked')) {
             unlikePost(tweetId);
         } else {
             likePost(tweetId);
@@ -39,8 +40,8 @@ function likePost(tweetId) {
             const likeSection = post.querySelector(".like-section");
             likeSection.classList.add('liked');
 
-            const likeButton = post.querySelector(".like-button .material-symbols-outlined");
-            likeButton.classList.add('liked');
+            const likeButtonIcon = post.querySelector(".like-button .material-symbols-outlined");
+            likeButtonIcon.classList.add('liked');
 
             // Update the likes count
             const likeCounter = likeSection.querySelector(".like-counter");
@@ -70,8 +71,11 @@ function unlikePost(tweetId) {
             const likeSection = post.querySelector(".like-section");
             likeSection.classList.remove('liked');
 
-            const likeButton = post.querySelector(".like-button .material-symbols-outlined");
+            const likeButton = post.querySelector(".like-button");
             likeButton.classList.remove('liked');
+
+            const likeButtonIcon = post.querySelector(".like-button .material-symbols-outlined");
+            likeButtonIcon.classList.remove('liked');
 
             // Update count
             const likeCounter = likeSection.querySelector(".like-counter");
