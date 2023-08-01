@@ -5,12 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     function handleLikeToggle(event) {
-        console.log('button clicked');
+        console.log('**button clicked** from handleLikeToggle');
         const likeButton = event.currentTarget;
         const parentElement = likeButton.parentNode;
+        const grandparentElement = parentElement.parentNode;
         const tweetId = likeButton.dataset.tweetId;
-
-        if (parentElement.classList.contains('liked')) {
+        
+        if (grandparentElement.classList.contains('liked')) {
             unlikePost(tweetId);
         } else {
             likePost(tweetId);
