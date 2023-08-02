@@ -3,6 +3,7 @@
 
 {% block extra_head %}
     <link href="{% static 'network/css/profile-page.css' %}" rel="stylesheet">
+    <script src= {% static 'network/js/post-interactions.js' %} type="text/javascript"></script>
     <script src= {% static 'network/js/user-profile.js' %} type="text/javascript"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title> {% block title %}{{ users_profile.user }}{% endblock title %} </title>
@@ -28,7 +29,7 @@
         {% if user_profile.user.username == users_profile.user.username %}
             <div class="action-section">
                 <a href="{% url 'change_profile' %}">
-                    <button class="action-button">Edit Profile</button>
+                    <button class="action-button-edit-profile">Edit Profile</button>
                 </a>
             </div>
         {% else %}
@@ -46,7 +47,7 @@
         <div class="user-tweets">
             {% if users_tweets %}
                 {% for tweet in users_tweets %}
-                    <div class="post">
+                    <div class="post" id="post-{{ tweet.id }}">
                         <div class="post-layout">
                             
                             <img src="{{ users_profile.profile_picture.url }}" class="profile-pic small-post-section tweet-creator">
@@ -80,13 +81,19 @@
                                                 </div>
                                             {% endif %}
 
-                                            <div class="like-section">
+                                            <div class="like-section {% if tweet.id in current_user_likes %}liked{% endif %}">
                                                 <!-- Like Button -->
-                                                <button class="like-button">
-                                                    <span class="material-symbols-outlined">favorite</span>
+                                                <button class="like-button {% if tweet.id in current_user_likes %}liked{% endif %}">
+                                                    <span class="material-symbols-outlined" data-tweet-id="{{ tweet.id }}">favorite</span>
                                                 </button>
                                                 <!-- Like Counter -->
-                                                <span class="like-counter">{{ tweet.likes }} Likes</span>
+                                                <span class="like-counter">
+                                                    {% if tweet.likes == 1 %}
+                                                        1 Like
+                                                    {% else %}
+                                                        {{ tweet.likes }} Likes
+                                                    {% endif %}
+                                                </span>
                                             </div>
                                             
                                             <div class="comment-section">
@@ -95,7 +102,13 @@
                                                     <span class="material-symbols-outlined">chat_bubble</span>
                                                 </button>
                                                 <!-- Comment Counter -->
-                                                <span class="comment-counter">{{ tweet.comments_count }} Comments</span>
+                                                <span class="comment-counter">
+                                                {% if tweet.comments_count == 1 %}
+                                                    1 Comment
+                                                {% else %}
+                                                    {{ tweet.comments_count }} Comments
+                                                {% endif %}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

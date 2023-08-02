@@ -58,7 +58,7 @@
     margin-left: 0.4rem;
 }
 
-.action-button {
+.action-button, .action-button-edit-profile {
     background-color: var(--main-color);
     color: var(--text-color);
     border-radius: 1rem;
@@ -69,11 +69,11 @@
     font-size: 1.1rem;
 }
 
-.action-button:hover {
+.action-button:hover, .action-button-edit-profile:hover {
     background-color: var(--main-color-focus);
 }
 
-.action-section .action-button:focus {
+.action-section .action-button:focus, .action-button-edit-profile:focus {
     outline: none !important;
     border: none;
 }
@@ -231,4 +231,13 @@
     color: red;
     border: 1px solid red;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.liked, .liked .like-button {
+    color: red;
+}
+
+.like-section .like-button:focus {
+    outline: none !important;
+    border: none;
 }

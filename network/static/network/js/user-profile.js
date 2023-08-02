@@ -1,7 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const actionButton = document.querySelector(".action-button");
 
-    actionButton.addEventListener('click', handleFollowToggle);
+    // Only apply if the user is not viewing their own profile
+    if (actionButton) {
+        actionButton.addEventListener('click', handleFollowToggle);
+
+        // Handle hover effects
+        actionButton.addEventListener("mouseenter", () => {
+            if (actionButton.classList.contains("following-button")) {
+                actionButton.textContent = "Unfollow";
+            }
+        });
+
+        actionButton.addEventListener("mouseleave", () => {
+            if (actionButton.classList.contains("following-button")) {
+                actionButton.textContent = "Following";
+            }
+        });
+    }
 
     // Handle the follow/unfollow toggle
     function handleFollowToggle() {
@@ -51,17 +67,4 @@ document.addEventListener('DOMContentLoaded', () => {
         const followers = document.querySelector(".followers");
         followers.textContent = `${count} Followers`;
     }
-
-    // Handle hover effects
-    actionButton.addEventListener("mouseenter", () => {
-        if (actionButton.classList.contains("following-button")) {
-            actionButton.textContent = "Unfollow";
-        }
-    });
-
-    actionButton.addEventListener("mouseleave", () => {
-        if (actionButton.classList.contains("following-button")) {
-            actionButton.textContent = "Following";
-        }
-    });
 });

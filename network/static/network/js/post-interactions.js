@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const parentElement = likeButton.parentNode;
         const grandparentElement = parentElement.parentNode;
         const tweetId = likeButton.dataset.tweetId;
+        console.log(likeButton);
         
         if (grandparentElement.classList.contains('liked')) {
             unlikePost(tweetId);

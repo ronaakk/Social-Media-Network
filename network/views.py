@@ -193,6 +193,10 @@ def view_profile(request, username):
         current_user_profile = UserProfile.objects.get(user=request.user) if request.user.is_authenticated else None
         current_user_relationships = UserRelationship.objects.get(user = request.user)
         current_user_following = current_user_relationships.following.all().values_list('user__username', flat=True)
+
+        # Get tweets liked by the current user using prefetch_related
+        current_user_likes = Like.objects.filter(user=request.user).prefetch_related('tweet')
+        liked_tweet_ids = set(like.tweet.id for like in current_user_likes)
         
         return render(request, "network/user-profile.html", {
             "users_profile": users_profile,
@@ -201,7 +205,8 @@ def view_profile(request, username):
             "following_count": following_count,
             "users_tweets": users_tweets.order_by("-date_posted"),
             "user_profile": current_user_profile,
-            "current_user_following": current_user_following
+            "current_user_following": current_user_following,
+            "current_user_likes": liked_tweet_ids
         })
 
 def home_feed(request):
