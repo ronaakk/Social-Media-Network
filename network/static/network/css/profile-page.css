@@ -1,6 +1,6 @@
 @import "./styles.css";
 
-.profile-layout, .profile-header, .user-details, .user-stats, .user-tweets {
+.profile-layout, .profile-header, .user-details, .user-stats, .posts {
     display: flex;
     justify-content: space-between;
 }
@@ -47,7 +47,7 @@
     margin-left: 4.5rem;
 }
 
-.user-tweets {
+.posts {
     flex-direction: column;
 }
 

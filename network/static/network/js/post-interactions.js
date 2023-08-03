@@ -1,18 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const likeIcons = document.querySelectorAll(".like-button .material-symbols-outlined");
-    likeIcons.forEach(icon => {
-        icon.addEventListener('click', handleLikeToggle);
-    })
+    const postContainer = document.querySelector('.posts');
 
-    function handleLikeToggle(event) {
+    // Event delegation
+    postContainer.addEventListener('click', (event) => {
+        const likeButton = event.target.closest('.like-button');
+        if (likeButton) {
+            handleLikeToggle(likeButton);
+        }
+    });
+
+    function handleLikeToggle(likeButton) {
         console.log('**button clicked** from handleLikeToggle');
-        const likeButton = event.currentTarget;
+        const likeIcon = likeButton.querySelector(".material-symbols-outlined");
+        const tweetId = likeIcon.dataset.tweetId;
+        console.log(tweetId);
+
         const parentElement = likeButton.parentNode;
-        const grandparentElement = parentElement.parentNode;
-        const tweetId = likeButton.dataset.tweetId;
-        console.log(likeButton);
-        
-        if (grandparentElement.classList.contains('liked')) {
+        console.log(parentElement);
+
+        if (parentElement.classList.contains('liked')) {
             unlikePost(tweetId);
         } else {
             likePost(tweetId);

@@ -250,7 +250,7 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
     const postTemplate = document.querySelector(".post");
   
     const newPost = postTemplate.cloneNode(true);
-    newPost.classList.remove("hidden");
+    newPost.classList.remove('hidden');
     newPost.id = `post-${tweetId}`;
   
     const tweetDetails = newPost.querySelector(".tweet-details");
@@ -292,12 +292,11 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
     tweetComments.textContent = commentsCount > 1 || commentsCount === 0 ? `${commentsCount} Comments` : `${commentsCount} Comment`;
 
     // Adding appropriate id to like button
-    const likeButton = tweetDetails.querySelector(".like-button");
+    const likeButton = tweetDetails.querySelector(".like-button .material-symbols-outlined");
     likeButton.dataset.tweetId = tweetId;
 
     // Checking to see whether user has liked the current tweet
     const likeSection = tweetDetails.querySelector(".like-section");
-    console.log(`${tweet}: ${hasLiked}`)
     if (hasLiked) {
       likeSection.classList.add('liked');
       likeButton.classList.add('liked');

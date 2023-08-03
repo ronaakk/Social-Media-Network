@@ -3,8 +3,8 @@
 
 {% block extra_head %}
     <script src= {% static 'network/js/posts.js' %} type="text/javascript"></script>
-    <script src= {% static 'network/js/post-interactions.js' %} type="text/javascript"></script>
     <script src= {% static 'network/js/edit-post.js' %} type="text/javascript"></script>
+    <script src= {% static 'network/js/post-interactions.js' %} type="text/javascript"></script>
     <link rel="stylesheet" href= {% static 'network/css/post-section.css' %}>
     <link rel="stylesheet" href= {% static 'network/css/editing-post.css' %}>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -73,7 +73,6 @@
                                     <!-- Edit Button -->
                                     <button class="edit-button">
                                         <span class="material-symbols-outlined edit">edit_square</span>
-                                        <span class="tooltiptext">Edit Post</span>
                                     </button>
                                 </div>
 
@@ -81,7 +80,6 @@
                                     <!-- Like Button -->
                                     <button class="like-button">
                                         <span class="material-symbols-outlined">favorite</span>
-                                        <span class="tooltiptext">Like</span>
                                     </button>
                                     <!-- Like Counter -->
                                     <span class="like-counter"></span>
@@ -91,7 +89,6 @@
                                     <!-- Comment Button -->
                                     <button class="comment-button">
                                         <span class="material-symbols-outlined">chat_bubble</span>
-                                        <span class="tooltiptext">Comment</span>
                                     </button>
                                     <!-- Comment Counter -->
                                     <span class="comment-counter"></span>
