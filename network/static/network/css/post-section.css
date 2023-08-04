@@ -20,9 +20,9 @@ body {
     background-color: white;
 }
 
-.post:hover {
+/* .post:hover {
     cursor: pointer;
-}
+} */
 
 .post.hidden {
     display: none;
@@ -56,7 +56,7 @@ body {
     cursor: pointer;
     border-radius: 0.3rem;
     border: none;
-    padding: 0.2rem 1.5rem;
+    padding: 0.2rem 1.1rem;
     transition: background-color 0.3s;
 }
 
@@ -310,7 +310,19 @@ body {
     color: red;
 }
 
-.like-section .like-button:focus {
+.like-section .like-button:focus, .comment-section .comment-button:focus {
     outline: none !important;
     border: none;
+}
+
+.comment-section-link {
+    text-decoration: none;
+    color: #212529;
+    font-size: 1rem;
+    font-weight: 400;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+.comment-section-link:hover {
+    text-decoration: none;
 }

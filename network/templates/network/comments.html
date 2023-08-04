@@ -1,0 +1,109 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block extra_head %}
+    {% comment %} <script src= {% static 'network/js/posts.js' %} type="text/javascript"></script> {% endcomment %}
+    <title>{% block title %}Comments{% endblock %}</title>
+    {% comment %} <script src= {% static 'network/js/post-interactions.js' %} type="text/javascript"></script> {% endcomment %}
+    <link rel="stylesheet" href= {% static 'network/css/post-section.css' %}>
+    <link rel="stylesheet" href= {% static 'network/css/comments.css' %}>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="post comment-view" id="post-{{ post.id }}">
+        <div class="post-layout">
+            
+            <a href={% url 'view_profile' post.user %} class="user-profile-link">
+                <img src="{{ post_creator_image }}" class="profile-pic small-post-section tweet-creator">
+            </a>
+
+            <!-- Actual post content (profile image, username, tweet, and image) -->
+            <div class="section-row"> 
+                <div class="tweet-details"> 
+                    <div class="tweet-header">
+                        <a href={% url 'view_profile' post.user %} class="user-profile-link">
+                            <input type="hidden" id="tweet-username" value="{{ users_profile.user }}">
+                            <p class="username-post">{{ username }}</p>
+                        </a>
+                        <p class="date-posted"> • {{ post.date_posted }}</p>
+                    </div>
+                    
+                    <p class="tweet">{{ post.tweet }}</p>
+                    
+                    {% if post_image %}
+                        <div class="tweet-details__image">
+                            <img src="{{ post_image }}" class="posted-tweet-picture">
+                        </div>
+                    {% endif %}
+
+                    <!-- Edit/Delete a post (given creator is authenticated), Likes, Comments (give this div a class of "tweet-actions") -->
+                    <div class="tweet-actions-post">
+                        <div class="tweet-actions-section">
+                            <div class="like-section {% if has_liked %}liked{% endif %}">
+                                <!-- Like Button -->
+                                <button class="like-button {% if has_liked %}liked{% endif %}">
+                                    <span class="material-symbols-outlined" data-tweet-id="{{ post.id }}">favorite</span>
+                                </button>
+                                <!-- Like Counter -->
+                                <span class="like-counter">
+                                    {% if likes == 1 %}
+                                        1 Like
+                                    {% else %}
+                                        {{ likes }} Likes
+                                    {% endif %}
+                                </span>
+                            </div>
+                            
+                            <a href="" class="comment-section-link">
+                                <div class="comment-section">
+                                    <!-- Comment Button -->
+                                    <button class="comment-button">
+                                        <span class="material-symbols-outlined">chat_bubble</span>
+                                    </button>
+                                    <!-- Comment Counter -->
+                                    <span class="comment-counter">
+                                        {% if comments == 1 %}
+                                            1 Comment
+                                        {% else %}
+                                            {{ comments}} Comments
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Where user can fill out comment and post it -->
+    <div class="comment-form">
+        <div class="comment-section-row">
+            <a class="creator" href="{% url 'change_profile' %}"> 
+                <img src="{{ current_user_image }}" class="profile-pic small-post-section" >
+            </a>
+            <input type="text" id="comment-content" autocomplete="off" name="comment" placeholder="Comment" oninput="checkCharacterCount(this)"></input>
+        </div>
+        <button type="submit" id="post-button-comment">Comment</button>
+    </div>
+
+
+    <!-- Where comments will be displayed -->
+    <div class="comments">
+
+
+    </div>
+
+
+    
+
+
+
+
+
+
+
+
+{% endblock body %}

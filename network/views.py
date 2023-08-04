@@ -414,3 +414,54 @@ def unlike_tweet(request, tweet_id):
         }, status=200, content_type="application/json")
     else:
         return JsonResponse({"error": "POST request required."}, status=400, content_type="application/json")
+
+def view_comments(request, tweet_id):
+    if request.method == "GET":
+        # Retrieve info about tweet
+        tweet = Tweet.objects.get(id = tweet_id)
+        tweet_comments = Comment.objects.filter(tweet=tweet)
+        tweet_creator_profile = UserProfile.objects.get(user = tweet.user)
+
+        if tweet.image:
+            tweet_image = tweet.image.url
+        else:
+            tweet_image = None
+
+        # Info about user
+        current_user_profile = UserProfile.objects.get(user = request.user)
+        has_liked = Like.objects.filter(user = request.user, tweet = tweet)
+
+        return render(request, "network/comments.html", {
+            "logged_in_user": request.user.username,
+            "user_profile": current_user_profile,
+            "post": tweet,
+            "username": tweet.user.username,
+            "post_creator_image": tweet_creator_profile.profile_picture.url,
+            "current_user_image": current_user_profile.profile_picture.url,
+            "likes": tweet.likes,
+            "comments": tweet.comments.count(),
+            "post_image": tweet_image,
+            "has_liked": has_liked,
+            "tweet_comments": tweet_comments,
+        })
+
+def add_comment(request, tweet_id):
+    if request.method == "POST":
+        tweet = Tweet.objects.get(id = tweet_id)
+        comment = request.POST.get('comment', '').strip()
+
+        new_comment = Comment.create(tweet=tweet, user=request.user, comment=comment)
+        new_comment.save()
+
+        # Get the new count of comments and pass it to json response
+
+        return JsonResponse({
+            "message": "Comment added successfully.",
+            "comment": new_comment,
+            "commentsCount": 
+            
+        }, status=200, content_type="application/json")
+
+
+    else:
+        return JsonResponse({"error": "POST request required."}, status=400, content_type="application/json")

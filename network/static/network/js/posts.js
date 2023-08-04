@@ -318,8 +318,11 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
       });
     }
 
-    // Load the correct url
+    // Load the correct url for user profile
     loadUserUrl(username, newPost);
+
+    // Load the correct url for comments section
+    loadCommentUrl(tweetId, newPost);
   
     feed.insertBefore(newPost, feed.firstChild);
 }
@@ -332,4 +335,10 @@ function loadUserUrl(username, post) {
   userProfileLinks.forEach(tag => {
     tag.href = baseUrl + username;
   });
+}
+
+// Function to load appropriate comment section url on each post
+function loadCommentUrl(tweetId, post) {
+  const commentLink = post.querySelector(".comment-section-link");
+  commentLink.href = `/${tweetId}/comments`;
 }

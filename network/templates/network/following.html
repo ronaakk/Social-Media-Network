@@ -3,6 +3,7 @@
 
 {% block extra_head %}
     <script src= {% static 'network/js/post-interactions.js' %} type="text/javascript"></script>
+    <title>{% block title %}Following{% endblock %}</title>
     <link rel="stylesheet" href= {% static 'network/css/post-section.css' %}>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 {% endblock extra_head %}
@@ -54,20 +55,22 @@
                                         </span>
                                     </div>
                                     
-                                    <div class="comment-section">
-                                        <!-- Comment Button -->
-                                        <button class="comment-button">
-                                            <span class="material-symbols-outlined">chat_bubble</span>
-                                        </button>
-                                        <!-- Comment Counter -->
-                                        <span class="comment-counter">
-                                            {% if post.tweet_comments == 1 %}
-                                                1 Comment
-                                            {% else %}
-                                                {{ post.tweet_comments }} Comments
-                                            {% endif %}
-                                        </span>
-                                    </div>
+                                    <a href="" class="comment-section-link">
+                                        <div class="comment-section">
+                                            <!-- Comment Button -->
+                                            <button class="comment-button">
+                                                <span class="material-symbols-outlined">chat_bubble</span>
+                                            </button>
+                                            <!-- Comment Counter -->
+                                            <span class="comment-counter">
+                                                {% if post.tweet_comments == 1 %}
+                                                    1 Comment
+                                                {% else %}
+                                                    {{ post.tweet_comments }} Comments
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>

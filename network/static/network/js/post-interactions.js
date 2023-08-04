@@ -10,13 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function handleLikeToggle(likeButton) {
-        console.log('**button clicked** from handleLikeToggle');
         const likeIcon = likeButton.querySelector(".material-symbols-outlined");
         const tweetId = likeIcon.dataset.tweetId;
-        console.log(tweetId);
-
         const parentElement = likeButton.parentNode;
-        console.log(parentElement);
 
         if (parentElement.classList.contains('liked')) {
             unlikePost(tweetId);
@@ -42,7 +38,6 @@ function likePost(tweetId) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log("---- likePost function started running");
             // Make the whole like section red by adding 'liked' class
             const post = document.querySelector(`#post-${tweetId}`);
             const likeSection = post.querySelector(".like-section");
@@ -54,9 +49,6 @@ function likePost(tweetId) {
             // Update the likes count
             const likeCounter = likeSection.querySelector(".like-counter");
             likeCounter.textContent = data.likesCount > 1 || data.likesCount === 0 ? `${data.likesCount} Likes` : `${data.likesCount} Like`;
-
-            console.log(data.likesCount);
-            console.log('likePost function finished running. ----');
         })
         .catch(error => {
             console.log(error);
@@ -73,7 +65,6 @@ function unlikePost(tweetId) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('---- unlikePost function called');
             // Remove liked class
             const post = document.querySelector(`#post-${tweetId}`);
             const likeSection = post.querySelector(".like-section");
@@ -88,9 +79,6 @@ function unlikePost(tweetId) {
             // Update count
             const likeCounter = likeSection.querySelector(".like-counter");
             likeCounter.textContent = data.likesCount > 1 || data.likesCount === 0 ? `${data.likesCount} Likes` : `${data.likesCount} Like`;
-
-            console.log(data.likesCount);
-            console.log('unlikePost function finished running. ----');
         })
         .catch(error => {
             console.log(error);

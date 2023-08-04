@@ -1,0 +1,45 @@
+@import "./styles.css";
+
+.comment-form {
+    margin: 2rem auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    min-width: 450px;
+    max-width: 625px;
+
+    border-radius: .5rem;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);  
+    padding: 1.5rem;
+    background-color: white;
+}
+
+#comment-content {
+    padding: 0rem 0.7rem;
+    border: none;
+    width: 100%;
+    font-size: 1rem;
+    resize: none;
+}
+
+#comment-content:focus {
+    outline: none;
+}
+
+.comment-section-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+#post-button-comment {
+    background-color: var(--main-color);
+    color: var(--text-color);
+    cursor: pointer;
+    border-radius: 0.9rem;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    transition: background-color 0.3s;
+}
