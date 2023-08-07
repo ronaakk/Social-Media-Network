@@ -36,7 +36,7 @@ pre_delete.connect(delete_tweet_images, sender=Tweet)
 
 class Comment(models.Model):
     tweet = models.ForeignKey('Tweet', on_delete=models.CASCADE, null=True)
-    comment = models.CharField(max_length=140, null=True, blank=False)
+    comment = models.CharField(max_length=100, null=True, blank=False)
     user = models.ForeignKey('User', on_delete=models.CASCADE, null=True)
     date_posted = models.DateTimeField(default=timezone.now)
 

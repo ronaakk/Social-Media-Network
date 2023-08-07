@@ -2,9 +2,8 @@
 {% load static %}
 
 {% block extra_head %}
-    {% comment %} <script src= {% static 'network/js/posts.js' %} type="text/javascript"></script> {% endcomment %}
     <title>{% block title %}Comments{% endblock %}</title>
-    {% comment %} <script src= {% static 'network/js/post-interactions.js' %} type="text/javascript"></script> {% endcomment %}
+    <script src= {% static 'network/js/comments.js' %} type="text/javascript"></script>
     <link rel="stylesheet" href= {% static 'network/css/post-section.css' %}>
     <link rel="stylesheet" href= {% static 'network/css/comments.css' %}>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -86,24 +85,31 @@
             </a>
             <input type="text" id="comment-content" autocomplete="off" name="comment" placeholder="Comment" oninput="checkCharacterCount(this)"></input>
         </div>
-        <button type="submit" id="post-button-comment">Comment</button>
+        <button type="submit" id="post-button-comment" data-tweet-id="{{ post.id }}">Comment</button>
     </div>
 
+    <!-- Comment template-->
+    <div class="comment-template hidden">
+        <div class="comment-layout">
+            <!-- Load this through js -->
+            <a href="" class="user-profile-link">
+                <img src="" class="profile-pic small-post-section tweet-creator">
+            </a>
+            <div class="comment__row">
+                <div class="comment-details">
+                    <div class="comment-header">
+                        <a href="" class="user-profile-link">
+                            <p class="username-comment"></p>
+                        </a>
+                        <p class="date-posted"></p>
+                    </div>
+                </div>
+                <p class="comment"></p>
+            </div>
+        </div>
+    </div>
 
     <!-- Where comments will be displayed -->
     <div class="comments">
-
-
     </div>
-
-
-    
-
-
-
-
-
-
-
-
 {% endblock body %}

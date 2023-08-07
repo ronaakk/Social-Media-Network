@@ -419,7 +419,6 @@ def view_comments(request, tweet_id):
     if request.method == "GET":
         # Retrieve info about tweet
         tweet = Tweet.objects.get(id = tweet_id)
-        tweet_comments = Comment.objects.filter(tweet=tweet)
         tweet_creator_profile = UserProfile.objects.get(user = tweet.user)
 
         if tweet.image:
@@ -442,7 +441,6 @@ def view_comments(request, tweet_id):
             "comments": tweet.comments.count(),
             "post_image": tweet_image,
             "has_liked": has_liked,
-            "tweet_comments": tweet_comments,
         })
 
 def add_comment(request, tweet_id):
@@ -450,18 +448,21 @@ def add_comment(request, tweet_id):
         tweet = Tweet.objects.get(id = tweet_id)
         comment = request.POST.get('comment', '').strip()
 
-        new_comment = Comment.create(tweet=tweet, user=request.user, comment=comment)
+        new_comment = Comment.objects.create(tweet=tweet, user=request.user, comment=comment)
         new_comment.save()
 
         # Get the new count of comments and pass it to json response
+        comments_count = tweet.comments.count()
+
+        user_profile = UserProfile.objects.get(user = request.user)
+        user_profile_pic = user_profile.profile_picture
 
         return JsonResponse({
             "message": "Comment added successfully.",
-            "comment": new_comment,
-            "commentsCount": 
-            
+            "profile_pic": user_profile_pic.url,
+            "logged_in_user": request.user.username,
+            "date_posted": new_comment.date_posted.strftime("%B %d, %Y"),
+            "comments_count": comments_count, 
         }, status=200, content_type="application/json")
-
-
     else:
         return JsonResponse({"error": "POST request required."}, status=400, content_type="application/json")

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (likeButton) {
             handleLikeToggle(likeButton);
         }
-    });
+    });  
 
     function handleLikeToggle(likeButton) {
         const likeIcon = likeButton.querySelector(".material-symbols-outlined");

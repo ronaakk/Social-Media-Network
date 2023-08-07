@@ -20,10 +20,6 @@ body {
     background-color: white;
 }
 
-/* .post:hover {
-    cursor: pointer;
-} */
-
 .post.hidden {
     display: none;
 }
@@ -63,7 +59,7 @@ body {
 #post-button:disabled, .image-button:disabled {
     opacity: 0.3;
     cursor: not-allowed;
-  }
+}
 
 #post-button:hover {
     background-color: var(--main-color-focus);
