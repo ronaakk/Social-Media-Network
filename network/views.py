@@ -184,7 +184,25 @@ def view_profile(request, username):
         # Getting the user whos profile was clicked
         clicked_user = User.objects.get(username=username)
         users_profile = UserProfile.objects.get(user = clicked_user)
-        users_tweets = Tweet.objects.filter(user = clicked_user)
+
+        users_tweets = Tweet.objects.filter(user = clicked_user).order_by("-date_posted")
+        tweet_data = []
+        for tweet in users_tweets:
+            comments_count = Comment.objects.filter(tweet = tweet).count()
+            has_liked = Like.objects.filter(user=request.user, tweet=tweet).exists()
+            user = UserProfile.objects.get(user = tweet.user)
+            profile_pic = user.profile_picture
+            tweet_data.append({
+                "tweet": tweet.tweet,
+                "tweet_id": tweet.id,
+                "tweet_image_url": tweet.image.url if tweet.image else "",
+                "username": tweet.user.username,
+                "date_posted": tweet.date_posted.strftime("%B %d, %Y"),
+                "comments_count": comments_count,
+                "tweet_likes": tweet.likes,
+                "tweet_user_profile_pic": profile_pic.url,
+                "has_liked": has_liked
+            })
 
         users_relationships = UserRelationship.objects.get(user = clicked_user)
         followers_count = users_relationships.followers_count()
@@ -203,7 +221,7 @@ def view_profile(request, username):
             "users_relationships": users_relationships,
             "followers_count": followers_count,
             "following_count": following_count,
-            "users_tweets": users_tweets.order_by("-date_posted"),
+            "users_tweets": tweet_data,
             "user_profile": current_user_profile,
             "current_user_following": current_user_following,
             "current_user_likes": liked_tweet_ids
@@ -219,6 +237,9 @@ def home_feed(request):
             user = UserProfile.objects.get(user = post.user)
             profile_pic = user.profile_picture
 
+            # Get the comment count
+            comments_count = Comment.objects.filter(tweet = post).count()
+
             # Check if the current user has liked the tweet
             has_liked = Like.objects.filter(user=request.user, tweet=post).exists()
 
@@ -228,7 +249,7 @@ def home_feed(request):
                 "tweet_image_url": post.image.url if post.image else "",
                 "username": post.user.username,
                 "date_posted": post.date_posted.strftime("%B %d, %Y"),
-                "tweet_comments": post.comments.count() if post.comments.exists() else 0,
+                "tweet_comments": comments_count,
                 "tweet_likes": post.likes,
                 "tweet_user_profile_pic": profile_pic.url,
                 "has_liked": has_liked
@@ -256,6 +277,9 @@ def following_feed(request):
             user = post.user
             user_profile = UserProfile.objects.get(user = user)
             profile_pic = user_profile.profile_picture
+
+            # Get the comment count
+            comments_count = Comment.objects.filter(tweet = post).count()
             
             # Check if the current user has liked the tweet
             has_liked = Like.objects.filter(user=request.user, tweet=post).exists()
@@ -267,7 +291,7 @@ def following_feed(request):
                 "user": user,
                 "username": user.username,
                 "date_posted": post.date_posted.strftime("%B %d, %Y"),
-                "tweet_comments": post.comments.count() if post.comments.exists() else 0,
+                "tweet_comments": comments_count,
                 "tweet_likes": post.likes,
                 "tweet_user_profile_pic": profile_pic.url,
                 "has_liked": has_liked
@@ -430,6 +454,23 @@ def view_comments(request, tweet_id):
         current_user_profile = UserProfile.objects.get(user = request.user)
         has_liked = Like.objects.filter(user = request.user, tweet = tweet)
 
+        # Comments info
+        comments_count = Comment.objects.filter(tweet = tweet).count()
+        comment_data = []
+        comments = Comment.objects.filter(tweet = tweet).order_by("-date_posted")
+        for comment in comments:
+            # username and user profile pic
+            user = UserProfile.objects.get(user = comment.user)
+            profile_pic = user.profile_picture
+            comment_data.append({
+                "id": comment.id,
+                "user": comment.user,
+                "comment": comment.comment,
+                "date_posted": comment.date_posted.strftime("%B %d, %Y"),
+                "commentor_username": comment.user.username,
+                "commentor_profile_pic": profile_pic.url
+            })
+
         return render(request, "network/comments.html", {
             "logged_in_user": request.user.username,
             "user_profile": current_user_profile,
@@ -438,9 +479,10 @@ def view_comments(request, tweet_id):
             "post_creator_image": tweet_creator_profile.profile_picture.url,
             "current_user_image": current_user_profile.profile_picture.url,
             "likes": tweet.likes,
-            "comments": tweet.comments.count(),
+            "comments_count": comments_count,
             "post_image": tweet_image,
             "has_liked": has_liked,
+            "comments": comment_data
         })
 
 def add_comment(request, tweet_id):
@@ -452,7 +494,7 @@ def add_comment(request, tweet_id):
         new_comment.save()
 
         # Get the new count of comments and pass it to json response
-        comments_count = tweet.comments.count()
+        comments_count = Comment.objects.filter(tweet = tweet).count()
 
         user_profile = UserProfile.objects.get(user = request.user)
         user_profile_pic = user_profile.profile_picture
@@ -463,6 +505,18 @@ def add_comment(request, tweet_id):
             "logged_in_user": request.user.username,
             "date_posted": new_comment.date_posted.strftime("%B %d, %Y"),
             "comments_count": comments_count, 
+            "comment_id": new_comment.id
         }, status=200, content_type="application/json")
+    else:
+        return JsonResponse({"error": "POST request required."}, status=400, content_type="application/json")
+
+def delete_comment(request, comment_id):
+    if request.method == "POST":
+        comment_to_delete = Comment.objects.get(id = comment_id)
+        comment_to_delete.delete()
+
+        comment_count = Comment.objects.filter(tweet= comment_to_delete.tweet).count()
+
+        return JsonResponse({"message": "Comment deleted successfully.", "commentsCount": comment_count}, status=200, content_type="application/json")
     else:
         return JsonResponse({"error": "POST request required."}, status=400, content_type="application/json")

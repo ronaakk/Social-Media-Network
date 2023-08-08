@@ -66,6 +66,7 @@
     padding: 1.5rem;
     justify-content: space-between;
     background-color: #f2f9ff;
+    /* #c3dff7 */
 }
 
 .comment-layout {
@@ -87,6 +88,7 @@
     display: flex;
     gap: 0.3rem;
     align-items: center;
+    /* justify-content: space-between; */
 }
 
 .comment {
@@ -94,10 +96,41 @@
     max-width: 95%;
 }
 
-.user-profile-link {
+.commentor {
     margin-top: 0.4rem;
 }
 
 .comment-template.hidden {
     display: none;
+}
+
+.username-comment {
+    width: max-content;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--bg-color);
+}
+
+.comment-header-details {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.delete-button {
+    font-size: 1.7rem;
+    transition: all 0.3s ease;
+    margin-left: 19rem;
+}
+
+.delete-button:hover {
+    color: red;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+.delete-button:focus {
+    outline: none !important;
+    border: none;
 }

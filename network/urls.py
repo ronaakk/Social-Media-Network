@@ -22,6 +22,7 @@ urlpatterns = [
     path("delete_tweet/<int:tweet_id>", views.delete_tweet, name="delete_tweet"),
     path("like_tweet/<int:tweet_id>", views.like_tweet, name="like_tweet"),
     path("unlike_tweet/<int:tweet_id>", views.unlike_tweet, name="unlike_tweet"),
-    path("<int:tweet_id>/add_comment", views.add_comment, name="add_comment")
+    path("<int:tweet_id>/add_comment", views.add_comment, name="add_comment"),
+    path("delete_comment/<int:comment_id>", views.delete_comment, name="delete_comment")
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

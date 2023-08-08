@@ -62,10 +62,10 @@
                                     </button>
                                     <!-- Comment Counter -->
                                     <span class="comment-counter">
-                                        {% if comments == 1 %}
+                                        {% if comments_count == 1 %}
                                             1 Comment
                                         {% else %}
-                                            {{ comments}} Comments
+                                            {{ comments_count }} Comments
                                         {% endif %}
                                     </span>
                                 </div>
@@ -85,7 +85,7 @@
             </a>
             <input type="text" id="comment-content" autocomplete="off" name="comment" placeholder="Comment" oninput="checkCharacterCount(this)"></input>
         </div>
-        <button type="submit" id="post-button-comment" data-tweet-id="{{ post.id }}">Comment</button>
+        <input type="submit" id="post-button-comment" data-tweet-id="{{ post.id }}" value="Comment">
     </div>
 
     <!-- Comment template-->
@@ -93,23 +93,57 @@
         <div class="comment-layout">
             <!-- Load this through js -->
             <a href="" class="user-profile-link">
-                <img src="" class="profile-pic small-post-section tweet-creator">
+                <img src="" class="profile-pic small-post-section tweet-creator commentor">
             </a>
             <div class="comment__row">
                 <div class="comment-details">
                     <div class="comment-header">
-                        <a href="" class="user-profile-link">
-                            <p class="username-comment"></p>
-                        </a>
-                        <p class="date-posted"></p>
+                        <div class="comment-header-details">
+                            <a href="" class="user-profile-link">
+                                <p class="username-comment"></p>
+                            </a>
+                            <p class="date-posted"></p>
+                        </div>
+                        <span class="material-symbols-outlined delete-button">
+                            delete
+                        </span>
                     </div>
                 </div>
                 <p class="comment"></p>
-            </div>
+            </div>  
         </div>
     </div>
 
     <!-- Where comments will be displayed -->
     <div class="comments">
+        {% if comments %}
+            {% for comment in comments %}
+                <div class="comment-template" id="comment-{{ comment.id }}">
+                    <div class="comment-layout">
+                        <a href="{% url 'view_profile' comment.commentor_username %}" class="user-profile-link">
+                            <img src="{{ comment.commentor_profile_pic }}" class="profile-pic small-post-section tweet-creator commentor">
+                        </a>
+                        <div class="comment__row">
+                            <div class="comment-details">
+                                <div class="comment-header">
+                                    <div class="comment-header-details">
+                                        <a href="{% url 'view_profile' comment.commentor_username %}" class="user-profile-link">
+                                            <p class="username-comment">{{ comment.commentor_username }}</p>
+                                        </a>
+                                        <p class="date-posted"> • {{ comment.date_posted }}</p>
+                                    </div>
+                                    {% if user_profile.user == comment.user %}
+                                        <span class="material-symbols-outlined delete-button" data-comment-id = "{{ comment.id }}">
+                                            delete
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <p class="comment">{{ comment.comment }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock body %}

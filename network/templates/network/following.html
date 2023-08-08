@@ -22,7 +22,7 @@
                     <div class="section-row"> 
                         <div class="tweet-details"> 
                             <div class="tweet-header">
-                                <a href={% url 'view_profile' post.user %} class="user-profile-link">
+                                <a href="{% url 'view_profile' post.user %}" class="user-profile-link">
                                     <input type="hidden" id="tweet-username" value="{{ users_profile.user }}">
                                     <p class="username-post">{{ post.username }}</p>
                                 </a>
@@ -55,7 +55,7 @@
                                         </span>
                                     </div>
                                     
-                                    <a href="" class="comment-section-link">
+                                    <a href="{% url 'view_comments' post.id %}" class="comment-section-link">
                                         <div class="comment-section">
                                             <!-- Comment Button -->
                                             <button class="comment-button">

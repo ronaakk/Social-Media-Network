@@ -47,7 +47,7 @@
         <div class="posts">
             {% if users_tweets %}
                 {% for tweet in users_tweets %}
-                    <div class="post" id="post-{{ tweet.id }}">
+                    <div class="post" id="post-{{ tweet.tweet_id }}">
                         <div class="post-layout">
                             
                             <img src="{{ users_profile.profile_picture.url }}" class="profile-pic small-post-section tweet-creator">
@@ -63,9 +63,9 @@
                                     
                                     <p class="tweet">{{ tweet.tweet }}</p>
                                     
-                                    {% if tweet.image %}
+                                    {% if tweet.tweet_image_url %}
                                         <div class="tweet-details__image">
-                                            <img src="{{ tweet.image.url }}" class="posted-tweet-picture">
+                                            <img src="{{ tweet.tweet_image_url }}" class="posted-tweet-picture">
                                         </div>
                                     {% endif %}
 
@@ -81,22 +81,22 @@
                                                 </div>
                                             {% endif %}
 
-                                            <div class="like-section {% if tweet.id in current_user_likes %}liked{% endif %}">
+                                            <div class="like-section {% if tweet.tweet_id in current_user_likes %}liked{% endif %}">
                                                 <!-- Like Button -->
-                                                <button class="like-button {% if tweet.id in current_user_likes %}liked{% endif %}">
-                                                    <span class="material-symbols-outlined" data-tweet-id="{{ tweet.id }}">favorite</span>
+                                                <button class="like-button {% if tweet.tweet_id in current_user_likes %}liked{% endif %}">
+                                                    <span class="material-symbols-outlined" data-tweet-id="{{ tweet.tweet_id }}">favorite</span>
                                                 </button>
                                                 <!-- Like Counter -->
                                                 <span class="like-counter">
-                                                    {% if tweet.likes == 1 %}
+                                                    {% if tweet.tweet_likes == 1 %}
                                                         1 Like
                                                     {% else %}
-                                                        {{ tweet.likes }} Likes
+                                                        {{ tweet.tweet_likes }} Likes
                                                     {% endif %}
                                                 </span>
                                             </div>
                                             
-                                            <a href="" class="comment-section-link">
+                                            <a href="{% url 'view_comments' tweet.tweet_id %}" class="comment-section-link">
                                                 <div class="comment-section">
                                                     <!-- Comment Button -->
                                                     <button class="comment-button">

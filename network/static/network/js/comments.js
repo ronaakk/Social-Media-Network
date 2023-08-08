@@ -1,18 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Comment functionality
     const commentSubmit = document.querySelector("#post-button-comment");
-    console.log(commentSubmit);
     commentSubmit.disabled = true;
     const tweetId = commentSubmit.dataset.tweetId;
-    // commentSubmit.addEventListener('click', addComment(tweetId));
+    commentSubmit.addEventListener('click', () => addComment(tweetId));
+
+    // Deleting comment functionality
+    const deleteButton = document.querySelectorAll(".delete-button");
+    deleteButton.forEach(button => {
+        const commentId = button.dataset.commentId;
+        button.addEventListener('click', () => {
+            const shouldDelete = window.confirm('Are you sure you want to delete your comment?');
+            if (shouldDelete) {
+                deleteComment(commentId);
+            }
+        });
+    })
+
+    // Liking functionality
+    const likeButton = document.querySelector(".like-button");
+    if (likeButton) {
+        likeButton.addEventListener('click', () => handleLikeToggle(likeButton));
+    }
+
+    function handleLikeToggle(likeButton) {
+        const likeIcon = likeButton.querySelector(".material-symbols-outlined");
+        const tweetId = likeIcon.dataset.tweetId;
+        const parentElement = likeButton.parentNode;
+        console.log(tweetId);
+
+        if (parentElement.classList.contains('liked')) {
+            unlikePost(tweetId);
+        } else {
+            likePost(tweetId);
+        }
+    }
+
 })
 
 // Function to add comment
 function addComment(tweetId) {
     const formData = new FormData();
     const commentField = document.querySelector("#comment-content");
-    const comment = commentField.textContent;
+    const comment = commentField.value;
     formData.append('comment', comment);
-    console.log(comment);
 
     fetch(`/${tweetId}/add_comment`, {
         method: 'POST',
@@ -24,11 +55,18 @@ function addComment(tweetId) {
     })
         .then(response => response.json())
         .then(data => {
-            addCommentToPage(comment, data.logged_in_user, data.date_posted, data.comments_count, data.profile_pic);
+            addCommentToPage(comment, data.logged_in_user, data.date_posted, data.comments_count, data.profile_pic, data.comment_id);
+            clearCommentField();
         })
         .catch(error => {
             console.log(error);
         })
+}
+
+function clearCommentField() {
+    const commentField = document.querySelector("#comment-content")
+    commentField.value = '';
+    disableCommentButton();
 }
 
 // Find the csrf token within the user's browser
@@ -64,19 +102,20 @@ function disableCommentButton() {
 }
 
 // Function to display comment
-function addCommentToPage(comment, username, date_posted, commentsCount, profilePic) {
+function addCommentToPage(comment, username, date_posted, commentsCount, profilePic, commentId) {
     const comments = document.querySelector(".comments");
     const commentTemplate = document.querySelector(".comment-template");
 
     const newComment = commentTemplate.cloneNode(true);
     newComment.classList.remove('hidden');
+    newComment.id = `comment-${commentId}`;
 
-    const profileLinkElement = newComment.querySelectorAll(".user-profile-link");
     const profilePicElement = newComment.querySelector(".tweet-creator");
     const usernameElement = newComment.querySelector(".username-comment");
     const datePostedElement = newComment.querySelector(".date-posted");
     const commentElement = newComment.querySelector(".comment");
     const tweetComments = document.querySelector(".comment-counter");
+    const deleteButton = newComment.querySelector(".delete-button");
 
     // Setting the profile pic
     profilePicElement.src = profilePic;
@@ -86,6 +125,15 @@ function addCommentToPage(comment, username, date_posted, commentsCount, profile
 
     // Loading the username into the appropriate place
     usernameElement.textContent = username;
+
+    // Setting the commentId and click listener
+    deleteButton.dataset.commentId = commentId;
+    deleteButton.addEventListener('click', () => {
+        const shouldDelete = window.confirm('Are you sure you want to delete your comment?');
+        if (shouldDelete) {
+            deleteComment(commentId);
+        }
+    });
 
     // Loading the comment
     commentElement.textContent = comment;
@@ -109,4 +157,79 @@ function loadUserUrl(username, post) {
     });
 }
 
-// Function to like a tweet?
+// Functions to like/unlike a tweet
+function likePost(tweetId) {
+    fetch(`/like_tweet/${tweetId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content_Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Make the whole like section red by adding 'liked' class
+            const post = document.querySelector(`#post-${tweetId}`);
+            const likeSection = post.querySelector(".like-section");
+            likeSection.classList.add('liked');
+
+            const likeButtonIcon = post.querySelector(".like-button .material-symbols-outlined");
+            likeButtonIcon.classList.add('liked');
+
+            // Update the likes count
+            const likeCounter = likeSection.querySelector(".like-counter");
+            likeCounter.textContent = data.likesCount > 1 || data.likesCount === 0 ? `${data.likesCount} Likes` : `${data.likesCount} Like`;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
+
+function unlikePost(tweetId) {
+    fetch(`/unlike_tweet/${tweetId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content_Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Remove liked class
+            const post = document.querySelector(`#post-${tweetId}`);
+            const likeSection = post.querySelector(".like-section");
+            likeSection.classList.remove('liked');
+
+            const likeButton = post.querySelector(".like-button");
+            likeButton.classList.remove('liked');
+
+            const likeButtonIcon = post.querySelector(".like-button .material-symbols-outlined");
+            likeButtonIcon.classList.remove('liked');
+
+            // Update count
+            const likeCounter = likeSection.querySelector(".like-counter");
+            likeCounter.textContent = data.likesCount > 1 || data.likesCount === 0 ? `${data.likesCount} Likes` : `${data.likesCount} Like`;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
+
+function deleteComment(commentId) {
+    fetch(`/delete_comment/${commentId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content_Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.commentsCount);
+            const comment = document.getElementById(`comment-${commentId}`);
+            const commentCounter = document.querySelector(".comment-counter");
+            commentCounter.textContent = data.commentsCount > 1 || data.commentsCount === 0 ? `${data.commentsCount} Comments` : `${data.commentsCount} Comment`;
+            comment.remove();
+        })
+        .catch(error => console.log(error));
+}
