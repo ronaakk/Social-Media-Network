@@ -245,7 +245,7 @@ function deletePreview(previewContainer) {
 }
   
 // Function to add posts to page (and sort them by date added)
-function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesCount, commentsCount, profilePic, loggedInUser, tweetId, hasLiked = "") {
+function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesCount, commentsCount, profilePic, loggedInUser = "", tweetId, hasLiked = "") {
     const feed = document.querySelector(".posts");
     const postTemplate = document.querySelector(".post");
   
@@ -307,15 +307,17 @@ function addPostToPage(tweet, tweetImageFile = "", username, date_posted, likesC
 
     // Checking to see if authenticated user is creator of tweet
     const editSection = tweetDetails.querySelector(".edit-section");
-    if (loggedInUser !== username) {
-      editSection.style.display = "none";
-    } else {
-      editSection.style.display = "flex";
-      const editButton = editSection.querySelector(".edit-button");
-      editButton.dataset.tweetId = tweetId;
-      editButton.addEventListener('click', () => {
-        editPost(tweetId);
-      });
+    if (loggedInUser) {
+      if (loggedInUser !== username) {
+        editSection.style.display = "none";
+      } else {
+        editSection.style.display = "flex";
+        const editButton = editSection.querySelector(".edit-button");
+        editButton.dataset.tweetId = tweetId;
+        editButton.addEventListener('click', () => {
+          editPost(tweetId);
+        });
+      }
     }
 
     // Load the correct url for user profile

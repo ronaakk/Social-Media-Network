@@ -1,0 +1,36 @@
+{% extends 'network/layout.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link href="{% static 'network/css/about-page.css' %}" rel="stylesheet">
+    <title>{% block title %}About{% endblock %}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="page-layout">
+        <h1 class="welcome-header">Welcome to Tweetify</h1>
+        <main>
+            <section class="welcome-section">
+                <p>Welcome to Tweetify, your personalized social media network designed to keep you connected with your friends and up-to-date on everything that matters to them. In this fast-paced world, maintaining strong connections can be a challenge, but Tweetify is here to make it easier than ever. Whether it's sharing your thoughts, posting updates, or simply staying in the loop about your friends' activities, Tweetify provides a platform that fosters meaningful interactions and cultivates a sense of belonging. To begin interacting with others in this space, <a class='linkedin-link' href="{% url 'register' %}">Sign Up</a> here.
+            </section>
+            <section class="learnings-section">
+                <p>Throughout the development of Tweetify, I've embarked on an exciting journey of learning and growth. One of the key aspects of this project was implementing APIs to retrieve and save data asynchronously. The integration of fetch calls and AJAX allowed for seamless communication between the frontend and backend, enhancing the user experience by delivering real-time updates and interactions. In addition, a major achievement was achieved in optimizing the user interface to ensure an intuitive and enjoyable experience for all users. Leveraging Django on the backend, I not only achieved efficiency in code but also enhanced the platform's performance, ensuring a smooth and responsive application.</p>
+            </section>
+        </main>
+        <footer>
+            <p>Thank you for taking the time to explore Tweetify, your presence here is greatly appreciated. If you have any questions, suggestions, or just want to connect, please feel free to reach out to me on <a class='linkedin-link' href="https://www.linkedin.com/in/ronak-patel-bba9a91a1" target="_blank">LinkedIn</a>. Looking forward to connecting with you!</p>
+        </footer>
+    </div>
+{% endblock body %}
+
+
+
+
+
+
+
+
+
+
+

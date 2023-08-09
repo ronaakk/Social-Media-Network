@@ -183,11 +183,11 @@ function savePost(tweetId) {
 
     // Get the edited tweet content
     const newTweetContent = newTweetInput.value;
-
-    const newImage = tweetImageFileInput.files.length > 0
+    
+    const newImage = tweetImageFileInput && tweetImageFileInput.files.length > 0
         ? tweetImageFileInput.files[tweetImageFileInput.files.length - 1]
         : '';
-   
+
     // Code works well till here
     console.log(`new image to save: ${newImage.name}`);
 

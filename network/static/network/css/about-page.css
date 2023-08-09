@@ -1,0 +1,35 @@
+@import './styles.css';
+
+p, a {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.welcome-header {
+    color: var(--bg-color);
+}
+
+.page-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 80%;
+    margin: 2rem auto;
+    gap: 1.5rem;
+}
+
+.welcome-section {
+    margin-bottom: 1.5rem;
+}
+
+.linkedin-link {
+    color: var(--main-color);
+    transition: all 0.2s ease;
+}
+
+.linkedin-link:hover {
+    text-decoration: none !important;
+    color: var(--main-color-focus);
+}

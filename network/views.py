@@ -28,7 +28,7 @@ def index(request):
         user_profile = None
 
     return render(request, "network/index.html", {
-        "user_profile" : user_profile
+        "user_profile" : user_profile,
     })
 
 def login_view(request):
@@ -51,7 +51,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("login"))
 
 def register(request):
     if request.method == "POST":
@@ -241,7 +241,10 @@ def home_feed(request):
             comments_count = Comment.objects.filter(tweet = post).count()
 
             # Check if the current user has liked the tweet
-            has_liked = Like.objects.filter(user=request.user, tweet=post).exists()
+            if request.user.is_authenticated:
+                has_liked = Like.objects.filter(user=request.user, tweet=post).exists()
+            else:
+                has_liked = False
 
             feed_data.append({
                 "tweet": post.tweet,
@@ -256,7 +259,7 @@ def home_feed(request):
             })
         return JsonResponse({
             "feed_posts": feed_data, 
-            "logged_in_user": request.user.username
+            "logged_in_user": request.user.username if request.user.is_authenticated else None
         }, status=200, content_type="application/json")    
     else:
         return JsonResponse({"error": "GET request requried."}, status=400, content_type="application/json")
@@ -520,3 +523,13 @@ def delete_comment(request, comment_id):
         return JsonResponse({"message": "Comment deleted successfully.", "commentsCount": comment_count}, status=200, content_type="application/json")
     else:
         return JsonResponse({"error": "POST request required."}, status=400, content_type="application/json")
+
+def about(request):
+    try:
+        user_profile = UserProfile.objects.get(user = request.user)
+    except:
+        user_profile = None
+
+    return render(request, "network/about.html", {
+        "user_profile": user_profile,
+    })

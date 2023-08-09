@@ -20,18 +20,10 @@
     <body>
           <header>
             <div class="left-section navbar">
-              <a class="logo" href="#">
+              <a class="logo" href="{% url 'about' %}" class="nav-link {% if request.resolver_match.view_name == 'about' %}active{% endif %}">
                 <img class="icon" src="{% static 'icons/bird-logo.png' %}" id="tweetify-tab">
                 <span class="app-name">Tweetify</span>
               </a>
-              {% if not user.is_authenticated %}
-                <a href="{% url 'index' %}" class="nav-link home" id="home-tab">
-                  <div class="remix-icon-item">
-                    <i class="remix-icon ri-home-4-line"></i>
-                    <p>Home</p>
-                  </div>
-                </a>
-              {% endif %}
             </div>
       
             <ul class="navbar">
@@ -71,17 +63,17 @@
                   </div>
                 </a>
         
-                <a class="username" href="{% url 'change_profile' %}" id="profile-tab">
+                <a class="username {% if request.resolver_match.view_name == 'change_profile' %}active{% endif %}" href="{% url 'change_profile' %}" id="profile-tab">
                   {{ user.username }}
                 </a>
               {% else %}
-                <a href="{% url 'login' %}" class="user">
+                <a href="{% url 'login' %}" class="user {% if request.resolver_match.view_name == 'login' %}active{% endif %}">
                   <div class="remix-icon-item">
                     <i class="remix-icon ri-account-circle-line"></i>
                     <p>Login</p>
                   </div>
                 </a>
-                <a href="{% url 'register' %}" class="register">Sign Up</a>
+                <a href="{% url 'register' %}" class="register {% if request.resolver_match.view_name == 'register' %}active{% endif %}">Sign Up</a>
               {% endif %}
             </div>
           </header>

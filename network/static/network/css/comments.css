@@ -121,7 +121,6 @@
 .delete-button {
     font-size: 1.7rem;
     transition: all 0.3s ease;
-    margin-left: 19rem;
 }
 
 .delete-button:hover {
