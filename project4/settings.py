@@ -32,7 +32,7 @@ SECURE_HSTS_SECONDS = 31536000  # One year in seconds
 SECURE_SSL_REDIRECT = True
 SECURE_HSTS_PRELOAD = True
 
-ALLOWED_HOSTS = ['https://tweetify-d64eeb573d39.herokuapp.com/']
+ALLOWED_HOSTS = ['tweetify-d64eeb573d39.herokuapp.com/']
 
 # Application definition
 INSTALLED_APPS = [
