@@ -16,7 +16,7 @@
         <div class="post-section">
             <form id="tweet-form" method="post" enctype="multipart/form-data">
                 <div class="post-section-row">
-                    <a class="creator" href="{% url 'change_profile' %}"> 
+                    <a class="creator" href="{% url 'view_profile' user_profile.user %}"> 
                         <img src="{{ user_profile.profile_picture.url }}" class="profile-pic small-post-section" >
                     </a>
                     <textarea id="post-content" name="tweet" placeholder="What's Happening?" oninput="autoExpand(this); checkCharacterCount(this)"></textarea>
