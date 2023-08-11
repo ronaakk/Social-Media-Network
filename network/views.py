@@ -35,14 +35,14 @@ def login_view(request):
     if request.method == "POST":
 
         # Attempt to sign user in
-        username = User.objects.get(username = request.POST["username"]).username.strip()
+        username = request.POST.get('username').strip()
         password = request.POST["password"].strip()
         user = authenticate(request, username=username, password=password)
 
         # Check if authentication successful
-        if user is not None:
+        if user.is_authenticated:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return redirect("index")
         else:
             messages.error(request, "Invalid username and/or password.")
             return render(request, "network/login.html")
