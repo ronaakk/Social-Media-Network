@@ -27,7 +27,7 @@ def index(request):
     except:
         user_profile = None
 
-    return render(request, "network/about.html", {
+    return render(request, "network/index.html", {
         "user_profile" : user_profile,
     })
 
