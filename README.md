@@ -2,7 +2,7 @@
 
 Tweetify is a dynamic social media network that enables users to connect, share thoughts, and interact with a community of friends and acquaintances. With Tweetify, you can create an account, write and share text-based posts, upload images, comment on posts, like and unlike content, follow other users, and explore a rich and engaging social space. Stay connected, express yourself, and discover new connections with Tweetify!
 
-![Screen Shot 2023-08-11 at 4 20 27 PM](https://github.com/ronaakk/Social-Media-Network/assets/92412291/bba7ef53-4ecc-4478-982e-30663a5ee3fd)
+![1](https://github.com/ronaakk/Social-Media-Network/assets/92412291/f39599b7-743f-4ec9-a555-a13919863347)
 
 ## Specifications
 
